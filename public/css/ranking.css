@@ -1,0 +1,459 @@
+@keyframes carro-primeira-passagem {
+    0% {
+        left: 100%;  /* Começa fora da tela */
+    }
+    40% {
+        left: 60%; /* Movimento lento até 60% da tela */
+    }
+    80% {
+        left: 30%; /* Acelera um pouco mais */
+    }
+    100% {
+        left: -20%; /* Sai da tela */
+    }
+}
+
+@keyframes carro-segunda-passagem {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -50%; /* Passa rápido, sai à esquerda */
+    }
+}
+
+/* Contêiner do carrossel */
+
+/* Seção de slides */
+/* Contêiner do carrossel */
+.carrossel-container {
+    width: 95%; /* Ocupa 95% da largura da tela */
+    max-width: 95vw; /* Usa 95% da largura da janela de visualização */
+    height: 95vh; /* Ocupa 95% da altura da janela de visualização */
+    margin: auto; /* Centraliza o carrossel horizontalmente */
+    overflow: hidden; /* Esconde imagens que excedem o contêiner */
+}
+
+/* Seção de slides */
+.slides-container {
+    display: flex; /* Organiza os slides horizontalmente */
+    transition: transform 0.5s ease; /* Efeito suave de transição */
+    width: 100%; /* Garante que a largura do contêiner seja 100% */
+    height: 100%; /* Garante que a altura ocupe 100% */
+
+}
+
+/* Cada slide */
+.slide-carrossel {
+    flex: 0 0 100%; /* Cada slide ocupa 100% da largura do contêiner */
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    height: 100%; /* Slide ocupa 100% da altura do contêiner */
+}
+
+/* Estilo para as imagens */
+.slide-carrossel img {
+    width: auto; /* Deixe a largura ser automática */
+    height: auto; /* Deixe a altura ser automática */
+    max-height: 100%; /* Limita a altura máxima para o contêiner */
+    max-width: 100%; /* Limita a largura máxima para o contêiner */
+    object-fit: contain; /* Garante que a imagem mantenha suas proporções sem cortar */
+}
+
+
+
+.row {
+    margin-left: 0; /* Remove o espaço à esquerda da linha */
+    margin-right: 0; /* Remove o espaço à direita da linha */
+}
+.col-6 {
+    padding-left: 5px; /* Adiciona um pouco de espaço à esquerda */
+    padding-right: 5px; /* Adiciona um pouco de espaço à direita */
+}
+
+#carro-container {
+    position: fixed;
+    bottom: 40%;
+    width: 200px;
+    height: auto;
+    z-index: 52; /* Aumente o z-index para que o carro fique na frente */
+}
+
+#carro-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 51; /* Fundo preto fica atrás do carro */
+    opacity: 0.9;
+    display: none;
+}
+
+
+@keyframes firework {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+/*#popup-primeiro {*/
+/*    display: none;*/
+/*    z-index: 100; !* Card do 1º lugar *!*/
+/*}*/
+
+#fogos-bg {
+    z-index: 90; /* Fundo preto para os fogos */
+    background: url('/fogos2.gif') center center no-repeat, rgba(0, 0, 0, 0.5);
+    background-size: contain;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    inset: 0;
+}
+
+
+#fundo-preto-fogos {
+    z-index: 90; /* Fundo preto para os fogos */
+    background: url('/fogos2.gif') center center no-repeat, rgba(0, 0, 0, 0.5);
+    background-size: cover;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    inset: 0;
+}
+
+
+#fundo-preto {
+    z-index: 90; /* Fundo preto para os fogos */
+
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    inset: 0;
+}
+
+
+#confetti-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Não interfere nas interações com outros elementos */
+    z-index: 100;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: red; /* Cor inicial do confete */
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: confetti-fall 5s linear infinite;
+}
+
+/* Animação da queda dos confetes */
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100%) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+#fogos-container {
+    display: none;
+    z-index: 95; /* Animação dos fogos */
+}
+
+#popup-primeiro {
+    background: url('/fogos2.gif') center center no-repeat, rgba(0, 0, 0, 0.5);
+    background-size: cover;
+    z-index: 50; /* Certifica-se de que o modal fica acima de outros elementos */
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    inset: 0;
+}
+
+.ocultar {display:none !important;}
+.show {
+    display:flex !important;
+}
+.aparecer {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*#popup-primeiro .relative {*/
+/*    z-index: 100; !* Certifique-se de que o conteúdo do modal fica acima do fundo *!*/
+/*    background-color: white;*/
+/*    padding: 2rem;*/
+/*    border-radius: 0.5rem;*/
+/*}*/
+
+.modals {
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro transparente */
+
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    z-index: 9998;
+}
+
+/* Esconder a modal por padrão */
+.hidden-ranking {
+    display: none;
+}
+
+.modal-content-ranking input[type='number'] {
+    background-color:rgba(254,254,254,0.18);
+    width:80%;
+    color:#FFF;
+}
+
+/* Conteúdo da modal */
+.modal-content-ranking {
+    background-color:rgba(254,254,254,0.18);
+    backdrop-filter: blur(15px);
+    padding: 20px;
+    color:#FFF;
+    border-radius: 10px;
+    width: 100%; /* Tamanho da modal */
+    max-width: 1000px;
+    max-height: 80vh; /* Altura máxima da modal */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra ao redor */
+    position: relative; /* Para o botão de fechar */
+    overflow: hidden; /* Evita que a modal cresça além da altura */
+}
+
+/* Botão de fechar */
+.close-button-ranking {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-button-ranking:hover {
+    color: red;
+}
+
+/* Estilo da lista de corretores */
+.corretores-list {
+    max-height: 300px; /* Define uma altura fixa para a lista de corretores */
+    overflow-y: auto; /* Habilita o scroll vertical */
+    margin-top: 20px;
+}
+
+/* Estilos para o botão de abrir modal */
+.open-modal-btn-ranking {
+    padding: 10px 20px;
+    background-color: #2e4a7a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.open-modal-btn-ranking:hover {
+    background-color: #00CED1;
+}
+
+/* Personalização do scrollbar */
+.corretores-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.corretores-list::-webkit-scrollbar-thumb {
+    background-color: #00CED1; /* Cor do scrollbar */
+    border-radius: 5px;
+}
+
+.corretores-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#overlayHistorico {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    pointer-events: none; /* Evita capturar cliques */
+}
+
+#modalHistorico {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 1000;
+    pointer-events: auto; /* Garante que o modal receba cliques */
+}
+
+
+
+
+/* O overlay que bloqueia as ações */
+#overlay {
+    display: none;  /* Inicialmente oculto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);  /* Fundo semi-transparente para destacar o loading */
+    z-index: 9998;  /* Logo abaixo do loading */
+}
+
+/* O loading com fundo branco */
+#loading {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    font-weight: bold;
+    color: #333;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 9999;  /* Em frente ao overlay */
+}
+
+#loading span {
+    display: inline-block;
+    animation: bounce 1s infinite;
+}
+
+#loading span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+#loading span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+
+
+
+
+.sky {
+    width: 100%;
+    height: 100vh;
+    background: radial-gradient(circle, #001d3d, #000);
+    overflow: hidden;
+    position: fixed;
+    z-index: 90;
+    justify-content: center;
+    align-items: center;
+}
+
+.sky-venda {
+    width: 100%;
+    height: 100vh;
+    background: radial-gradient(circle, #001d3d, #000);
+    overflow: hidden;
+    position: fixed;
+    z-index: 90;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Foguete */
+.rocket {
+    width: 15px;
+    height: 40px;
+    position: absolute;
+    background: linear-gradient(to top, red, yellow);
+    border-radius: 50%;
+    animation: launch 3s ease-in-out forwards;
+}
+
+/* Cauda do foguete */
+.rocket::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 100px;
+    background: linear-gradient(to bottom, orange, transparent);
+    animation: tail 0.4s linear infinite;
+}
+
+/* Partículas da explosão */
+.particle {
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0;
+    animation: explode-particle 1.5s ease-out forwards;
+}
+
+/* Animações */
+@keyframes launch {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(var(--dx), var(--dy));
+    }
+}
+
+@keyframes tail {
+    0%, 100% {
+        height: 100px;
+        opacity: 1;
+    }
+    50% {
+        height: 120px;
+        opacity: 0.7;
+    }
+}
+
+@keyframes explode-particle {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--dx), var(--dy)) scale(2);
+    }
+}

@@ -1,0 +1,341 @@
+table.dataTable tbody td {
+    font-size: 0.85em !important;
+    padding: 0px !important;
+}
+
+table.dataTable thead th {
+    font-size: 0.85em !important;
+    padding: 0px !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: white !important; /* Define a cor da fonte como branca */
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    color: white !important; /* Mantém a cor da fonte branca ao passar o mouse */
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    color: white !important; /* Define a cor da fonte do botão atual como branca */
+}
+
+#mudar_ano_table option selected {
+    color: #FFF !important;
+}
+
+input[readonly] {
+    background-color: #9ca3af;
+}
+
+
+.fontsize0 option {font-size: 0.7em !important;}
+.destaque_content_radius {border-radius:5px;}
+.ajax_load {display:none;position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000;}
+.ajax_load_box{margin:auto;text-align:center;color:#fff;font-weight:var(700);text-shadow:1px 1px 1px rgba(0,0,0,.5)}
+.ajax_load_box_circle{border:16px solid #e3e3e3;border-top:16px solid #61DDBC;border-radius:50%;margin:auto;width:80px;height:80px;-webkit-animation:spin 1.2s linear infinite;-o-animation:spin 1.2s linear infinite;animation:spin 1.2s linear infinite}
+@-webkit-keyframes spin{0%{-webkit-transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg)}}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+#container_mostrar_comissao {width:439px;height:555px;background-color:#123449;position:absolute;right:5px;border-radius: 5px;}
+.container_edit {display:flex;justify-content:end;}
+.ativo {background-color:#FFF !important;color: #000 !important;}
+.ocultar {display: none;}
+.list_abas {list-style: none;display: flex;border-bottom: 1px solid white;margin: 4px 0;padding: 0;}
+.list_abas li {color: #fff;width: 150px;padding: 8px 5px;text-align:center;border-radius: 5px 5px 0 0;background-color:rgba(254,254,254,0.18);}
+.list_abas li:hover {cursor: pointer;}
+.list_abas li:nth-of-type(2) {margin: 0 1%;}
+.list_abas li:nth-of-type(4) {margin-left:1%;}
+.textoforte {background-color:rgba(255,255,255,0.5) !important;color:black;}
+.textoforte-list {background-color:rgba(255,255,255,0.5);color:white;}
+.botao:hover {background-color: rgba(0,0,0,0.5) !important;color:#FFF !important;}
+.valores-acomodacao {background-color:#123449;color:#FFF;width:32%;box-shadow:rgba(0,0,0,0.8) 0.6em 0.7em 5px;}
+.valores-acomodacao:hover {cursor:pointer;box-shadow: none;}
+
+.destaque {border:4px solid rgba(36,125,157);}
+#coluna_direita {flex-basis:10%;background-color:#123449;border-radius: 5px;}
+#coluna_direita ul {list-style: none;margin: 0;padding: 0;}
+#coluna_direita li {color:#FFF;}
+.coluna-right {flex-basis:30%;flex-wrap: wrap;border-radius:5px;height:720px;}
+.coluna-right.aba_individual {flex-basis:30%;flex-wrap: wrap;border-radius:5px;height:1000px;}
+/* .container_div_info {background-color:rgba(0,0,0,1);position:absolute;width:500px;right:0px;top:57px;min-height: 700px;display: none;z-index: 1;color: #FFF;} */
+.container_div_info {display:flex;position:absolute;flex-basis:30%;right:0px;top:57px;display: none;z-index: 1;color: #FFF;}
+#padrao {width:50px;background-color:#FFF;color:#000;}
+.buttons {display: flex;}
+.button_individual {display:flex;}
+.button_empresarial {display: flex;}
+.dt-right {text-align: right !important;}
+.dt-center {text-align: center !important;}
+.estilizar_pagination .pagination {font-size: 0.8em !important;color:#FFF;}
+.estilizar_pagination .pagination li {height:10px;color:#FFF;}
+.por_pagina {font-size: 12px !important;color:#FFF;}
+.por_pagina #tabela_mes_atual_length {display: flex;align-items: center;align-self: center;margin-top: 8px;}
+.por_pagina #tabela_mes_diferente_length {display: flex;align-items: center;align-self: center;margin-top: 8px;}
+.por_pagina select {color:#FFF !important;}
+.estilizar_pagination #tabela_mes_atual_previous {color:#FFF !important;}
+.estilizar_pagination #tabela_mes_atual_next {color:#FFF !important;}
+.estilizar_pagination #tabela_mes_diferente_previous {color:#FFF !important;}
+.estilizar_pagination #tabela_mes_diferente_next {color:#FFF !important;}
+#tabela_individual_filter input[type='search'] {background-color: #FFF !important;margin-right:5px;margin-top:3px;color:black !important;}
+#tabela_coletivo_filter input[type='search'] {background-color: #FFF !important;margin-right:5px;margin-top:3px;color:black !important;}
+#tabela_empresarial_filter input[type='search'] {background-color: #FFF !important;color:black !important;}
+
+#tabela_empresarial td {white-space: nowrap;overflow: hidden;text-overflow: clip;}
+#tabela_individual td {white-space: nowrap;overflow: hidden;text-overflow: clip;}
+#tabela_coletivo td {white-space: nowrap;overflow: hidden;text-overflow: clip;}
+
+
+
+
+
+.select2-container .select2-selection {
+    text-align:center !important;
+}
+
+
+
+.select2-selection__rendered {
+    font-size: 0.8em; /* Tamanho da fonte */
+    height: 20px; /* Altura */
+    line-height: 20px; /* Espaçamento entre linhas */
+    padding: 0 1px; /* Espaçamento interno */
+
+}
+
+/* Estilos para a seta de dropdown */
+.select2-selection__arrow {
+    height: 20px; /* Altura */
+}
+
+
+#uploadModal,
+#uploadCancelados {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Inicialmente escondido */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Certifica-se de que esteja acima de outros elementos */
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#uploadModal .modal-dialog,
+#uploadCancelados .modal-dialog {
+    width: 80%;
+    padding: 50px;
+    margin: auto;
+    background-color: white;
+    border-radius: 8px; /* Canto arredondado */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+#uploadModal .modal-content,
+#uploadCancelados .modal-content
+{
+    padding: 20px;
+    background-color: #f9f9f9; /* Fundo leve para o conteúdo */
+    border-radius: 8px; /* Canto arredondado para o conteúdo */
+}
+
+#uploadModal .modal-header,
+#uploadCancelados .modal-header
+{
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd; /* Linha sutil abaixo do cabeçalho */
+    display:flex;
+    justify-content: space-between;
+}
+
+#uploadModal .modal-title,
+#uploadCancelados .modal-title
+{
+    font-size: 1.5rem;
+    color: #333; /* Cor do título */
+}
+
+#uploadModal .close,
+#uploadCancelados .close
+{
+    color: black; /* Cor do botão de fechar */
+    font-size: 2em;
+}
+
+#uploadModal .close:hover,
+#uploadCancelados .close:hover
+{
+    color: #000; /* Cor ao passar o mouse sobre o botão de fechar */
+    opacity: 1;
+}
+
+#uploadModal label,
+#uploadCancelados label
+{
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#uploadModal input[type="file"],
+#uploadCancelados input[type="file"]
+{
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box; /* Garante que o padding não ultrapasse a largura */
+}
+
+#uploadModal .btn-danger,
+#uploadCancelados .btn-danger
+{
+    background-color: #e3342f;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
+
+#uploadModal .btn-danger:hover,
+#uploadCancelados .btn-danger:hover
+{
+    background-color: #cc1f1a;
+}
+
+#uploadModal.show,
+#uploadCancelados.show
+{
+    display: flex;
+    opacity: 1;
+}
+
+#uploadModal,
+#uploadCancelados
+{
+    background-color: rgba(0, 0, 0, 0.4); /* Fundo mais leve */
+}
+
+@keyframes animate-border {
+    0% {
+        border-color: #6a0dad;
+    }
+    100% {
+        border-color: #8a2be2;
+    }
+}
+
+.animate-border {
+    animation: animate-border 4s linear infinite alternate;
+}
+
+.border-lilas-custom {
+    border-width: 2%;
+    border-style: solid;
+}
+
+#loading-dots-change {
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 100px;
+    position: relative;
+}
+
+#loading-dots-change div {
+    width: 20px;
+    height: 20px;
+    margin: 0 5px;
+    background-color: #000;
+    border-radius: 50%;
+    animation: dot-bounce 0.6s infinite alternate;
+}
+
+#loading-dots-change div:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+#loading-dots-change div:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.ocultar {display:none !important;}
+
+
+
+
+
+
+
+.dot-flashing {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 100px;
+    position: relative;
+}
+
+.dot-flashing div {
+    width: 20px;
+    height: 20px;
+    margin: 0 5px;
+    background-color: #000;
+    border-radius: 50%;
+    animation: dot-bounce 0.6s infinite alternate;
+}
+
+.dot-flashing div:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot-flashing div:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dot-bounce {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-20px);
+    }
+}
+
+.date-picker {
+    color: transparent; /* Esconde o valor do campo */
+    text-align: center; /* Centraliza o ícone de calendário */
+    position: relative;
+    cursor: pointer; /* Torna o campo clicável */
+    width: 150px; /* Defina uma largura adequada para o campo */
+    height: 40px; /* Defina uma altura adequada para o campo */
+}
+
+/* Torna o ícone de calendário visível */
+.date-picker::-webkit-calendar-picker-indicator {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); /* Centraliza o ícone */
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    color: black; /* Mantém o ícone visível */
+}
+
+.disabled-button {
+    background-color:rgba(254,254,254,0.18);
+    border: 1px solid #FFF; /* Lighter Gray border */
+    color: #FFF; /* Lighter text */
+    cursor: not-allowed;
+
+    filter: blur(0.8px); /* Desfoque leve */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25); /* Sombra */
+    transition: all 0.3s ease;
+}
+
+
+
+
+
+

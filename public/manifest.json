@@ -1,0 +1,15 @@
+{
+    "short_name": "MeuApp",
+    "name": "Meu Aplicativo Laravel",
+    "icons": [
+        {
+            "src": "https://vivaz.bmsys.com.br/icons/icone_bmsys.png",
+            "sizes": "76x75",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff"
+}
