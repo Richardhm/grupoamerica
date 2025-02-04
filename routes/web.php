@@ -20,9 +20,26 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::domain('{tenant}.bmsys.test')->group(function () {
-    Route::get('/', function ($tenant) {
-        return view('welcome');
+//    Route::get('/', function ($tenant) {
+//        return view('welcome');
+//    });
+
+
+    Route::get('/', function () {
+        return redirect()->route('login'); // Redireciona para login
     });
+
+    Route::get('/login', function () {
+        return view('auth.login');
+    })->name('login');
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/dashboard', function () {
+            return view('dashboard'); // Página inicial após login
+        })->name('dashboard');
+    });
+
+
 });
 
 Route::get('/dashboard', function () {
