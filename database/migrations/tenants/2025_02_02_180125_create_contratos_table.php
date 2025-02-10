@@ -27,8 +27,8 @@ return new class extends Migration
             $table->date('data_baixa')->nullable();
             $table->decimal('valor_adesao', 10, 2)->nullable();
             $table->decimal('valor_plano', 10, 2)->nullable();
-            $table->decimal('desconto_corretora', 10, 2)->default(0.00);
-            $table->decimal('desconto_corretor', 10, 2)->default(0.00);
+            $table->decimal('desconto_corretora', 10, 2)->nullable()->default(0.00);
+            $table->decimal('desconto_corretor', 10, 2)->nullable()->default(0.00);
             $table->date('data_analise')->nullable();
             $table->date('data_emissao')->nullable();
             $table->boolean('estorno')->default(false);

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::connection('tenant')->create('comissoes_corretores_configuracoes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('plano_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('administradora_id');
             $table->unsignedBigInteger('tabela_origens_id');
             $table->decimal('valor', 10, 2);

@@ -77,7 +77,12 @@ class ProfileController extends Controller
     public function alterarUserCLT(Request $request)
     {
         $id = $request->id;
+
         $user = User::find($id);
+        $clt_parceiro = $user->clt == true ? 0 : 1;
+        $user->clt = $clt_parceiro;
+        $user->save();
+        return "Ola";
 
         if($user->corretora_id == 1 && $request->ativo == 1) {
             DB::table('comissoes_corretores_configuracoes')->where('user_id', $id)->delete();

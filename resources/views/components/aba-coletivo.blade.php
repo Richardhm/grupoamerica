@@ -123,7 +123,7 @@
                 <ul class="list-none m-0 py-1" id="listar">
                     <li style="height:30px;line-height: 30px;" class="flex mb-1 justify-between flex justify-end coletivo" id="em_analise_coletivo">
                         <span class="text-sm">Em Analise</span>
-                        <span class="text-right w-[30%] text-sm text-black bg-transparent backdrop-blur-[80px] text-white pr-1 rounded">0</span>
+                        <span class="text-sm coletivo_quantidade_em_analise bg-transparent backdrop-blur-[80px] w-[30%] text-right pr-1 rounded flex justify-end">0</span>
                     </li>
                     <li class="mb-1 coletivo flex justify-between" id="emissao_boleto_coletivo" style="height:30px;line-height: 30px;">
                         <span class="text-sm">Emissão Boleto</span>

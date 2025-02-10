@@ -72,15 +72,11 @@ class FinanceiroController extends Controller
 
     public function index(Request $request)
     {
-
-
-        $users = User::where("name" ,"!=",'Administrador')
+        $corretora_id = auth()->user()->corretora_id;
+        $users = User::where("corretora_id",$corretora_id)
+            ->where("name" ,"!=",'Administrador')
             ->whereRaw("name != ''")
             ->get();
-
-
-
-
         return view('financeiro.index',[
             "users" => $users
         ]);
@@ -92,16 +88,13 @@ class FinanceiroController extends Controller
         return $corretora_id;
     }
 
-
-
     public function geralIndividualPendentes(Request $request)
     {
-
-
+        $corretora_id = $request->corretora_id == null ? auth()->user()->corretora_id : $request->corretora_id;
         $mes = $request->mes != '00' && isset($request->mes) ? $request->mes : null;
 
         // Definir uma chave de cache baseada nos parâmetros da requisição
-        $cacheKey = 'geralIndividualPendentes_' . '_' . ($mes ?? 'todos_meses');
+        $cacheKey = 'geralIndividualPendentes_' . $corretora_id . '_' . ($mes ?? 'todos_meses');
         $tempoDeExpiracao = 900; // Cache por 15 minutos
 
         if($request->has('refresh') && $request->refresh == 1) {
@@ -109,7 +102,7 @@ class FinanceiroController extends Controller
         }
 
         // Verificar se o resultado já está no cache ou executar a consulta
-        $resultado = Cache::remember($cacheKey,$tempoDeExpiracao,function() use ( $mes) {
+        $resultado = Cache::remember($cacheKey,$tempoDeExpiracao,function() use ($corretora_id, $mes) {
             // Consulta base
             $query = DB::connection('tenant')->table('comissoes_corretores_lancadas')
                 ->join('comissoes', 'comissoes.id', '=', 'comissoes_corretores_lancadas.comissoes_id')
@@ -127,6 +120,7 @@ class FinanceiroController extends Controller
                     'users.name as corretor',
                     'clientes.nome as cliente',
                     'clientes.cpf as cpf',
+                    'clientes.corretora_id as corretora_id',
                     'clientes.user_id as user_id',
                     'clientes.quantidade_vidas as quantidade_vidas',
                     'contratos.valor_plano as valor_plano',
@@ -167,7 +161,9 @@ class FinanceiroController extends Controller
                 $query->whereMonth('contratos.created_at', $mes);
             }
 
-
+            if($corretora_id != 0) {
+                $query->where('clientes.corretora_id', $corretora_id);
+            }
 
             $query->where('contratos.plano_id', 1);
 
@@ -196,6 +192,7 @@ class FinanceiroController extends Controller
     {
         $corretora_id = User::find($request->user_id)->corretora_id;
         $codigo_vendedor = User::find($request->user_id)->codigo_vendedor;
+        $clt = User::find($request->user_id)->clt;
 
         $dados = $request->except('_token');
         $dados['taxa_adesao'] = str_replace([".", ","], ["", "."], $request->taxa_adesao);
@@ -235,45 +232,15 @@ class FinanceiroController extends Controller
         $comissao->data = date('Y-m-d');
         $comissao->empresarial = 1;
         $comissao->save();
-        $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
-            ::where("plano_id", $request->plano_id)
-            ->where("administradora_id", 4)
-            ->where("user_id", $request->user_id)
-            ->get();
+
         $date = new \DateTime(now());
         $date->add(new \DateInterval('PT1M'));
         $data = $date->format('Y-m-d H:i:s');
         $comissao_corretor_contagem = 0;
         $valorComDesconto = 0;
         $comissao_corretor_default = 0;
-        if (count($comissoes_configuradas_corretor) >= 1) {
-            foreach ($comissoes_configuradas_corretor as $c) {
-                $comissaoVendedor = new ComissoesCorretoresLancadas();
-                $comissaoVendedor->comissoes_id = $comissao->id;
-                //$comissaoVendedor->user_id = auth()->user()->id;
-                $comissaoVendedor->parcela = $c->parcela;
-                if ($comissao_corretor_contagem == 0) {
-                    $comissaoVendedor->data = date('Y-m-d H:i:s', strtotime($request->data_boleto));
-                    //$comissaoVendedor->tempo = $data;
-                } else {
-                    $comissaoVendedor->data = date("Y-m-d H:i:s", strtotime($request->data_boleto . "+{$comissao_corretor_contagem}month"));
-                    $date = new \DateTime($data);
-                    $date->add(new \DateInterval("PT{$comissao_corretor_contagem}M"));
-                    $data_add = $date->format('Y-m-d H:i:s');
-                    //$comissaoVendedor->tempo = $data_add;
-                }
-                if($dados['quantidade_parcelas'] >= 1 && $dados['desconto_operadora'] >= 0) {
-                    if($comissao_corretor_contagem <= $dados['quantidade_parcelas']) {
-                        $valorComDesconto = ($valor * (1 - $dados['desconto_operadora'] / 100)) * $c->valor / 100;
-                    }
-                } else {
-                    $valorComDesconto = ($valor * $c->valor) / 100;
-                }
-                $comissaoVendedor->valor = $valorComDesconto;
-                $comissaoVendedor->save();
-                $comissao_corretor_contagem++;
-            }
-        } else {
+
+        if($clt == 1) {
             $dado = ComissoesCorretoresDefault
                 ::where("plano_id", $request->plano_id)
                 ->where("administradora_id", 4)
@@ -305,7 +272,91 @@ class FinanceiroController extends Controller
                 $comissaoVendedor->save();
                 $comissao_corretor_default++;
             }
+        } else {
+            $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
+                ::where("plano_id", $request->plano_id)
+                ->where("administradora_id", 4)
+                ->where("user_id", $request->user_id)
+                ->get();
+            if (count($comissoes_configuradas_corretor) >= 1) {
+                foreach ($comissoes_configuradas_corretor as $c) {
+                    $comissaoVendedor = new ComissoesCorretoresLancadas();
+                    $comissaoVendedor->comissoes_id = $comissao->id;
+                    //$comissaoVendedor->user_id = auth()->user()->id;
+                    $comissaoVendedor->parcela = $c->parcela;
+                    if ($comissao_corretor_contagem == 0) {
+                        $comissaoVendedor->data = date('Y-m-d H:i:s', strtotime($request->data_boleto));
+                        //$comissaoVendedor->tempo = $data;
+                    } else {
+                        $comissaoVendedor->data = date("Y-m-d H:i:s", strtotime($request->data_boleto . "+{$comissao_corretor_contagem}month"));
+                        $date = new \DateTime($data);
+                        $date->add(new \DateInterval("PT{$comissao_corretor_contagem}M"));
+                        $data_add = $date->format('Y-m-d H:i:s');
+                        //$comissaoVendedor->tempo = $data_add;
+                    }
+                    if($dados['quantidade_parcelas'] >= 1 && $dados['desconto_operadora'] >= 0) {
+                        if($comissao_corretor_contagem <= $dados['quantidade_parcelas']) {
+                            $valorComDesconto = ($valor * (1 - $dados['desconto_operadora'] / 100)) * $c->valor / 100;
+                        }
+                    } else {
+                        $valorComDesconto = ($valor * $c->valor) / 100;
+                    }
+                    $comissaoVendedor->valor = $valorComDesconto;
+                    $comissaoVendedor->save();
+                    $comissao_corretor_contagem++;
+                }
+            } else {
+
+                $comissoes_configuradas_default = ComissoesCorretoresConfiguracoes
+                    ::where("plano_id", $request->plano_id)
+                    ->where("administradora_id", 4)
+                    ->get();
+
+                foreach ($comissoes_configuradas_default as $c) {
+                    $comissaoVendedor = new ComissoesCorretoresLancadas();
+                    $comissaoVendedor->comissoes_id = $comissao->id;
+                    //$comissaoVendedor->user_id = auth()->user()->id;
+                    $comissaoVendedor->parcela = $c->parcela;
+                    if ($comissao_corretor_contagem == 0) {
+                        $comissaoVendedor->data = date('Y-m-d H:i:s', strtotime($request->data_boleto));
+                        //$comissaoVendedor->tempo = $data;
+                    } else {
+                        $comissaoVendedor->data = date("Y-m-d H:i:s", strtotime($request->data_boleto . "+{$comissao_corretor_contagem}month"));
+                        $date = new \DateTime($data);
+                        $date->add(new \DateInterval("PT{$comissao_corretor_contagem}M"));
+                        $data_add = $date->format('Y-m-d H:i:s');
+                        //$comissaoVendedor->tempo = $data_add;
+                    }
+                    if($dados['quantidade_parcelas'] >= 1 && $dados['desconto_operadora'] >= 0) {
+                        if($comissao_corretor_contagem <= $dados['quantidade_parcelas']) {
+                            $valorComDesconto = ($valor * (1 - $dados['desconto_operadora'] / 100)) * $c->valor / 100;
+                        }
+                    } else {
+                        $valorComDesconto = ($valor * $c->valor) / 100;
+                    }
+                    $comissaoVendedor->valor = $valorComDesconto;
+                    $comissaoVendedor->save();
+                    $comissao_corretor_contagem++;
+                }
+
+
+
+
+            }
+
+
+
+
+
         }
+
+
+
+
+
+
+        /*********************LOgica Antiga*************************/
+
 
        return redirect('/financeiro?ac=empresarial');
     }
@@ -378,7 +429,7 @@ class FinanceiroController extends Controller
     }
     public function sincronizarDados(Request $request)
     {
-        set_time_limit(300);
+        set_time_limit(600);
         $filename = uniqid() . ".xlsx";
         if (move_uploaded_file($request->file, $filename)) {
             $filePath = base_path("public/{$filename}");
@@ -389,34 +440,34 @@ class FinanceiroController extends Controller
             foreach ($reader->getSheetIterator() as $sheet) {
                 foreach ($sheet->getRowIterator() as $rowNumber => $row) {
                     $cells = $row->getCells();
-                    if($cells[5]->getValue() != "") {
+                    if ($cells[5]->getValue() != "") {
                         if ($rowNumber === 3) {
                             $cidade = $cells[2]->getValue();
                         }
-                        //Se rowNumer for maior que 5 e não existe codigo externo cadastrado no banco de dados
                         if ($rowNumber >= 5 && $this->codigoExterno($cells[0]->getValue()) == 0) {
                             $cpf = mb_strlen($cells[4]->getValue()) == 11 ? $cells[4]->getValue() : str_pad($cells[4]->getValue(), 11, "000", STR_PAD_LEFT);
                             $dia = str_pad($cells[18]->getValue(), 2, "0", STR_PAD_LEFT);
                             array_push($cpfs, $cells[0]->getValue());
                             //$user_count = User::where('codigo_vendedor', $cells[2]->getValue())->count();
                             //$user_count = cidadeCodigoVendedor::where("codigo_vendedor",$cells[2]->getValue());
+                            //$user_id = User::where('codigo_vendedor', $cells[2]->getValue())->first()->id;
                             $user = User::where('codigo_vendedor', $cells[2]->getValue());
+
                             if($user->count() == 1) {
                                 $user_id = $user->first()->id;
-
-
+                                $corretora_id = User::where('codigo_vendedor', $cells[2]->getValue())->first()->corretora_id;
                                 $cidade_id = 2;
                                 $cliente = new Cliente();
                                 $cliente->user_id = $user_id;
                                 $cliente->nome = mb_convert_case($cells[5]->getValue(), MB_CASE_TITLE, "UTF-8");
                                 $cliente->celular = $cells[7]->getValue();
-                                //$cliente->corretora_id = $corretora_id;
+                                $cliente->corretora_id = $corretora_id;
                                 $cliente->cpf = $cpf;
                                 $cliente->data_nascimento = implode("-", array_reverse(explode("/", $cells[6]->getValue())));
                                 $cliente->pessoa_fisica = 1;
                                 $cliente->pessoa_juridica = 0;
                                 $cliente->codigo_externo = $cells[0]->getValue();
-                                //$cliente->corretora_id = $corretora_id;
+                                $cliente->corretora_id = $corretora_id;
                                 if ($cells[8]->getValue() == "RESPONSÁVEL FINANCEIRO") {
                                     $cliente->quantidade_vidas = $cells[15]->getValue();
                                 } else {
@@ -424,12 +475,79 @@ class FinanceiroController extends Controller
                                 }
                                 $cliente->save();
                                 //$data_vigencia = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
-                                $dataOriginal = $cells[17]->getValue();
-                                $novoDia = $dia; // Coluna 18
+                            $dataOriginal = $cells[17]->getValue();
                                 $dataDateTime = \DateTime::createFromFormat('d/m/Y', $dataOriginal);
-                                $dataDateTime->modify('+1 month');
-                                $dataDateTime->setDate($dataDateTime->format('Y'), $dataDateTime->format('m'), $novoDia);
-                                $data_vigencia = $dataDateTime->format('Y-m-d');
+                            $novoDia = $dia; // Coluna 18
+//                            $dataDateTime = \DateTime::createFromFormat('d/m/Y', $dataOriginal);
+//                            $dataDateTime->modify('+1 month');
+//                            $dataDateTime->setDate($dataDateTime->format('Y'), $dataDateTime->format('m'), $novoDia);
+//                            $data_vigencia = $dataDateTime->format('Y-m-d');
+
+                                // Armazena o dia original
+                                $originalDay = (int)$dataDateTime->format('d');
+
+// Move para o primeiro dia do próximo mês para obter o mês correto
+                                $dataDateTime->modify('first day of next month');
+
+// Obtém o último dia do próximo mês
+                                $lastDayNextMonth = (int)$dataDateTime->format('t');
+
+// Define o dia como o original ou o último dia do mês, se necessário
+                                if ($originalDay > $lastDayNextMonth) {
+                                    $dataDateTime->setDate(
+                                        (int)$dataDateTime->format('Y'),
+                                        (int)$dataDateTime->format('m'),
+                                        $lastDayNextMonth
+                                    );
+                                } else {
+                                    $dataDateTime->setDate(
+                                        (int)$dataDateTime->format('Y'),
+                                        (int)$dataDateTime->format('m'),
+                                        $originalDay
+                                    );
+                                }
+
+                                //
+                                if($dataDateTime->format('m') == '02' && $novoDia == '30') {
+                                    //dd("Olaaa");
+                                    $dataDateFevereiro = \DateTime::createFromFormat('d/m/Y', $dataOriginal);
+                                    $dataDateFevereiro->setDate($dataDateFevereiro->format('Y'), $dataDateFevereiro->format('m'), $dataDateFevereiro->format('d'));
+                                    //$dataDateTime = \DateTime::createFromFormat('d/m/Y', $dataOriginal);
+                                    //$dataDateTime->setDate($dataDateTime->format('Y'), $dataDateTime->format('m'), $novoDia);
+                                    $data_vigencia = $dataDateFevereiro->format("Y-m-d");
+
+
+                                } else if($dataDateTime->format('m') == '02') {
+
+                                    $dataDateFevereiroGeral = \DateTime::createFromFormat('d/m/Y', $dataOriginal);
+
+                                    //$dataDateFevereiroGeral->modify('+1 month');
+
+                                    $dataDateFevereiroGeral->setDate($dataDateFevereiroGeral->format('Y'), '02', $novoDia);
+
+
+                                    //$dataDateTime = \DateTime::createFromFormat('d/m/Y', $dataOriginal);
+                                    //$dataDateTime->setDate($dataDateTime->format('Y'), $dataDateTime->format('m'), $novoDia);
+                                    $data_vigencia = $dataDateFevereiroGeral->format("Y-m-d");
+
+                                }  else {
+
+                                    //dd("OPSSS");
+
+                                    //$dataDateTime->modify('+1 month');
+                                   // $dataDateTime = \DateTime::createFromFormat('d/m/Y', $dataOriginal);
+                                    $dataDateTime->setDate($dataDateTime->format('Y'), $dataDateTime->format('m'), $novoDia);
+                                    $data_vigencia = $dataDateTime->format("Y-m-d");
+                                }
+//
+//                                $ultimoDiaDoMes = cal_days_in_month(CAL_GREGORIAN, $dataDateTime->format('m'), $dataDateTime->format('Y'));
+//                                if ($novoDia > $ultimoDiaDoMes) {
+//                                    $dataDateTime->setDate($dataDateTime->format('Y'), $dataDateTime->format('m'), $ultimoDiaDoMes); // Ajusta para o último dia do mês
+//                                } else {
+//                                    $dataDateTime->setDate($dataDateTime->format('Y'), $dataDateTime->format('m'), $novoDia); // Caso contrário, usa o novo dia
+//                                }
+
+
 
                                 $contrato = new Contrato();
                                 //$contrato->acomodacao_id = $acomodacao_id;
@@ -441,8 +559,8 @@ class FinanceiroController extends Controller
                                 $contrato->data_vigencia = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
                                 $contrato->codigo_externo = $cells[0]->getValue();
                                 $contrato->data_boleto = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
-                                $contrato->valor_adesao = str_replace([".",","],["","."], $cells[12]->getValue());
-                                $contrato->valor_plano = (float) str_replace([".",","],["","."], $cells[12]->getValue()) - 25;
+                                $contrato->valor_adesao = str_replace([".", ","], ["", "."], $cells[12]->getValue());
+                                $contrato->valor_plano = (float)str_replace([".", ","], ["", "."], $cells[12]->getValue()) - 25;
                                 $contrato->coparticipacao = 1;
                                 $contrato->odonto = 0;
                                 $contrato->created_at = $data_vigencia;
@@ -459,71 +577,20 @@ class FinanceiroController extends Controller
                                 $comissao->administradora_id = 4;
                                 $comissao->tabela_origens_id = $cidade_id;
                                 $comissao->data = date('Y-m-d');
-                                //$comissao->corretora_id = $corretora_id;
+                                $comissao->corretora_id = $corretora_id;
                                 $comissao->save();
 
-                                $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
-                                    ::where("plano_id", 1)
-                                    ->where("administradora_id", 4)
-                                    ->where("user_id", $user_id)
-                                    //->where("tabela_origens_id", 2)
-                                    ->get();
-                                $comissao_corretor_contagem = 0;
-                                $comissao_corretor_default = 0;
-                                if (count($comissoes_configuradas_corretor) >= 1) {
-                                    //$comissao_corretor_contagem = 0;
-                                    foreach ($comissoes_configuradas_corretor as $c) {
-                                        $valor_comissao = (float) str_replace([".",","],["","."], $cells[12]->getValue()) - 25;
-                                        $comissaoVendedor = new ComissoesCorretoresLancadas();
-                                        $comissaoVendedor->comissoes_id = $comissao->id;
-                                        //$comissaoVendedor->user_id = auth()->user()->id;
-                                        // $comissaoVendedor->documento_gerador = "12345678";
-                                        $comissaoVendedor->parcela = $c->parcela;
-                                        $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
-                                        //$comissaoVendedor->data = null;
-                                        if ($comissao_corretor_contagem == 0) {
-                                            $comissaoVendedor->data = null;
-                                            //$comissaoVendedor->data = $data_vigencia;
-                                            $comissaoVendedor->status_financeiro = 1;
-                                            if ($comissaoVendedor->valor == "0.00" || $comissaoVendedor->valor == 0 || $comissaoVendedor->valor >= 0) {
-
-                                            }
-                                            $comissaoVendedor->data_baixa = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
-                                            $comissaoVendedor->valor_pago = str_replace([".",","],["","."], $cells[12]->getValue());
-                                        } else {
-                                            $data_vigencia_sem_dia = date("Y-m", strtotime($data_vigencia));
-                                            $dates = date("Y-m", strtotime($data_vigencia_sem_dia . "+{$comissao_corretor_contagem}month"));
-                                            $mes = explode("-", $dates)[1];
-                                            if ($dia == 30 && $mes == 02) {
-                                                $ano = explode("-", $dates)[0];
-                                                $comissaoVendedor->data = date($ano."-02-28");
-                                                $ano = explode("-", $comissaoVendedor->data)[0];
-                                                $bissexto = date('L', mktime(0, 0, 0, 1, 1, $ano));
-                                                if ($bissexto == 1) {
-                                                    $comissaoVendedor->data = date($ano."-02-29");
-                                                } else {
-                                                    $comissaoVendedor->data = date($ano."-02-28");
-                                                }
-                                            } else {
-                                                $comissaoVendedor->data = date("Y-m-" . $dia, strtotime($dates));
-                                            }
-                                        }
-                                        //$comissaoVendedor->data = null;
-                                        $comissaoVendedor->save();
-                                        $comissao_corretor_contagem++;
-                                    }
-
-                                } else {
+                                if ($user->first()->clt == 1) {///SE AQUI O CORRETOR E CLT
 
                                     $dados = ComissoesCorretoresDefault
-                                        ::where("plano_id",1)
-                                        ->where("administradora_id",4)
-                                        //->where("corretora_id",$corretora_id)
+                                        ::where("plano_id", 1)
+                                        ->where("administradora_id", 4)
+                                        ->where("corretora_id",$corretora_id)
                                         //->where("tabela_origens_id", 2)
                                         ->get();
 
                                     foreach ($dados as $c) {
-                                        $valor_comissao_default = (float) str_replace([".",","],["","."], $cells[12]->getValue()) - 25;
+                                        $valor_comissao_default = (float)str_replace([".", ","], ["", "."], $cells[12]->getValue()) - 25;
                                         $comissaoVendedor = new ComissoesCorretoresLancadas();
                                         $comissaoVendedor->comissoes_id = $comissao->id;
                                         $comissaoVendedor->parcela = $c->parcela;
@@ -536,7 +603,7 @@ class FinanceiroController extends Controller
 
                                             }
                                             $comissaoVendedor->data_baixa = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
-                                            $comissaoVendedor->valor_pago = str_replace([".",","],["","."], $cells[12]->getValue());
+                                            $comissaoVendedor->valor_pago = str_replace([".", ","], ["", "."], $cells[12]->getValue());
                                         } else {
                                             $data_vigencia_sem_dia = date("Y-m", strtotime($data_vigencia));
                                             $dates = date("Y-m", strtotime($data_vigencia_sem_dia . "+{$comissao_corretor_default}month"));
@@ -544,13 +611,13 @@ class FinanceiroController extends Controller
                                             $mes = explode("-", $dates)[1];
                                             if ($dia == 30 && $mes == 02) {
                                                 $ano = explode("-", $dates)[0];
-                                                $comissaoVendedor->data = date($ano."-02-28");
+                                                $comissaoVendedor->data = date($ano . "-02-28");
 
                                                 $bissexto = date('L', mktime(0, 0, 0, 1, 1, $ano));
                                                 if ($bissexto == 1) {
-                                                    $comissaoVendedor->data = date($ano."-02-29");
+                                                    $comissaoVendedor->data = date($ano . "-02-29");
                                                 } else {
-                                                    $comissaoVendedor->data = date($ano."-02-28");
+                                                    $comissaoVendedor->data = date($ano . "-02-28");
                                                 }
                                             } else {
                                                 $comissaoVendedor->data = date("Y-m-" . $dia, strtotime($dates));
@@ -563,27 +630,140 @@ class FinanceiroController extends Controller
                                     //}
                                     /****FIm SE Comissoes Lancadas */
                                     $comissao_corretor_default = 0;
+
+
+                                } else {
+
+
+                                    $comissoes_configuradas_personalizado = ComissoesCorretoresConfiguracoes
+                                        ::where("plano_id", 1)
+                                        ->where("administradora_id", 4)
+                                        ->where("corretora_id",$corretora_id)
+                                        ->where("user_id", $user_id)
+                                        //->where("tabela_origens_id", 2)
+                                        ->get();
+
+                                    $comissao_corretor_contagem = 0;
+                                    $comissao_corretor_default = 0;
+
+                                    if (count($comissoes_configuradas_personalizado) >= 1) {//AQUI CORRETOR TEM COMISSOES PERSONALIZADAS
+                                        //dd("PARCEIRO COM CONF");
+                                        foreach ($comissoes_configuradas_personalizado as $c) {
+                                            $valor_comissao = (float)str_replace([".", ","], ["", "."], $cells[12]->getValue()) - 25;
+                                            $comissaoVendedor = new ComissoesCorretoresLancadas();
+                                            $comissaoVendedor->comissoes_id = $comissao->id;
+                                            //$comissaoVendedor->user_id = auth()->user()->id;
+                                            // $comissaoVendedor->documento_gerador = "12345678";
+                                            $comissaoVendedor->parcela = $c->parcela;
+                                            $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
+                                            //$comissaoVendedor->data = null;
+                                            if ($comissao_corretor_contagem == 0) {
+                                                $comissaoVendedor->data = null;
+                                                //$comissaoVendedor->data = $data_vigencia;
+                                                $comissaoVendedor->status_financeiro = 1;
+                                                if ($comissaoVendedor->valor == "0.00" || $comissaoVendedor->valor == 0 || $comissaoVendedor->valor >= 0) {
+
+                                                }
+                                                $comissaoVendedor->data_baixa = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
+                                                $comissaoVendedor->valor_pago = str_replace([".", ","], ["", "."], $cells[12]->getValue());
+                                            } else {
+                                                $data_vigencia_sem_dia = date("Y-m", strtotime($data_vigencia));
+                                                $dates = date("Y-m", strtotime($data_vigencia_sem_dia . "+{$comissao_corretor_contagem}month"));
+                                                $mes = explode("-", $dates)[1];
+
+                                                //dd($mes);
+
+                                                if ($dia == 30 && $mes == 02) {
+                                                    $ano = explode("-", $dates)[0];
+                                                    $comissaoVendedor->data = date($ano . "-02-28");
+                                                    $ano = explode("-", $comissaoVendedor->data)[0];
+                                                    $bissexto = date('L', mktime(0, 0, 0, 1, 1, $ano));
+                                                    if ($bissexto == 1) {
+                                                        $comissaoVendedor->data = date($ano . "-02-29");
+                                                    } else {
+                                                        $comissaoVendedor->data = date($ano . "-02-28");
+                                                    }
+                                                } else {
+                                                    $comissaoVendedor->data = date("Y-m-" . $dia, strtotime($dates));
+                                                }
+                                            }
+                                            //$comissaoVendedor->data = null;
+                                            $comissaoVendedor->save();
+                                            $comissao_corretor_contagem++;
+                                        }
+
+                                    } else {//AQUI O CORRETOR E PARCELA DEFAULT
+
+                                        $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
+                                            ::where("plano_id", 1)
+                                            ->where("administradora_id", 4)
+                                            ->where("corretora_id",$corretora_id)
+                                            ->get();
+
+                                        foreach ($comissoes_configuradas_corretor as $c) {
+                                            $valor_comissao = (float)str_replace([".", ","], ["", "."], $cells[12]->getValue()) - 25;
+                                            $comissaoVendedor = new ComissoesCorretoresLancadas();
+                                            $comissaoVendedor->comissoes_id = $comissao->id;
+                                            //$comissaoVendedor->user_id = auth()->user()->id;
+                                            // $comissaoVendedor->documento_gerador = "12345678";
+                                            $comissaoVendedor->parcela = $c->parcela;
+                                            $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
+                                            //$comissaoVendedor->data = null;
+                                            if ($comissao_corretor_contagem == 0) {
+                                                $comissaoVendedor->data = null;
+                                                //$comissaoVendedor->data = $data_vigencia;
+                                                $comissaoVendedor->status_financeiro = 1;
+                                                if ($comissaoVendedor->valor == "0.00" || $comissaoVendedor->valor == 0 || $comissaoVendedor->valor >= 0) {
+
+                                                }
+                                                $comissaoVendedor->data_baixa = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
+                                                $comissaoVendedor->valor_pago = str_replace([".", ","], ["", "."], $cells[12]->getValue());
+                                            } else {
+                                                $data_vigencia_sem_dia = date("Y-m", strtotime($data_vigencia));
+                                                $dates = date("Y-m", strtotime($data_vigencia_sem_dia . "+{$comissao_corretor_contagem}month"));
+                                                $mes = explode("-", $dates)[1];
+                                                //dd($data_vigencia);
+                                                if ($dia == 30 && $mes == 02) {
+                                                    $ano = explode("-", $dates)[0];
+                                                    $comissaoVendedor->data = date($ano . "-02-28");
+                                                    $ano = explode("-", $comissaoVendedor->data)[0];
+                                                    $bissexto = date('L', mktime(0, 0, 0, 1, 1, $ano));
+                                                    if ($bissexto == 1) {
+                                                        $comissaoVendedor->data = date($ano . "-02-29");
+                                                    } else {
+                                                        $comissaoVendedor->data = date($ano . "-02-28");
+                                                    }
+                                                } else {
+
+                                                    $comissaoVendedor->data = date("Y-m-" . $dia, strtotime($dates));
+                                                }
+                                            }
+                                            //$comissaoVendedor->data = null;
+                                            $comissaoVendedor->save();
+                                            $comissao_corretor_contagem++;
+                                        }
+
+
+                                    }
                                 }
 
 
 
-
-
-
-
-
-
                             }
-                            //$corretora_id = User::where('codigo_vendedor', $cells[2]->getValue())->first()->corretora_id;
 
-                        }// Fim Se rowNumer for maior que 5 e não existe codigo externo cadastrado no banco de dados
+
+
+
+
+
+                        }
+                        //unlink("public/".$filename);
                     }
-                    //unlink("public/".$filename);
                 }
             }
+            //Cliente::orderBy("id","desc")->first()->update(["last"=>1]);
+            return "sucesso";
         }
-        //Cliente::orderBy("id","desc")->first()->update(["last"=>1]);
-        return "sucesso";
     }
 
     public function formCreateColetivo()
@@ -698,7 +878,7 @@ class FinanceiroController extends Controller
 
     public function sincronizarBaixasJaExiste(Request $request)
     {
-        set_time_limit(300);
+        set_time_limit(600);
         $filename = uniqid() . ".xlsx";
         if (move_uploaded_file($request->file, $filename)) {
             $filePath = base_path("public/{$filename}");
@@ -758,36 +938,7 @@ class FinanceiroController extends Controller
                                                 'data_baixa' => $dt_pagamento,
                                                 'valor_pago' => $cells[10]->getValue()
                                             ]);
-                                            switch($c->parcela) {
-                                                case 2:
-                                                    $contrato_id=Comissoes::where("id",$c->comissoes_id)->first()->contrato_id;
-                                                    Contrato::where("id",$contrato_id)->update(["financeiro_id" => 6]);
-                                                    break;
 
-                                                case 3:
-                                                    $contrato_id = Comissoes::where("id",$c->comissoes_id)->first()->contrato_id;
-                                                    Contrato::where("id",$contrato_id)->update(["financeiro_id" => 7]);
-                                                    break;
-
-                                                case 4:
-                                                    $contrato_id = Comissoes::where("id",$c->comissoes_id)->first()->contrato_id;
-                                                    Contrato::where("id",$contrato_id)->update(["financeiro_id" => 8]);
-                                                    break;
-
-                                                case 5:
-                                                    $contrato_id = Comissoes::where("id",$c->comissoes_id)->first()->contrato_id;
-                                                    Contrato::where("id",$contrato_id)->update(["financeiro_id" => 9]);
-                                                    break;
-
-                                                case 6:
-                                                    $contrato_id = Comissoes::where("id",$c->comissoes_id)->first()->contrato_id;
-                                                    Contrato::where("id",$contrato_id)->update(["financeiro_id" => 11]);
-                                                    break;
-
-                                                default:
-
-                                                    break;
-                                            }
                                         }
                                     }
                                 }
@@ -838,36 +989,7 @@ class FinanceiroController extends Controller
                                                 'data_baixa' => $dt_pagamento,
                                                 'valor_pago' => $cells[10]->getValue()
                                             ]);
-                                            switch($c->parcela) {
-                                                case 2:
-                                                    $contrato_id=Comissoes::where("id",$c->comissoes_id)->first()->contrato_id;
-                                                    Contrato::where("id",$contrato_id)->update(["financeiro_id" => 6]);
-                                                    break;
 
-                                                case 3:
-                                                    $contrato_id = Comissoes::where("id",$c->comissoes_id)->first()->contrato_id;
-                                                    Contrato::where("id",$contrato_id)->update(["financeiro_id" => 7]);
-                                                    break;
-
-                                                case 4:
-                                                    $contrato_id = Comissoes::where("id",$c->comissoes_id)->first()->contrato_id;
-                                                    Contrato::where("id",$contrato_id)->update(["financeiro_id" => 8]);
-                                                    break;
-
-                                                case 5:
-                                                    $contrato_id = Comissoes::where("id",$c->comissoes_id)->first()->contrato_id;
-                                                    Contrato::where("id",$contrato_id)->update(["financeiro_id" => 9]);
-                                                    break;
-
-                                                case 6:
-                                                    $contrato_id = Comissoes::where("id",$c->comissoes_id)->first()->contrato_id;
-                                                    Contrato::where("id",$contrato_id)->update(["financeiro_id" => 11]);
-                                                    break;
-
-                                                default:
-
-                                                    break;
-                                            }
                                         }
                                     }
                                 }
@@ -879,12 +1001,61 @@ class FinanceiroController extends Controller
                 }
             }
         }
+
+
+
+        $this->atualizarContrato();
+
+
         return "successo";
     }
 
 
 
+    private function atualizarContrato()
+    {
+        $comissoes = \Illuminate\Support\Facades\DB::connection('tenant')->select("
+               select
+                   *
+               from comissoes_corretores_lancadas where
+               comissoes_id IN(select id from comissoes where contrato_id IN(select id from contratos where plano_id = 1))
+               and status_financeiro = 1
+         ");
+        foreach($comissoes as $cc) {
 
+            switch ($cc->parcela) {
+                case 2:
+                    $contrato_id = Comissoes::where("id", $cc->comissoes_id)->first()->contrato_id;
+                    Contrato::where("id", $contrato_id)->update(["financeiro_id" => 6]);
+                    break;
+
+                case 3:
+                    $contrato_id = Comissoes::where("id", $cc->comissoes_id)->first()->contrato_id;
+                    Contrato::where("id", $contrato_id)->update(["financeiro_id" => 7]);
+                    break;
+
+                case 4:
+                    $contrato_id = Comissoes::where("id", $cc->comissoes_id)->first()->contrato_id;
+                    Contrato::where("id", $contrato_id)->update(["financeiro_id" => 8]);
+                    break;
+
+                case 5:
+                    $contrato_id = Comissoes::where("id", $cc->comissoes_id)->first()->contrato_id;
+                    Contrato::where("id", $contrato_id)->update(["financeiro_id" => 9]);
+                    break;
+
+                case 6:
+                    $contrato_id = Comissoes::where("id", $cc->comissoes_id)->first()->contrato_id;
+                    Contrato::where("id", $contrato_id)->update(["financeiro_id" => 11]);
+                    break;
+
+                default:
+                    $contrato_id = Comissoes::where("id", $cc->comissoes_id)->first()->contrato_id;
+                    Contrato::where("id", $contrato_id)->update(["financeiro_id" => 5]);
+                    break;
+            }
+        }
+    }
 
 
 
@@ -1116,7 +1287,9 @@ class FinanceiroController extends Controller
 
     public function store(Request $request)
     {
+
         $corretora_id = User::find($request->usuario_coletivo_switch)->corretora_id;
+        $clt = User::find($request->usuario_coletivo_switch)->clt;
         if($cod = $this->coletivoVerificarCodigoExterno($request->codigo_externo_coletivo) != 0) {
             return "ja_existe";
         }
@@ -1214,46 +1387,8 @@ class FinanceiroController extends Controller
         $comissao->corretora_id = $corretora_id;
         $comissao->save();
 
-        /* Comissao Corretor */
-        $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
-            ::where("plano_id",3)
-            ->where("administradora_id",$request->administradora)
-            ->where("user_id",$request->usuario_coletivo_switch)
-            ->where("tabela_origens_id",$request->tabela_origem)
-            ->get();
 
-        $date = new \DateTime(now());
-        $date->add(new \DateInterval('PT1M'));
-        $data = $date->format('Y-m-d H:i:s');
-
-        $comissao_corretor_contagem = 0;
-        $comissao_corretor_default = 0;
-        $valorComDesconto = 0;
-        $ii=0;
-        $cd=0;
-
-        if(count($comissoes_configuradas_corretor) >= 1) {
-            foreach($comissoes_configuradas_corretor as $c) {
-                $comissaoVendedor = new ComissoesCorretoresLancadas();
-                $comissaoVendedor->comissoes_id = $comissao->id;
-                //$comissaoVendedor->user_id = auth()->user()->id;
-                $comissaoVendedor->parcela = $c->parcela;
-                if($comissao_corretor_contagem == 0) {
-                    $comissaoVendedor->data = date('Y-m-d H:i:s',strtotime($request->data_vigencia));
-                    //$comissaoVendedor->tempo = $data;
-                } else {
-                    $comissaoVendedor->data = date("Y-m-d H:i:s",strtotime($request->data_vigencia."+{$ii}month"));
-                    $date = new \DateTime($data);
-                    $date->add(new \DateInterval("PT{$comissao_corretor_contagem}M"));
-                    $data_add = $date->format('Y-m-d H:i:s');
-                    //$comissaoVendedor->tempo = $data_add;
-                    $ii++;
-                }
-                $comissaoVendedor->valor = ($valor * $c->valor) / 100;
-                $comissaoVendedor->save();
-                $comissao_corretor_contagem++;
-            }
-        } else {
+        if($clt == 1) {
 
             $dados = ComissoesCorretoresDefault
                 ::where("plano_id",3)
@@ -1286,7 +1421,7 @@ class FinanceiroController extends Controller
                 }
                 if($request->quantidade_parcelas >= 1 && $request->desconto_operadora >= 0 && $cd <= $request->quantidade_parcelas) {
                     //if($comissao_corretor_contagem <= $request->quantidade_parcelas) {
-                        $valorComDesconto = ($valor * (1 - $request->desconto_operadora / 100)) * $c->valor / 100;
+                    $valorComDesconto = ($valor * (1 - $request->desconto_operadora / 100)) * $c->valor / 100;
                     //}
                 } else {
                     $valorComDesconto = ($valor * $c->valor) / 100;
@@ -1298,7 +1433,98 @@ class FinanceiroController extends Controller
 
 
 
+
+
+
+
+        } else {
+
+            $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
+                ::where("plano_id",3)
+                ->where("administradora_id",$request->administradora)
+                ->where("user_id",$request->usuario_coletivo_switch)
+                //->where("tabela_origens_id",$request->tabela_origem)
+                ->get();
+
+            $date = new \DateTime(now());
+            $date->add(new \DateInterval('PT1M'));
+            $data = $date->format('Y-m-d H:i:s');
+
+            $comissao_corretor_contagem = 0;
+            $comissao_corretor_default = 0;
+            $valorComDesconto = 0;
+            $ii=0;
+            $cd=0;
+
+            if(count($comissoes_configuradas_corretor) >= 1) {
+                foreach($comissoes_configuradas_corretor as $c) {
+                    $comissaoVendedor = new ComissoesCorretoresLancadas();
+                    $comissaoVendedor->comissoes_id = $comissao->id;
+                    //$comissaoVendedor->user_id = auth()->user()->id;
+                    $comissaoVendedor->parcela = $c->parcela;
+                    if($comissao_corretor_contagem == 0) {
+                        $comissaoVendedor->data = date('Y-m-d H:i:s',strtotime($request->data_vigencia));
+                        //$comissaoVendedor->tempo = $data;
+                    } else {
+                        $comissaoVendedor->data = date("Y-m-d H:i:s",strtotime($request->data_vigencia."+{$ii}month"));
+                        $date = new \DateTime($data);
+                        $date->add(new \DateInterval("PT{$comissao_corretor_contagem}M"));
+                        $data_add = $date->format('Y-m-d H:i:s');
+                        //$comissaoVendedor->tempo = $data_add;
+                        $ii++;
+                    }
+                    $comissaoVendedor->valor = ($valor * $c->valor) / 100;
+                    $comissaoVendedor->save();
+                    $comissao_corretor_contagem++;
+                }
+            } else {
+                $comissoes_configuradas_corretor_geral = ComissoesCorretoresConfiguracoes
+                    ::where("plano_id",3)
+                    ->where("administradora_id",$request->administradora)
+                    //->where("user_id",$request->usuario_coletivo_switch)
+                    //->where("tabela_origens_id",$request->tabela_origem)
+                    ->get();
+
+                foreach($comissoes_configuradas_corretor_geral as $c) {
+                    $comissaoVendedor = new ComissoesCorretoresLancadas();
+                    $comissaoVendedor->comissoes_id = $comissao->id;
+                    //$comissaoVendedor->user_id = auth()->user()->id;
+                    $comissaoVendedor->parcela = $c->parcela;
+                    if($comissao_corretor_contagem == 0) {
+                        $comissaoVendedor->data = date('Y-m-d H:i:s',strtotime($request->data_vigencia));
+                        //$comissaoVendedor->tempo = $data;
+                    } else {
+                        $comissaoVendedor->data = date("Y-m-d H:i:s",strtotime($request->data_vigencia."+{$ii}month"));
+                        $date = new \DateTime($data);
+                        $date->add(new \DateInterval("PT{$comissao_corretor_contagem}M"));
+                        $data_add = $date->format('Y-m-d H:i:s');
+                        //$comissaoVendedor->tempo = $data_add;
+                        $ii++;
+                    }
+                    $comissaoVendedor->valor = ($valor * $c->valor) / 100;
+                    $comissaoVendedor->save();
+                    $comissao_corretor_contagem++;
+                }
+
+            }
+
+
+
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2581,8 +2807,8 @@ class FinanceiroController extends Controller
             ::where("id", $id)
             ->select("*")
             ->selectRaw("(select name from users where users.id = contrato_empresarial.user_id) as vendedor")
-            ->selectRaw("(select nome from planos where planos.id = contrato_empresarial.plano_id) as plano")
-            ->selectRaw("(select nome from tabela_origens where tabela_origens.id = contrato_empresarial.tabela_origens_id) as tabela_origem")
+            ->selectRaw("(select nome from grupoamerica.planos where planos.id = contrato_empresarial.plano_id) as plano")
+            ->selectRaw("(select nome from grupoamerica.tabela_origens where tabela_origens.id = contrato_empresarial.tabela_origens_id) as tabela_origem")
             ->with(
                 ["financeiro",
                     "comissao",
@@ -3051,7 +3277,7 @@ class FinanceiroController extends Controller
     {
 
         if ($request->ajax()) {
-
+            $corretora_id = $request->corretora_id == null ? auth()->user()->corretora_id : $request->corretora_id;
             $cacheKey = "geralColetivoGeral_" . now()->format('YmdHis');
             $tempoDeExpiracao = 60;
 
@@ -3064,7 +3290,7 @@ class FinanceiroController extends Controller
 
 
 
-            $dados = Cache::remember($cacheKey, $tempoDeExpiracao, function () {
+            $dados = Cache::remember($cacheKey, $tempoDeExpiracao, function () use($corretora_id) {
                 $query = DB::connection('tenant')->table('comissoes_corretores_lancadas')
                     ->select(
                         DB::raw("DATE_FORMAT(contratos.created_at,'%d/%m/%Y') as data"),
@@ -3117,6 +3343,9 @@ class FinanceiroController extends Controller
                     ->where('contratos.plano_id', 3)
                     ->groupBy('contratos.id');
 
+                if ($corretora_id != 0) {
+                    $query->where('clientes.corretora_id', $corretora_id);
+                }
 
                 return $query->get();
             });
@@ -3128,11 +3357,11 @@ class FinanceiroController extends Controller
 
     public function listarContratoEmpresaPendentes(Request $request)
     {
-
+        $corretora_id = $request->corretora_id == null ? auth()->user()->corretora_id : $request->corretora_id;
         if ($request->ajax()) {
             $cacheKey = 'listarContratoEmpresaPendentes';
             $tempoDeExpiracao = 0;
-            $resultado = Cache::remember($cacheKey, $tempoDeExpiracao, function () {
+            $resultado = Cache::remember($cacheKey, $tempoDeExpiracao, function () use($corretora_id) {
                 $query = DB::connection('tenant')->table('comissoes_corretores_lancadas')
                     ->select(
                         DB::raw("DATE_FORMAT(contrato_empresarial.created_at,'%d/%m/%Y') as created_at"),
@@ -3173,9 +3402,11 @@ class FinanceiroController extends Controller
                     ->join('comissoes', 'comissoes.id', '=', 'comissoes_corretores_lancadas.comissoes_id')
                     ->join('contrato_empresarial', 'contrato_empresarial.id', '=', 'comissoes.contrato_empresarial_id')
                     ->join('users', 'users.id', '=', 'comissoes.user_id')
-                    ->join('planos', 'planos.id', '=', 'comissoes.plano_id')
+
+                    ->join(DB::raw('grupoamerica.planos'), 'planos.id', '=', 'contrato_empresarial.plano_id')
+                    ->join(DB::raw('grupoamerica.tabela_origens'), 'tabela_origens.id', '=', 'contrato_empresarial.tabela_origens_id')
                     ->join('estagio_financeiros', 'estagio_financeiros.id', '=', 'contrato_empresarial.financeiro_id')
-                    ->join('tabela_origens', 'tabela_origens.id', '=', 'contrato_empresarial.tabela_origens_id')
+
                     ->where(function($query) {
                         $query->where('comissoes.empresarial', 1)
                             ->where(function($query) {
@@ -3187,6 +3418,10 @@ class FinanceiroController extends Controller
                             });
                     })
                     ->groupBy('comissoes_corretores_lancadas.comissoes_id');
+
+                if ($corretora_id != 0) {
+                    $query->where('contrato_empresarial.corretora_id', $corretora_id);
+                }
 
                 return $query->get();
             });

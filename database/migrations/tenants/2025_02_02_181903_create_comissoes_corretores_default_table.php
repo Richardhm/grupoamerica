@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::connection('tenant')->create('comissoes_corretores_default', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('corretora_id');
             $table->unsignedBigInteger('plano_id');
             $table->unsignedBigInteger('administradora_id');
             $table->unsignedBigInteger('tabela_origens_id')->nullable();

@@ -45,6 +45,7 @@ class ContratoEmpresarial extends Model
         'plano_contrado',
         'desconto_operadora',
         'quantidade_parcelas',
+        'corretora_id'
     ];
 
     protected $dates = [
@@ -77,6 +78,11 @@ class ContratoEmpresarial extends Model
      */
     public function financeiro()
     {
-        return $this->belongsTo(\App\Models\Tenants\Financeiro::class, 'financeiro_id');
+        return $this->belongsTo(EstagioFinanceiro::class,'financeiro_id','id');
+    }
+
+    public function comissao()
+    {
+        return $this->hasOne(Comissoes::class);
     }
 }

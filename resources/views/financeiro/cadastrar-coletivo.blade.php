@@ -213,7 +213,7 @@
             <!-- Usuários -->
             <div class="flex flex-col">
                 <label for="usuario_coletivo_switch" class="block mb-0.5 text-xs font-medium text-white">Corretor:</label>
-                <select name="usuario_coletivo_switch" required id="usuario_coletivo_switch" class="bg-gray-50 border text-center border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                <select name="usuario_coletivo_switch" required id="usuario_coletivo_switch" class="bg-gray-50 border text-center border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-10">
                     <option value="">--</option>
                     @foreach($users as $u)
                         <option value="{{$u->id}}">{{$u->name}}</option>

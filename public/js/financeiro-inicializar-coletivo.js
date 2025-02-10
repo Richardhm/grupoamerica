@@ -1,5 +1,6 @@
 
 function inicializarColetivo(corretora_id = null) {
+    console.log("Olaaaaa");
     if ($.fn.DataTable.isDataTable('.listardados')) {
         $('.listardados').DataTable().destroy();
     }
@@ -153,6 +154,9 @@ function inicializarColetivo(corretora_id = null) {
             dadosColuna11.each(function(valor){
                 if (valor.toLowerCase() == 'atrasado') {atrasados++;}
             });
+
+            console.log("Olaaaaaaaaaaaaaaaa = ",contagemEmAnalise);
+
             $(".coletivo_quantidade_em_analise").html(`<span class="my-auto flex items-center align-middle self-center h-100">${contagemEmAnalise}</span>`);
             $(".coletivo_quantidade_emissao_boleto").html(`<span class="my-auto flex items-center align-middle self-center h-100">${emissao}</span>`);
             $(".coletivo_quantidade_pagamento_adesao").html(`<span class="my-auto flex items-center align-middle self-center h-100">${adesao}</span>`);

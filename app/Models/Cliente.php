@@ -8,6 +8,7 @@ class Cliente extends Model
 {
     protected $connection = 'tenant';
 
+
     protected $table = 'clientes';
 
     protected $fillable = [
@@ -50,4 +51,26 @@ class Cliente extends Model
         'dados' => 'boolean',
         'baixa' => 'date'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function dependentes()
+    {
+
+        return $this->hasOne(Dependente::class);
+    }
+
+    public function contrato()
+    {
+        return $this->hasOne(Contrato::class);
+    }
+
+    public function contratos()
+    {
+        return $this->hasMany(Contrato::class);
+    }
+
 }
