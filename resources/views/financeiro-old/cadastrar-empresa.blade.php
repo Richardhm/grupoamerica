@@ -65,7 +65,7 @@
     </style>
 </head>
 <body>
-        <div class="bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] flex mx-auto mt-2 w-11/12 rounded-lg border-white border-2">
+        <div class="flex mx-auto mt-2 w-[95%] rounded-lg" style="background-color:red;">
 
             <form action="{{route('contratos.storeEmpresarial.financeiro')}}" method="post" class="px-1 py-5 mx-auto w-full " name="cadastrar_dados_empresarial" id="cadastrar_dados_empresarial">
                 @csrf
@@ -276,7 +276,7 @@
 
 
                 <!-- Fim Segunda Linha -->
-                <input type="submit" class="py-2 px-5 me-2 mt-4 text-lg font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full" value="Salvar Contrato">
+                <input type="submit" class="py-2 px-5 me-2 mt-4 text-lg font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full" value="Salvar Contratossssssssssssssss">
                 <!--Faixas Etarias--->
             </form>
 

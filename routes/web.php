@@ -7,6 +7,7 @@ use App\Http\Controllers\GerenteController;
 use App\Http\Controllers\ImagemController;
 use App\Http\Controllers\OrcamentoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TabelaController;
 use App\Models\Comissoes;
 use App\Models\Contrato;
@@ -33,9 +34,9 @@ Route::domain('{tenant}.bmsys.test')->group(function () {
 //    });
 
 
-    Route::get('/', function () {
-        return redirect()->route('login'); // Redireciona para login
-    });
+//    Route::get('/', function () {
+//        return redirect()->route('login'); // Redireciona para login
+//    });
 
     Route::get('/login', function () {
         return view('auth.login');
@@ -50,16 +51,48 @@ Route::domain('{tenant}.bmsys.test')->group(function () {
 
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+//Route::get('/dashboard', function () {
+//    return view('dashboard');
+//})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::post('/dashboard/tabela/orcamento',[TabelaController::class,'orcamento'])->middleware(['auth', 'verified'])->name('orcamento.tabela.montarOrcamento');
 
 Route::middleware('auth')->group(callback: function () {
 
-    /***Tabela Full***/
+    /************* Home *************/
+    Route::get("/",[HomeController::class,'index'])->name("home.index");
+    Route::get("/tabela_preco",[HomeController::class,'search'])->name('orcamento.search.home');
+    Route::post("/tabela_preco",[HomeController::class,'tabelaPrecoResposta'])->name('tabela.preco.resposta');
+    Route::post('/mudar/grafico/ano',[HomeController::class,'mudarGraficoAno'])->name('mudar.grafico.ano');
 
+
+
+    Route::post("/tabela_preco/cidade/resposta",[HomeController::class,'tabelaPrecoRespostaCidade'])->name('tabela.preco.resposta.cidade');
+    Route::get("/consultar",[HomeController::class,'consultar'])->name('home.administrador.consultar');
+    Route::post("/consultar",[HomeController::class,'consultarCarteirnha'])->name('consultar.carteirinha');
+    Route::post("/dashboard/filtrar/user",[HomeController::class,'dashboardFiltrarUser'])->name("dashboard.filtrar.user");
+    Route::post("/dashboard/semestre",[HomeController::class,'dashboardSemestre'])->name("dashboard.semestre");
+    Route::post("/dashboard/mes",[HomeController::class,'dashboardMes'])->name("dashboard.mes");
+    Route::post("/dashboard/ano",[HomeController::class,'dashboardAno'])->name("dashboard.ano");
+    Route::post("/dashboard/ranking/semestral",[HomeController::class,'dashboardRankingSemestral'])->name("dashboard.ranking.semestral");
+    Route::post("/dashboard/ranking/mes",[HomeController::class,'dashboardRankingmes'])->name("dashboard.ranking.mes");
+    Route::post("/dashboard/tabela/ranking/mes",[HomeController::class,'dashboardTabelaRankingmes'])->name("dashboard.tabela.ranking.mes");
+    Route::post("/dashboard/ranking/ano",[HomeController::class,'dashboardRankingano'])->name("dashboard.ranking.ano");
+    Route::post("/dashboard/grafico/ano",[HomeController::class,'dashboardGraficoAno'])->name("grafico.mudar.ano");
+
+    /******Fim Home*****/
+
+
+
+
+
+
+
+
+
+
+
+    /***Tabela Full***/
     Route::get('/tabela_completa',[TabelaController::class,'index'])->name('tabela_completa.index');
     Route::get('/tabela',[TabelaController::class,'tabela_preco'])->name('tabela.config');
     Route::post('/corretora/select/planos/administradoras',[TabelaController::class,'planosAdministradoraSelect'])->name('planos.administradora.select');

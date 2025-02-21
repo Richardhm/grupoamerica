@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Permission;
 use App\Models\User;
+use Illuminate\Support\Facades\App;
+
 
 
 class AppServiceProvider extends ServiceProvider
@@ -27,12 +29,13 @@ class AppServiceProvider extends ServiceProvider
         DB::statement("SET lc_time_names = 'pt_BR'");
         DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
 
-        $permissions = Permission::all();
-
-        foreach($permissions as $permission) {
-            Gate::define($permission->name, function (User $user) use ($permission) {
-                return $user->hasPermission($permission->name);
-            });
+        if (!App::runningInConsole()) { // Use sua lógica de verificação de tenant
+            $permissions = DB::connection('tenant')->table('permissions')->get();
+            foreach ($permissions as $permission) {
+                Gate::define($permission->name, function (User $user) use ($permission) {
+                    return $user->hasPermission($permission->name);
+                });
+            }
         }
 
 

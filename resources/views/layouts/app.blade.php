@@ -23,7 +23,7 @@
     <script src="{{asset('js/toastr.min.js')}}"></script>
     <link rel="stylesheet" href="{{asset('assets/datatables.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/toastr.min.css')}}">
-    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="{{asset('js/xlsx.full.min.js')}}"></script>
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="{{asset('js/select2.min.js')}}"></script>
@@ -305,7 +305,7 @@
 
 
             <li text-data="dashboard" class="hover:text-black">
-                <a href="" class="flex items-center justify-center flex-col align-middle content-center hover:text-black">
+                <a href="{{route('home.index')}}" class="flex items-center justify-center flex-col align-middle content-center hover:text-black">
                     <svg class="w-4 h-4 text-gray-800 text-white hover:text-black flex align-middle" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                         <path fill-rule="evenodd" d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z" clip-rule="evenodd"/>
                     </svg>

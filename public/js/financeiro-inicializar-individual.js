@@ -1,4 +1,5 @@
 function inicializarIndividual(corretora_id = null,refresh = null) {
+    console.log(corretora_id);
     if($.fn.DataTable.isDataTable('.listarindividual')) {
         $('.listarindividual').DataTable().destroy();
     }
@@ -64,12 +65,12 @@ function inicializarIndividual(corretora_id = null,refresh = null) {
             {
                 extend: 'excelHtml5',
                 title: 'vivaz',
-                text: 'Exportar',
+                text: 'Exportar Excel',
                 className: 'btn-exportar', // Classe personalizada para estilo
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5,6] // Define as colunas a serem exportadas (ajuste conforme necessário)
                 },
-                filename: 'vivaz'
+                filename: 'grupoamerica'
             }
         ],
         "columnDefs": [

@@ -23,10 +23,10 @@ trait UserACLTrait
         return in_array($permissionName,$this->permissionsACL());
     }
 
-    public function isAdmin()
-    {
-        return in_array($this->email,config('acl.admins'));
-    }
+//    public function isAdmin()
+//    {
+//        return in_array($this->email,config('acl.admins'));
+//    }
 
 }
 

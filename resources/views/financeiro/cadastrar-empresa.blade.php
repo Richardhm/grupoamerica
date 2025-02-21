@@ -24,7 +24,8 @@
             background-size: cover;
             min-height: 100vh;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
+
         }
         .destaque {border:5px solid rgba(36,125,157) !important;box-shadow: 5px -9px 3px #000 !important; }
         .ajax_load {display:none;position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000;}
@@ -65,7 +66,7 @@
     </style>
 </head>
 <body>
-        <div class="bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] flex mx-auto mt-2 w-11/12 rounded-lg border-white border-2">
+        <div class="bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] flex mx-auto mt-2 w-[99%] flex self-center items-center my-auto rounded-lg border-white border-2" style="margin-top:100px;">
 
             <form action="{{route('contratos.storeEmpresarial.financeiro')}}" method="post" class="px-1 py-5 mx-auto w-full " name="cadastrar_dados_empresarial" id="cadastrar_dados_empresarial">
                 @csrf
@@ -75,7 +76,7 @@
 
                         <div>
                             <span for="user_id" class="block mb-0.5 text-xs font-medium text-white">Corretor:</span>
-                            <select required name="user_id" id="user_id" class="w-full rounded-lg placeholder:text-white bg-[rgba(254,254,254,0.18)] text-black backdrop-blur-[15px] text-lg border-white border-2">
+                            <select required name="user_id" id="user_id" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-black backdrop-blur-[15px] text-sm border-white border-2">
                                 <option value="" class="text-center">--</option>
                                 @foreach($users as $u)
                                     <option value="{{$u->id}}">{{$u->name}}</option>
@@ -86,7 +87,7 @@
 
                         <div>
                             <span for="plano_id" class="block mb-0.5 text-xs font-medium text-white">Plano:</span>
-                            <select required class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-black backdrop-blur-[15px] text-lg border-white border-2" id="plano_id" name="plano_id">
+                            <select required class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-black backdrop-blur-[15px] text-sm border-white border-2" id="plano_id" name="plano_id">
                                 <option value="" class="text-center">--</option>
                                 @foreach($planos_empresarial as $p)
                                     <option value="{{$p->id}}">{{$p->nome}}</option>
@@ -96,7 +97,7 @@
 
                         <div>
                             <span for="tabela_origens_id" class="block mb-0.5 text-xs font-medium text-white">Origem Tabela:</span>
-                            <select class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-black backdrop-blur-[15px] text-lg border-white border-2" name="tabela_origens_id" id="tabela_origens_id" required>
+                            <select class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-black backdrop-blur-[15px] text-sm border-white border-2" name="tabela_origens_id" id="tabela_origens_id" required>
                                 <option value="" class="text-center">--</option>
                                 @foreach($origem_tabela as $o)
                                     <option value="{{$o->id}}">{{$o->nome}}</option>
@@ -107,33 +108,33 @@
 
                         <div>
                             <span for="cnpj" class="block mb-0.5 text-xs font-medium text-white">CNPJ:</span>
-                            <input type="text" name="cnpj" id="cnpj" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" placeholder="CNPJ" required>
+                            <input type="text" name="cnpj" id="cnpj" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" placeholder="CNPJ" required>
                         </div>
 
 
                         <div>
                             <span for="codigo_corretora" class="block mb-0.5 text-xs font-medium text-white">Codigo Corretora:</span>
-                            <input type="text" name="codigo_corretora" value="{{old('codigo_corretora')}}" required id="codigo_corretora" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" placeholder="COD. Corretora">
+                            <input type="text" name="codigo_corretora" value="{{old('codigo_corretora')}}" required id="codigo_corretora" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" placeholder="COD. Corretora">
                         </div>
 
                         <div>
                             <span for="razao_social" class="block mb-0.5 text-xs font-medium text-white">Razão Social:</span>
-                            <input type="text" name="razao_social" required id="razao_social" value="{{old('razao_social')}}" placeholder="Razão Social" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" value="">
+                            <input type="text" name="razao_social" required id="razao_social" value="{{old('razao_social')}}" placeholder="Razão Social" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" value="">
                         </div>
 
                         <div>
                             <span for="codigo_externo" class="block mb-0.5 text-xs font-medium text-white">Codigo Externo:</span>
-                            <input type="text" name="codigo_externo" value="{{old('codigo_externo')}}" required id="codigo_externo" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" placeholder="COD. Externo">
+                            <input type="text" name="codigo_externo" value="{{old('codigo_externo')}}" required id="codigo_externo" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" placeholder="COD. Externo">
                         </div>
 
                         <div>
                             <span for="quantidade_vidas" class="block mb-0.5 text-xs font-medium text-white">Vidas:</span>
-                            <input type="number" name="quantidade_vidas" required id="quantidade_vidas" value="{{old('quantidade_vidas')}}" placeholder="QTE" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" value="">
+                            <input type="number" name="quantidade_vidas" required id="quantidade_vidas" value="{{old('quantidade_vidas')}}" placeholder="QTE" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" value="">
                         </div>
 
                         <div>
                             <span for="responsavel" class="block mb-0.5 text-xs font-medium text-white">Responsável:</span>
-                            <input type="text" name="responsavel" id="responsavel" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" placeholder="Responsável" required>
+                            <input type="text" name="responsavel" id="responsavel" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" placeholder="Responsável" required>
                         </div>
 
 
@@ -147,17 +148,17 @@
 
                         <div style="min-width: 180px;">
                             <span for="celular" class="block mb-0.5 text-xs font-medium text-white">Celular:</span>
-                            <input type="text" name="celular" id="celular" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" placeholder="Celular" required>
+                            <input type="text" name="celular" id="celular" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" placeholder="Celular" required>
                         </div>
 
                         <div style="min-width: 180px;">
                             <span for="email" class="block mb-0.5 text-xs font-medium text-white">Email:</span>
-                            <input type="text" name="email" id="email" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" placeholder="Email" required>
+                            <input type="text" name="email" id="email" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" placeholder="Email" required>
                         </div>
 
                         <div style="min-width: 180px;">
                             <span for="uf" class="block mb-0.5 text-xs font-medium text-white">UF:</span>
-                            <select id="uf" name="uf" class="w-full rounded-lg text-black selected:text-white placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2 select2-single" style="color:black;" required>
+                            <select id="uf" name="uf" class="w-full rounded-lg selected:text-white placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2 select2-single" style="color:black;" required>
                                 <option value=""></option>
                             </select>
                         </div>
@@ -166,14 +167,12 @@
 
                         <div style="width:200px;">
                             <span for="cidade" class="block mb-0.5 text-xs font-medium text-white">Cidade:</span>
-                            <select id="cidade" name="cidade" class="w-full text-black rounded-lg placeholder:text-white p-1 text-black bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2 select2-single" style="color:black;" required></select>
+                            <select id="cidade" name="cidade" class="w-full text-black rounded-lg placeholder:text-white p-1 text-black bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2 select2-single" style="color:black;" required></select>
                         </div>
-
-
 
                         <div>
                             <span for="plano_contrado" class="block mb-0.5 text-xs font-medium text-white">Plano Contratado:</span>
-                            <select name="plano_contrado" id="plano_contrado" class="w-full text-black rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" required>
+                            <select name="plano_contrado" id="plano_contrado" class="w-full text-black rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-black backdrop-blur-[15px] text-sm border-white border-2" required>
                                 <option class="text-center" value="">--</option>
                                 <option value="1">C/ Copart + Odonto</option>
                                 <option value="2">C/ Copart Sem Odonto</option>
@@ -184,25 +183,25 @@
 
                         <div>
                             <span for="created_at" class="block mb-0.5 text-xs font-medium text-white">Data Cadastrado:</span>
-                            <input type="date" required name="created_at" id="created_at" value="<?= date('Y-m-d'); ?>" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2">
+                            <input type="date" required name="created_at" id="created_at" value="<?= date('Y-m-d'); ?>" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2">
                         </div>
 
 
 
                         <div>
                             <span for="data_boleto" class="block mb-0.5 text-xs font-medium text-white">Data 1º Boleto:</span>
-                            <input type="date" name="data_boleto" required id="data_boleto" value="{{old('data_boleto')}}" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" placeholder="Data Boleto">
+                            <input type="date" name="data_boleto" required id="data_boleto" value="{{old('data_boleto')}}" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" placeholder="Data Boleto">
                         </div>
 
 
                         <div>
                             <span for="valor_plano_saude" class="block mb-0.5 text-xs font-medium text-white">Valor Plano Saúde:</span>
-                            <input type="text" name="valor_plano_saude" required id="valor_plano_saude" value="{{old('valor_plano_saude')}}" placeholder="Valor Plano Saúde" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" value="">
+                            <input type="text" name="valor_plano_saude" required id="valor_plano_saude" value="{{old('valor_plano_saude')}}" placeholder="Valor Plano Saúde" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" value="">
                         </div>
 
                     <div>
                         <span for="valor_plano_odonto" class="block mb-0.5 text-xs font-medium text-white">Valor Plano Odonto:</span>
-                        <input type="text" name="valor_plano_odonto" required id="valor_plano_odonto" value="{{old('valor_plano_odonto')}}" placeholder="Valor Plano Odonto" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" value="">
+                        <input type="text" name="valor_plano_odonto" required id="valor_plano_odonto" value="{{old('valor_plano_odonto')}}" placeholder="Valor Plano Odonto" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" value="">
                     </div>
 
 
@@ -215,43 +214,43 @@
 
                         <div>
                             <span for="taxa_adesao" class="block mb-0.5 text-xs font-medium text-white">Taxa Adesão:</span>
-                            <input type="text" name="taxa_adesao" required id="taxa_adesao" value="{{old('taxa_adesao')}}" placeholder="Taxa Adesão" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" value="">
+                            <input type="text" name="taxa_adesao" required id="taxa_adesao" value="{{old('taxa_adesao')}}" placeholder="Taxa Adesão" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" value="">
                         </div>
 
                         <div>
                             <span for="valor_boleto" class="block mb-0.5 text-xs font-medium text-white">Valor Boleto:</span>
-                            <input type="text" name="valor_boleto" required id="valor_boleto" value="{{old('valor_boleto')}}" placeholder="Valor Boleto" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" value="">
+                            <input type="text" name="valor_boleto" required id="valor_boleto" value="{{old('valor_boleto')}}" placeholder="Valor Boleto" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" value="">
                         </div>
 
                         <div>
                             <span for="vencimento_boleto" class="block mb-0.5 text-xs font-medium text-white">Vencimento:</span>
-                            <input type="date" name="vencimento_boleto" required id="vencimento_boleto" value="{{old('vencimento_boleto')}}" placeholder="Vencimento Boleto" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" value="">
+                            <input type="date" name="vencimento_boleto" required id="vencimento_boleto" value="{{old('vencimento_boleto')}}" placeholder="Vencimento Boleto" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" value="">
                         </div>
 
                         <div>
                             <span for="codigo_saude" class="block mb-0.5 text-xs font-medium text-white">Codigo Saude:</span>
-                            <input type="text" name="codigo_saude" id="codigo_saude" value="{{old('codigo_saude')}}" placeholder="Codigo Saude" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" value="">
+                            <input type="text" name="codigo_saude" id="codigo_saude" value="{{old('codigo_saude')}}" placeholder="Codigo Saude" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" value="">
                         </div>
 
                         <div>
                             <span for="codigo_odonto" class="block mb-0.5 text-xs font-medium text-white">Codigo Odonto:</span>
-                            <input type="text" name="codigo_odonto" id="codigo_odonto" value="{{old('codigo_odonto')}}" placeholder="Codigo Odonto" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" value="">
+                            <input type="text" name="codigo_odonto" id="codigo_odonto" value="{{old('codigo_odonto')}}" placeholder="Codigo Odonto" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" value="">
                         </div>
 
                         <div>
                             <span for="senha_cliente" class="block mb-0.5 text-xs font-medium text-white">Senha Cliente:</span>
-                            <input type="text" name="senha_cliente" id="senha_cliente" value="{{old('senha_cliente')}}" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" placeholder="Senha Cliente">
+                            <input type="text" name="senha_cliente" id="senha_cliente" value="{{old('senha_cliente')}}" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" placeholder="Senha Cliente">
                         </div>
 
 
                         <div>
                             <span for="desconto_operadora" class="block mb-0.5 text-xs font-medium text-white">Desconto Operadora:</span>
-                            <input type="number" name="desconto_operadora" id="desconto_operadora" value="" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2" placeholder="Desconto Operadora">
+                            <input type="number" name="desconto_operadora" id="desconto_operadora" value="" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2" placeholder="Desconto Operadora">
                         </div>
 
                         <div>
-                            <span for="quantidade_parcelas" class="block mb-0.5 text-xs font-medium text-white">Qte Parcelas do desconto:</span>
-                            <select name="quantidade_parcelas" id="quantidade_parcelas" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-lg border-white border-2">
+                            <span for="quantidade_parcelas" class="block mb-0.5 text-xs font-medium text-white">Qte parcelas desconto:</span>
+                            <select name="quantidade_parcelas" id="quantidade_parcelas" class="w-full rounded-lg placeholder:text-white p-1 bg-[rgba(254,254,254,0.18)] text-white backdrop-blur-[15px] text-sm border-white border-2">
                                 <option class="text-center" value="">--</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -276,7 +275,7 @@
 
 
                 <!-- Fim Segunda Linha -->
-                <input type="submit" class="py-2 px-5 me-2 mt-4 text-lg font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full" value="Salvar Contrato">
+                <input type="submit" class="py-2 px-5 me-2 mt-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 w-full" value="Salvar Contrato">
                 <!--Faixas Etarias--->
             </form>
 
@@ -307,22 +306,12 @@
 		$(function(){
 
 
-            $('#user_id').select2({
-                width: '180px',
-                height: "40px",
-                padding: "25px"
-            });
-
-            $('#plano_id').select2({
-                width: '160px'
-            });
-
-            $('#tabela_origens_id').select2({
-                width: '140px'
-            });
-
-            $('#plano_contrado').select2({
-                width: '140px'
+            $("#user_id, #plano_id, #tabela_origens_id, #uf").change(function() {
+                if ($(this).val()) {
+                    $(this).removeClass("text-black").addClass("text-white");
+                } else {
+                    $(this).removeClass("text-white").addClass("text-black");
+                }
             });
 
 
@@ -373,7 +362,7 @@
 
             $.getJSON("{{asset('js/estados_cidades.json')}}", function (data) {
                 var items = [];
-                var options = '<option value="">UF</option>';
+                var options = `<option value="" class="text-white" style="color:white;"></option>`;
                 $.each(data, function (key, val) {
                     options += '<option value="' + val.sigla + '">' + val.nome + '</option>';
                 });

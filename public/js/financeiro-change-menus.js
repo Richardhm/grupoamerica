@@ -1205,28 +1205,14 @@ $('#mudar_ano_table_empresarial').on('change', function() {
     let anoSelecionado = $(this).val();
     tableempresarial.column(0).search(anoSelecionado).draw();
 
-
-
-
-
 });
-
-
-
-
-
-
 
 var mes_old = "";
 
-
-
 $("#mudar_mes_table_coletivo").on('change',function(){
     let mes = $(this).val();
-
     //table.columns().search('').draw();
     //$.fn.dataTable.ext.search = [];
-
     $("ul#listar li.coletivo").removeClass('textoforte-list');
     $("ul#grupo_finalizados li.coletivo").removeClass('textoforte-list');
     $("#finalizado_corretor_coletivo").removeClass('textoforte-list').removeClass('destaque_content_radius');
@@ -1235,18 +1221,13 @@ $("#mudar_mes_table_coletivo").on('change',function(){
     $("#content_list_coletivo_begin").addClass('destaque_content_radius');
     $("#atrasado_corretor_coletivo").removeClass('textoforte-list').removeClass('destaque_content_radius');
     $('#title_coletivo_por_adesao_table').html("<h4 style='font-size:1em;margin-top:10px;margin-left:5px;'>Listagem(Completa)</h4>");
-
     if(mes != 00) {
-
         let ano = $("#mudar_ano_table_coletivo").val();
         table.search('').columns().search('').draw();
         let mesAno = mes + '/' + ano;
         table.column(0).search(mesAno, true, false).draw();
-
         let corretorSelecionado = $("#select_usuario").val();
-
         let dadosColuna2 = table.column(2,{search: 'applied'}).data().toArray();
-
         dadosColuna2.sort();
         let nomesUnicos = new Set(dadosColuna2);
         $("#select_usuario").empty();
@@ -1261,8 +1242,7 @@ $("#mudar_mes_table_coletivo").on('change',function(){
             let selecao = nome == corretorSelecionado ? 'selected' : '';
             $("#select_usuario").append(`<option value="${nome}" ${selecao} data-id="${index}" style="font-size:0.5em;">${nome}</option>`);
         });
-        //Inicializar o select2 novamente
-        $("#select_usuario").select2();
+
 
         if(corretorSelecionado != "todos") {
             table.column(2).search(corretorSelecionado).draw();
@@ -1352,8 +1332,6 @@ $("#mudar_mes_table_coletivo").on('change',function(){
         });
 
 
-        // Inicializar o select2 novamente
-        $("#select_usuario").select2();
 
         let dadosColuna9 = table.column(9,{search: 'applied'}).data();
         let dadosColuna11 = table.column(11,{search: 'applied'}).data();

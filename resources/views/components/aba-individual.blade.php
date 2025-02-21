@@ -26,9 +26,9 @@
                             py-2 mr-1 focus:bg-[rgba(254,254,254,0.18)] w-full text-xs px-1 mb-2 text-sm font-medium rounded-lg hover:border-none focus:border-none
                                 "
                         style="background-color: rgba(253, 216, 53, 0.7); backdrop-filter: blur(10px);">
-                        <option value="1" class="bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] text-black text-lg">Equipe Accert</option>
-                        <option value="2" class="bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] text-black text-lg">Equipe Innove</option>
-                        <option value="0" class="bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] text-black text-lg">Corretora Vivaz</option>
+                        <option value="1" class="bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] text-black text-lg">Vivaz</option>
+                        <option value="2" class="bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] text-black text-lg">America</option>
+                        <option value="0" class="bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] text-black text-lg">Grupo America</option>
                 </select>
             @endif
 

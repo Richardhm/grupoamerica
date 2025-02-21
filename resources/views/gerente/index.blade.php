@@ -173,7 +173,7 @@
                                     Premiação:
                                 </span>
                                <span style="flex-grow: 1; flex-shrink: 1; flex-basis: 50%;">
-                                    <input type="text" disabled name="comissao" id="comissao" value="{{$total_premiacao}}"
+                                    <input type="text" disabled name="premiacao" id="premiacao" value="{{$total_premiacao}}"
                                            class="salario_usuario bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] rounded-md premiacao_usuario"
                                            style="text-align:right; height:20px; font-size:0.8em; width: 100%;">
                                 </span>
@@ -397,9 +397,18 @@
                        <div style="border-radius:5px;margin:2px 0;" class="bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px]">
                            <p class="border-bottom text-center" style="margin:0;padding: 0;color: white;font-size:0.7em;">Estorno</p>
                            <ul style="margin:0 0 0 0;padding:0;list-style:none;" class="listar_estorno_ul">
-                               <li style="font-size:0.68em;display:flex;color:#FFF;margin-left:2px;" class="individual_estorno_receber">Individual</li>
-                               <li style="font-size:0.68em;display:flex;color:#FFF;margin-left:2px;" class="coletivo_estorno_receber">Coletivo</li>
-                               <li style="font-size:0.68em;display:flex;color:#FFF;margin-left:2px;" class="empresarial_estorno_receber">Empresarial</li>
+                               <li style="font-size:0.68em;display:flex;color:#FFF;margin-left:2px;justify-content: space-between;align-items:center;" class="individual_estorno_receber">
+                                   <span>Individual</span>
+                                   <span class="quantidade_estorno_individual valores_em_destaque">0</span>
+                               </li>
+                               <li style="font-size:0.68em;display:flex;color:#FFF;margin-left:2px;justify-content: space-between;align-items:center;" class="coletivo_estorno_receber">
+                                   <span>Coletivo</span>
+                                   <span class="quantidade_estorno_coletivo valores_em_destaque">0</span>
+                               </li>
+                               <li style="font-size:0.68em;display:flex;color:#FFF;margin-left:2px;justify-content: space-between;align-items:center;" class="empresarial_estorno_receber">
+                                   <span>Empresarial</span>
+                                   <span class="quantidade_estorno_empresarial valores_em_destaque">0</span>
+                               </li>
                            </ul>
                        </div>
 
@@ -543,7 +552,7 @@
 
 
                         <div style="color:#FFF;border-radius:5px;" id="tabela_estorno_back" class="dsnone">
-                            <div class="p-2" class="bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px]" style="border-radius:5px;">
+                            <div class="p-2 bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px]" style="border-radius:5px;">
                                 <table id="tabela_estorno_table_back" class="table table-sm listarestornosback w-100">
                                     <thead>
                                     <tr>
@@ -1249,11 +1258,18 @@
                                 'data-plano':rowData.plano,
                                 'data-comissao':rowData.comissoes_id,
                                 'data-lancadas':rowData.id_lancadas,
-                                append: [
-                                    $('<option />', {value: "1", text: "---",className:"dt-center"}),
-                                    $('<option />', {value: "2", text: "Estornar"}),
-                                ]
+                                // append: [
+                                //     $('<option />', {value: "1", text: "---",className:"dt-center"}).css('color', 'black');
+                                //     $('<option />', {value: "2", text: "Estornar"}).css('color', 'black');
+                                // ]
+                            }).css({
+                                "width": "80px",  // Defina a largura desejada
+                                "height": "30px", // Defina a altura desejada
+                                "font-size": "12px", // Ajuste o tamanho da fonte
+                                "padding": "2px" // Ajuste o espaçamento interno
                             });
+                            selected.append($('<option />', {value: "1", text: "---"}).css('color', 'black'));
+                            selected.append($('<option />', {value: "2", text: "Estornar"}).css('color', 'black'));
                             $(td).html(selected)
                         }
                     },
@@ -1287,16 +1303,16 @@
                 let ano = $("#mes_folha").find('option:selected').text().split("/")[1];
                 let user_id = $("#corretor_escolhido").val();
                 let linha = $(this).closest('tr');
-                let plano = $(this).attr('data-plano');
-                let comissao = $(this).attr('data-comissao');
+                //let plano = $(this).attr('data-plano');
+                //let comissao = $(this).attr('data-comissao');
                 let estorno = linha.find('.total_estorno').text().replace("R$","").replace(/\./g,'').replace(',', '.').trim();
-                let total_estorno = $("#valor_total_estorno_vendedor").val().replace(/\./g, '').replaceAll(',', '.').trim();
-                let total_comissao = $("#comissao_vendedor").val().replace(/\./g, '').replaceAll(',', '.').trim();
-                let calcular_estorno = parseFloat(total_estorno) + parseFloat(estorno);
-                $("#valor_total_estorno_vendedor").val(calcular_estorno.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace("R$",""));
-                let total_input = $("#total_campo_vendedor").val().replace(/\./g, '').replaceAll(',', '.').trim();
-                let total_calculado = total_input - parseFloat(estorno);
-                $("#total_campo_vendedor").val(total_calculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace("R$",""));
+                //let total_estorno = $("#valor_total_estorno_vendedor").val().replace(/\./g, '').replaceAll(',', '.').trim();
+                ///let total_comissao = $("#comissao_vendedor").val().replace(/\./g, '').replaceAll(',', '.').trim();
+                ///let calcular_estorno = parseFloat(total_estorno) + parseFloat(estorno);
+                ///$("#valor_total_estorno_vendedor").val(calcular_estorno.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace("R$",""));
+                ///let total_input = $("#total_campo_vendedor").val().replace(/\./g, '').replaceAll(',', '.').trim();
+                ///let total_calculado = total_input - parseFloat(estorno);
+                //$("#total_campo_vendedor").val(total_calculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace("R$",""));
                 $.ajax({
                    url:"{{route('gerente.contrato.estorno')}}",
                    data:
@@ -1304,15 +1320,102 @@
                        "&mes="+mes+
                        "&ano="+ano+
                        "&user_id="+user_id+
-                       "&valor="+calcular_estorno.toFixed(2)+
-                       "&total="+total_calculado+
-                       "&plano="+plano+
-                       "&comissao="+comissao+
-                       "&total_comissao="+total_comissao+
+                       "&valor="+estorno+
+                       // "&total="+total_calculado+
+                       // "&plano="+plano+
+                       // "&comissao="+comissao+
+                       // "&total_comissao="+total_comissao+
                        "&id_parcela="+id_parcela,
                    method:"POST",
                    success:function(res) {
+                       //$(".valor_individual_a_receber").text(res.valor_individual_a_receber);
+                       //$(".valor_coletivo_a_receber").text(res.valor_coletivo_a_receber);
+                       //$(".valor_empresarial_a_receber").text(res.valor_empresarial_a_receber);
+                       $("#total_quantidade_individual").text(res.total_individual_quantidade);
+                       $("#total_quantidade_coletivo").text(res.total_coletivo_quantidade);
+                       ///$("#valor_total_individual").text(res.total_individual);
+                       //$("#valor_total_coletivo").text(res.total_coletivo);
+                       $(".quantidade_estorno_empresarial").text(res.total_empresarial_quantidade_estorno);
+                       $(".quantidade_estorno_individual").text(res.total_individual_quantidade_estorno);
+                       $("#total_quantidade_empresarial").text(res.total_empresarial_quantidade);
+                       //$("#valor_total_empresarial").text(res.total_empresarial);
+                       $("#comissao_vendedor").val(res.total_comissao);
+                       $("#valores_confirmados").val(res.id_confirmados);
+                       $("#salario_vendedor").val(res.total_salario);
+                       $("#premiacao_vendedor").val(res.total_premiacao);
+                       $("#valor_total_estorno_vendedor").val(res.estorno);
+                       $("#valor_total_desconto_vendedor").val(res.desconto);
+                       $(".quantidade_estorno_coletivo ").text(res.total_coletivo_quantidade_estorno);
+                       $(".quantidade_estorno_empresarial").text(res.total_empresarial_quantidade_estorno);
+                       $("#total_campo_vendedor").val(res.total);
+                       $(".coletivo_a_receber").removeClass('ativo');
+                       $(".individual_a_receber").removeClass('ativo');
+                       $(".empresarial_a_receber").removeClass('ativo');
+                       $(".individual_recebidas").removeClass('ativo');
+                       $(".coletivo_recebidas").removeClass('ativo');
+                       $(".empresarial_recebidas").removeClass('ativo');
+                       $("#listar_individual_apto").removeClass('ativo');
+                       $("#listar_coletivo_apto").removeClass('ativo');
+                       $("#listar_empresarial_apto").removeClass('ativo');
+                       $(".listar_estorno_ul li").removeClass('ativo');
+
+
+                       ////$("#total_quantidade_individual_total").text(res.total_individual_quantidade_geral);
+                       //$("#valor_total_individual_total").text(res.total_individual_geral);
+
+                       //$("#total_quantidade_coletivo_total").text(res.total_coletivo_quantidade_geral);
+                       //$("#valor_total_coletivo_total").text(res.total_coletivo_geral);
+
+                       //$("#total_quantidade_empresarial_total").text(res.total_empresarial_quantidade_geral);
+                       //$("#valor_total_empresarial_total").text(res.total_empresarial_geral);
+
+
+                       $("#salario").val(res.valores_geral.salario);
+                       $("#comissao").val(res.valores_geral.comissao);
+                       $("#premiacao").val(res.valores_geral.premiacao);
+                       $("#estorno_geral").val(res.valores_geral.estorno);
+                       $("#valor_total_desconto").val(res.valores_geral.desconto);
+                       $("#total_campo").val(res.valores_geral.total)
+
+
+                       $("#list_user").html(res.view);
+                       $("#btn_fechar_mes").html('<button id="confirmBtn" >Fechar Mês</button>');
+                       const select = $("#escolher_vendedor");
+                       select.html('<option value="" class="text-center">--Corretores--</option>');
+                       $.each(res.usuarios, function(index, corretor) {
+                           const option = $("<option>").attr("value", corretor.id).text(corretor.name);
+                           if (corretor.id == $("#corretor_escolhido").val()) {
+                               option.attr("selected", "selected");
+                           }
+                           select.append(option);
+                       });
+                       select.append("<option value='00'>--Finalizar--</option>");
+
                        listarestornos.ajax.reload();
+                       // let total_a_pagar = parseFloat(res.total_comissao) - parseFloat(res.desconto)
+                       if(parseFloat(res.total_comissao) > 0) {
+                           $(".total_a_pagar").text(res.total);
+                       } else {
+                           $(".total_a_pagar").text(0);
+                       }
+                       // if(res != "error") {
+                       //
+                       //     if(res == 1) {
+                       //
+                       //     } else if(res == 3) {
+                       //         let col = $('.quantidade_estorno_coletivo').text();
+                       //         col -= 1;
+                       //         $('.quantidade_estorno_coletivo').text(col);
+                       //     } else {
+                       //         let ind = $('.quantidade_estorno_empresarial').text();
+                       //         ind -= 1;
+                       //         $('.quantidade_estorno_empresarial').text(ind);
+                       //     }
+                       //
+                       //
+                       //
+                            listarestornos.ajax.reload();
+                       // }
                    }
                 });
             });
@@ -1507,9 +1610,14 @@
                                 'data-comissao':cellData,
                                 'data-lancadas':rowData.id_lancadas,
                                 append: [
-                                    $('<option />', {value: "1", text: "---",className:"dt-center"}),
-                                    $('<option />', {value: "2", text: "Voltar"}),
+                                    $('<option />', {value: "1", text: "---",className:"dt-center"}).css({"color":"black"}),
+                                    $('<option />', {value: "2", text: "Voltar"}).css({"color":"black"}),
                                 ]
+                            }).css({
+                                "width": "80px",  // Defina a largura desejada
+                                "height": "30px", // Defina a altura desejada
+                                "font-size": "12px", // Ajuste o tamanho da fonte
+                                "padding": "2px" // Ajuste o espaçamento interno
                             });
                             $(td).html(selected)
                         }
@@ -1542,20 +1650,127 @@
                 let ano = $("#mes_folha").find('option:selected').text().split("/")[1];
                 let id = $(this).attr('data-lancadas');
                 let valor = $(this).closest('tr').find('.total_estorno_back').text().replace("R$","").trim();
-
-
-
-
-
                 $.ajax({
                     url:"{{route('gerente.estorno.valor.voltar')}}",
                     data:"user_id="+user_id+"&mes="+mes_atual+"&ano="+ano+"&id="+id+"&valor="+valor,
                     method:"POST",
                     success:function(res) {
+                        if(res != "error") {
 
-                        listarestornosback.ajax.reload();
-                        $(".estorno_usuario_vendedor").val(res.valor_estorno);
-                        $(".total_campo_vendedor").val(res.valor_total);
+
+                            // if(res.plano == 1) {
+                            //
+                            // } else if(res.plano == 3) {
+                            //     let col = parseInt($('.quantidade_estorno_coletivo').text());
+                            //     col += 1;
+                            //     $('.quantidade_estorno_coletivo').text("")
+                            //     $('.quantidade_estorno_coletivo').text(col);
+                            // } else {
+                            //     let ind = parseInt($('.quantidade_estorno_empresarial').text());
+                            //     ind += 1;
+                            //     $('.quantidade_estorno_empresarial').text("");
+                            //     $('.quantidade_estorno_empresarial').text(ind);
+                            // }
+
+                            //$(".valor_individual_a_receber").text(res.valor_individual_a_receber);
+                            //$(".valor_coletivo_a_receber").text(res.valor_coletivo_a_receber);
+                            //$(".valor_empresarial_a_receber").text(res.valor_empresarial_a_receber);
+                            $("#total_quantidade_individual").text(res.total_individual_quantidade);
+                            $("#total_quantidade_coletivo").text(res.total_coletivo_quantidade);
+                            ///$("#valor_total_individual").text(res.total_individual);
+                            //$("#valor_total_coletivo").text(res.total_coletivo);
+                            $(".quantidade_estorno_empresarial").text(res.total_empresarial_quantidade_estorno);
+                            $(".quantidade_estorno_individual").text(res.total_individual_quantidade_estorno);
+                            $("#total_quantidade_empresarial").text(res.total_empresarial_quantidade);
+                            //$("#valor_total_empresarial").text(res.total_empresarial);
+                            $("#comissao_vendedor").val(res.total_comissao);
+                            $("#valores_confirmados").val(res.id_confirmados);
+                            $("#salario_vendedor").val(res.total_salario);
+                            $("#premiacao_vendedor").val(res.total_premiacao);
+                            $("#valor_total_estorno_vendedor").val(res.estorno);
+                            $("#valor_total_desconto_vendedor").val(res.desconto);
+                            $(".quantidade_estorno_coletivo ").text(res.total_coletivo_quantidade_estorno);
+                            $(".quantidade_estorno_empresarial").text(res.total_empresarial_quantidade_estorno);
+                            $("#total_campo_vendedor").val(res.total);
+                            $(".coletivo_a_receber").removeClass('ativo');
+                            $(".individual_a_receber").removeClass('ativo');
+                            $(".empresarial_a_receber").removeClass('ativo');
+                            $(".individual_recebidas").removeClass('ativo');
+                            $(".coletivo_recebidas").removeClass('ativo');
+                            $(".empresarial_recebidas").removeClass('ativo');
+                            $("#listar_individual_apto").removeClass('ativo');
+                            $("#listar_coletivo_apto").removeClass('ativo');
+                            $("#listar_empresarial_apto").removeClass('ativo');
+                            $(".listar_estorno_ul li").removeClass('ativo');
+
+
+                            ////$("#total_quantidade_individual_total").text(res.total_individual_quantidade_geral);
+                            //$("#valor_total_individual_total").text(res.total_individual_geral);
+
+                            //$("#total_quantidade_coletivo_total").text(res.total_coletivo_quantidade_geral);
+                            //$("#valor_total_coletivo_total").text(res.total_coletivo_geral);
+
+                            //$("#total_quantidade_empresarial_total").text(res.total_empresarial_quantidade_geral);
+                            //$("#valor_total_empresarial_total").text(res.total_empresarial_geral);
+
+
+                            $("#salario").val(res.valores_geral.salario);
+                            $("#comissao").val(res.valores_geral.comissao);
+                            $("#premiacao").val(res.valores_geral.premiacao);
+                            $("#estorno_geral").val(res.valores_geral.estorno);
+                            $("#valor_total_desconto").val(res.valores_geral.desconto);
+                            $("#total_campo").val(res.valores_geral.total)
+
+
+                            $("#list_user").html(res.view);
+                            $("#btn_fechar_mes").html('<button id="confirmBtn" >Fechar Mês</button>');
+                            const select = $("#escolher_vendedor");
+                            select.html('<option value="" class="text-center">--Corretores--</option>');
+                            $.each(res.usuarios, function(index, corretor) {
+                                const option = $("<option>").attr("value", corretor.id).text(corretor.name);
+                                if (corretor.id == $("#corretor_escolhido").val()) {
+                                    option.attr("selected", "selected");
+                                }
+                                select.append(option);
+                            });
+                            select.append("<option value='00'>--Finalizar--</option>");
+
+                            listarestornos.ajax.reload();
+                            // let total_a_pagar = parseFloat(res.total_comissao) - parseFloat(res.desconto)
+                            if(parseFloat(res.total_comissao) > 0) {
+                                $(".total_a_pagar").text(res.total);
+                            } else {
+                                $(".total_a_pagar").text(0);
+                            }
+                            // if(res != "error") {
+                            //
+                            //     if(res == 1) {
+                            //
+                            //     } else if(res == 3) {
+                            //         let col = $('.quantidade_estorno_coletivo').text();
+                            //         col -= 1;
+                            //         $('.quantidade_estorno_coletivo').text(col);
+                            //     } else {
+                            //         let ind = $('.quantidade_estorno_empresarial').text();
+                            //         ind -= 1;
+                            //         $('.quantidade_estorno_empresarial').text(ind);
+                            //     }
+                            //
+                            //
+                            //
+                            //listarestornos.ajax.reload();
+                            // }
+
+
+
+
+
+
+                            listarestornosback.ajax.reload();
+                            //$(".estorno_usuario_vendedor").val(res.valor_estorno);
+                            //$(".total_campo_vendedor").val(res.valor_total);
+                        }
+
                     }
                 })
             });
@@ -1582,8 +1797,11 @@
 
             $("body").on('click','.criar_estorno',function(){
                 let id = $("#corretor_escolhido").val();
+                $(".listar_estorno_ul li").removeClass("ativo");
+                $(".listar li").removeClass("ativo");
+                $("#lista_apto_a_pagar_ul li").removeClass("ativo");
                 //$("#listar_coletivo_apto").removeClass("ativo");
-                ///$(".listar li").removeClass("ativo");
+
                 ///$(".individual_estorno_receber").removeClass("ativo");
                 //$(".coletivo_estorno_receber").removeClass("ativo");
                 //$("#listar_individual_apto").removeClass("ativo");
@@ -2235,7 +2453,7 @@
             $(".coletivo_a_receber").on('click',coletivo_a_receber);
 
             function individual_a_receber() {
-
+                console.log("Olaaaaaa");
 
                 $(".estilizar_search input[type='search']").val('');
                 listarcomissaomesdfirente.search('').draw();
@@ -2424,6 +2642,7 @@
 
 
             $("body").on('click','.user_destaque',function(){
+                $("#loading-overlay").removeClass('ocultar');
                 let id = $(this).attr("data-id");
                 let nome_corretor = $(this).text();
                 $("#escolher_vendedor").find("option:eq(0)").prop("selected", true);
@@ -2432,7 +2651,7 @@
                 $("#corretor_escolhido").val(id);
                 $("#list_user ul li").removeClass('user_destaque_ativo');
                 $(this).closest("li").addClass('user_destaque_ativo');
-                $("#container_btns").addClass("flex flex-col");
+                $("#container_btns").removeClass('hidden').addClass("flex flex-col");
                 $("#container_btns").html(`
                     <button class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 criar_estorno" data-id="${id}" style="font-size:0.8em;"  target="_blank">Estorno</button>
                     <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 criar_pdf_corretor" data-id="${id}" style="font-size:0.8em;"  target="_blank">PDF Corretor</button>
@@ -2482,7 +2701,6 @@
                        data:"mes="+mes+"&id="+id+"&ano="+ano,
                        method:"POST",
                        success:function(res) {
-                           console.log(res);
                            $(".valor_individual_a_receber").text(res.valor_individual_a_receber);
                            $(".valor_coletivo_a_receber").text(res.valor_coletivo_a_receber);
                            $(".valor_empresarial_a_receber").text(res.valor_empresarial_a_receber);
@@ -2493,6 +2711,8 @@
                            $(".desconto_usuario_vendedor").val(res.desconto);
                            $("#valor_total_desconto_vendedor").val(res.desconto);
                            $("#total_campo_vendedor").val(res.total);
+                           $(".quantidade_estorno_empresarial").text(res.total_empresarial_quantidade_estorno);
+                           $(".quantidade_estorno_individual").text(res.total_coletivo_quantidade_estorno);
                            $("#total_quantidade_individual").text(res.total_individual_quantidade);
                            $("#total_quantidade_coletivo").text(res.total_coletivo_quantidade);
                            $("#valor_total_individual").text(res.total_individual);
@@ -2502,13 +2722,17 @@
                            $("#valores_confirmados").val(res.id_confirmados);
                            $("#valor_total_estorno_vendedor").val(res.estorno);
                            $(".total_a_pagar").text(res.total);
+                           $(".quantidade_estorno_coletivo").text(res.total_coletivo_quantidade_estorno);
                            $("#listar_individual_apto").removeClass("ativo");
                            $("#listar_coletivo_apto").removeClass("ativo");
                            listaraptosapagar.ajax.reload(function() {
                                listaraptosapagar.clear().draw();
                            });
-
-                       }
+                       },
+                        complete: function () {
+                            // Esconder o overlay de loading
+                            $("#loading-overlay").addClass('ocultar');
+                        }
                     });
                 //}
             });
@@ -3062,6 +3286,8 @@
                             $("#total_quantidade_coletivo").text(res.total_coletivo_quantidade);
                             $("#valor_total_individual").text(res.total_individual);
                             $("#valor_total_coletivo").text(res.total_coletivo);
+                            $(".quantidade_estorno_empresarial").text(res.total_empresarial_quantidade_estorno);
+                            $(".quantidade_estorno_individual").text(res.total_individual_quantidade_estorno);
                             $("#total_quantidade_empresarial").text(res.total_empresarial_quantidade);
                             $("#valor_total_empresarial").text(res.total_empresarial);
                             $("#comissao_vendedor").val(res.total_comissao);
@@ -3070,6 +3296,8 @@
                             $("#premiacao_vendedor").val(res.total_premiacao);
                             $("#valor_total_estorno_vendedor").val(res.estorno);
                             $("#valor_total_desconto_vendedor").val(res.desconto);
+                            $(".quantidade_estorno_coletivo ").text(res.total_coletivo_quantidade_estorno);
+                            $(".quantidade_estorno_empresarial").text(res.total_empresarial_quantidade_estorno);
                             $("#total_campo_vendedor").val(res.total);
                             $(".coletivo_a_receber").removeClass('ativo');
                             $(".individual_a_receber").removeClass('ativo');
@@ -3081,6 +3309,7 @@
                             $("#listar_coletivo_apto").removeClass('ativo');
                             $("#listar_empresarial_apto").removeClass('ativo');
                             $(".listar_estorno_ul li").removeClass('ativo');
+
                             $("#list_user").html(res.view);
                             $("#btn_fechar_mes").html('<button id="confirmBtn" >Fechar Mês</button>');
                             const select = $("#escolher_vendedor");
@@ -3147,7 +3376,8 @@
                     });
                 } else {
                     let quantidadeOpcoes = $("#escolher_vendedor option[value!='00'][value!='']").length;
-                    if(quantidadeOpcoes == 1) {
+                    console.log(quantidadeOpcoes);
+                    if(quantidadeOpcoes == 1 || quantidadeOpcoes == 0) {
                         $("#escolher_vendedor option[value!='00'][value!='']").remove();
 
                         $.ajax({
@@ -3155,8 +3385,12 @@
                             method:"POST",
                             data:"mes="+mes+"&ano="+ano,
                             success:function(res) {
+                                console.log(res);
                                 $("#list_user").html(res.view);
 
+                            },complete: function () {
+                                // Esconder o overlay de loading
+                                $("#loading-overlay").addClass('ocultar');
                             }
                         });
 
@@ -3456,17 +3690,17 @@
                     {data:"id",name:"id",width:"5%",className: 'dt-center',
                         "createdCell": function (td, cellData, rowData, row, col) {
 
-                            $(td).html(`<button
-                                class="removeButton"
-                                id="${cellData}"
-                                style='background-color:transparent;border:none;'
-                                data-plano="${rowData.plano}"
-                                >
-                                <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            $(td).html(`
+
+
+
+
+
+                                <svg id="${cellData}" data-plano="${rowData.plano}" class="w-6 h-6 text-white removeButton" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V5m0 14-4-4m4 4 4-4"/>
                                 </svg>
 
-                                </button>`)
+                                `)
                         }
                     },
                     {
@@ -3691,20 +3925,22 @@
 
             function calcularValorTotal(id) {
                 $("#loading-overlay").removeClass('ocultar');
-                let valorIndividual = parseFloat($('#valor_total_individual').text().replace(/\./g,'').replace(',', '.').trim());
-                let valorColetivo = parseFloat($('#valor_total_coletivo').text().replace(/\./g,'').replace(',', '.').trim());
-                let valorEmpresarial = parseFloat($('#valor_total_empresarial').text().replace(/\./g,'').replace(',', '.').trim());
-                let total = valorIndividual + valorColetivo + valorEmpresarial;
-                $("#comissao_vendedor").val(parseFloat(total).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}).replace("R$",""));
-                let salario_input = parseFloat($("#salario_vendedor").val().replace(/\./g,'').replace(',', '.').trim());
-                let premiacao_input = parseFloat($("#premiacao_vendedor").val().replace(/\./g,'').replace(',', '.').trim());
-                let comissao = $("#comissao_vendedor").val().replace(/\./g,'').replace(',', '.');
-                let desconto = $("#valor_total_desconto_vendedor").val().replace(/\./g,'').replace(',', '.');
-                let estorno = $("#valor_total_estorno_vendedor").val().replace(/\./g,'').replace(',', '.');
-                let total_valor = (parseFloat(comissao) + salario_input + premiacao_input) - desconto;
-                total_valor = total_valor - estorno;
-                $("#total_campo_vendedor").val(parseFloat(total_valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}).replace("R$",""));
+                // let valorIndividual = parseFloat($('#valor_total_individual').text().replace(/\./g,'').replace(',', '.').trim());
+                // let valorColetivo = parseFloat($('#valor_total_coletivo').text().replace(/\./g,'').replace(',', '.').trim());
+                // let valorEmpresarial = parseFloat($('#valor_total_empresarial').text().replace(/\./g,'').replace(',', '.').trim());
+                // let total = valorIndividual + valorColetivo + valorEmpresarial;
+                // $("#comissao_vendedor").val(parseFloat(total).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}).replace("R$",""));
+                // let salario_input = parseFloat($("#salario_vendedor").val().replace(/\./g,'').replace(',', '.').trim());
+                // let premiacao_input = parseFloat($("#premiacao_vendedor").val().replace(/\./g,'').replace(',', '.').trim());
+                // let comissao = $("#comissao_vendedor").val().replace(/\./g,'').replace(',', '.');
+                // let desconto = $("#valor_total_desconto_vendedor").val().replace(/\./g,'').replace(',', '.');
+                // let estorno = $("#valor_total_estorno_vendedor").val().replace(/\./g,'').replace(',', '.');
+                // let total_valor = (parseFloat(comissao) + salario_input + premiacao_input) - desconto;
+                // total_valor = total_valor - estorno;
+                // $("#total_campo_vendedor").val(parseFloat(total_valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}).replace("R$",""));
                 let mes               = $("#mes_folha").val();
+                let ano               = $("#mes_folha option:selected").text().split("/")[1];
+
                 let user_id           = $("#corretor_escolhido").val();
                 let id_confirmados    = $("#valores_confirmados").val().split(",");
                 let salario           = $("#salario_vendedor").val();
@@ -3720,6 +3956,7 @@
                         data:
                             "id="+id+
                             "&mes="+mes+
+                            "&ano="+ano+
                             "&user_id="+user_id+
                             "&salario="+salario+
                             "&premiacao="+premiacao+
@@ -3728,33 +3965,33 @@
                             "&total="+total_final+
                             "&id_confirmados="+id_confirmados,
                         success:function(res) {
-                            //console.log(res);
-                            if(res.resposta == "sucesso") {
-                                 //listaraptosapagar.ajax.reload();
-                                 listarcomissaomesrecebidas.ajax.reload();
-                                 listarcomissaomesdfirente.ajax.reload();
-                            } else {
-                                let userId = res.user_id;
-                                if ($('#escolher_vendedor option[value="' + userId + '"]').length === 0) {
-                                    $('#escolher_vendedor').append('<option value="' + res.user_id + '">' + res.name + '</option>');
-
-                                    let options = $('#escolher_vendedor option');
-                                    options.sort(function (a, b) {
-                                        return a.text.toUpperCase().localeCompare(b.text.toUpperCase());
-                                    });
-                                    $('#escolher_vendedor').html(options);
-
-                                    let elementoLista = $('#list_user').find('li span[data-id="' + userId + '"]').closest('li');
-
-                                    if (elementoLista.length > 0) {
-                                        elementoLista.remove();
-                                    }
-
-
-                                    $("#container_btns").removeClass("hidden").addClass("flex").addClass('flex-col');
-                                    $("#list_user").css("height","235px");
-                                }
-                            }
+                            console.log(res);
+                            // if(res.resposta == "sucesso") {
+                            //      //listaraptosapagar.ajax.reload();
+                            //      listarcomissaomesrecebidas.ajax.reload();
+                            //      listarcomissaomesdfirente.ajax.reload();
+                            // } else {
+                            //     let userId = res.user_id;
+                            //     if ($('#escolher_vendedor option[value="' + userId + '"]').length === 0) {
+                            //         $('#escolher_vendedor').append('<option value="' + res.user_id + '">' + res.name + '</option>');
+                            //
+                            //         let options = $('#escolher_vendedor option');
+                            //         options.sort(function (a, b) {
+                            //             return a.text.toUpperCase().localeCompare(b.text.toUpperCase());
+                            //         });
+                            //         $('#escolher_vendedor').html(options);
+                            //
+                            //         let elementoLista = $('#list_user').find('li span[data-id="' + userId + '"]').closest('li');
+                            //
+                            //         if (elementoLista.length > 0) {
+                            //             elementoLista.remove();
+                            //         }
+                            //
+                            //
+                            //         $("#container_btns").removeClass("hidden").addClass("flex").addClass('flex-col');
+                            //         $("#list_user").css("height","235px");
+                            //     }
+                            // }
                         },
                         complete: function () {
                             $("#loading-overlay").addClass('ocultar');
@@ -3790,41 +4027,113 @@
 
 // Evento do botão removeButton
             $('body').on('click', '.removeButton', function () {
-                $("#loading-overlay").removeClass('ocultar');
 
+                $("#loading-overlay").removeClass('ocultar');
                 let row = listaraptosapagar.row($(this).parents('tr'));
                 let desconto = listaraptosapagar.row($(this).parents('tr')).data().desconto;
+                let comissao = listaraptosapagar.row($(this).parents('tr')).data().valor;
+
                 let id = $(this).attr('id');
+                //
+                // let total_desconto = $("#valor_total_desconto_vendedor").val().replace(',', '.');
+                // let desconto_refatorado = total_desconto - desconto;
+                // let total = parseFloat(desconto_refatorado).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).replace("R$", "");
+                //
+                // $("#valor_total_desconto_vendedor").val(total);
+                //
+                // let plano = $(this).attr('data-plano');
+                // row.remove().draw(false);
 
-                let total_desconto = $("#valor_total_desconto_vendedor").val().replace(',', '.');
-                let desconto_refatorado = total_desconto - desconto;
-                let total = parseFloat(desconto_refatorado).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).replace("R$", "");
-
-                $("#valor_total_desconto_vendedor").val(total);
-
-                let plano = $(this).attr('data-plano');
-                row.remove().draw(false);
-
-                if (plano == 1) recalculateIndividual();
-                else if (plano == 3) recalculateColetivo();
-                else recalculateEmpresarial();
-
-                calcularValorTotal(id);
+                // if (plano == 1) recalculateIndividual();
+                // else if (plano == 3) recalculateColetivo();
+                // else recalculateEmpresarial();
+                //
+                // calcularValorTotal(id);
 
                 // Adicionar requisição na fila
                 let requestData = {
                     id: id,
                     mes: $("#mes_folha").val(),
+                    ano: $("#mes_folha").find('option:selected').text().split("/")[1],
                     user_id: $("#corretor_escolhido").val(),
                     salario: $("#salario_vendedor").val(),
                     premiacao: $("#premiacao_vendedor").val(),
-                    comissao: $("#comissao_vendedor").val(),
-                    desconto: $("#valor_total_desconto_vendedor").val(),
+                    comissao,
+                    desconto,
                     total: $("#total_campo_vendedor").val(),
                 };
 
-                queue.push({ data: requestData });
-                if (queue.length === 1) processQueue(); // Iniciar o processamento da fila
+                $.ajax({
+                    url: "{{ route('gerente.mudar.para_a_nao_pago') }}",
+                    method: "POST",
+                    data: requestData,
+                    success: function (res) {
+                            console.log(res);
+                            $(".valor_individual_a_receber").text(res.valor_individual_a_receber);
+                            $(".valor_coletivo_a_receber").text(res.valor_coletivo_a_receber);
+                            $(".valor_empresarial_a_receber").text(res.valor_empresarial_a_receber);
+                            $("#total_quantidade_individual").text(res.total_individual_quantidade);
+                            $("#total_quantidade_coletivo").text(res.total_coletivo_quantidade);
+                            $("#valor_total_individual").text(res.total_individual);
+                            $("#valor_total_coletivo").text(res.total_coletivo);
+                            $(".quantidade_estorno_empresarial").text(res.total_empresarial_quantidade_estorno);
+                            $(".quantidade_estorno_individual").text(res.total_individual_quantidade_estorno);
+                            $("#total_quantidade_empresarial").text(res.total_empresarial_quantidade);
+                            $("#valor_total_empresarial").text(res.total_empresarial);
+                            $("#comissao_vendedor").val(res.total_comissao);
+                            $("#valores_confirmados").val(res.id_confirmados);
+                            $("#salario_vendedor").val(res.total_salario);
+                            $("#premiacao_vendedor").val(res.total_premiacao);
+                            $("#valor_total_estorno_vendedor").val(res.estorno);
+                            $("#valor_total_desconto_vendedor").val(res.desconto);
+                            $(".quantidade_estorno_coletivo ").text(res.total_coletivo_quantidade_estorno);
+                            $(".quantidade_estorno_empresarial").text(res.total_empresarial_quantidade_estorno);
+                            $("#total_campo_vendedor").val(res.total);
+                            $(".coletivo_a_receber").removeClass('ativo');
+                            $(".individual_a_receber").removeClass('ativo');
+                            $(".empresarial_a_receber").removeClass('ativo');
+                            $(".individual_recebidas").removeClass('ativo');
+                            $(".coletivo_recebidas").removeClass('ativo');
+                            $(".empresarial_recebidas").removeClass('ativo');
+                            $("#listar_individual_apto").removeClass('ativo');
+                            $("#listar_coletivo_apto").removeClass('ativo');
+                            $("#listar_empresarial_apto").removeClass('ativo');
+                            $(".listar_estorno_ul li").removeClass('ativo');
+
+                            $("#list_user").html(res.view);
+                            $("#btn_fechar_mes").html('<button id="confirmBtn" >Fechar Mês</button>');
+                            const select = $("#escolher_vendedor");
+                            select.html('<option value="" class="text-center">--Corretores--</option>');
+                            $.each(res.usuarios, function(index, corretor) {
+                                const option = $("<option>").attr("value", corretor.id).text(corretor.name);
+                                if (corretor.id == $("#corretor_escolhido").val()) {
+                                    option.attr("selected", "selected");
+                                }
+                                select.append(option);
+                            });
+                            select.append("<option value='00'>--Finalizar--</option>");
+
+
+                            // let total_a_pagar = parseFloat(res.total_comissao) - parseFloat(res.desconto)
+                            if(parseFloat(res.total_comissao) > 0) {
+                                $(".total_a_pagar").text(res.total);
+                            } else {
+                                $(".total_a_pagar").text(0);
+                            }
+                            listarcomissaomesrecebidas.ajax.reload();
+                            listarcomissaomesdfirente.ajax.reload();
+                    },
+                    complete: function () {
+                        $("#loading-overlay").addClass('ocultar');
+                    },
+                });
+
+
+
+
+
+
+
             });
 
 
@@ -5000,105 +5309,302 @@
             $(".empresarial_a_receber").on('click',empresarial_a_receber);
 
 
+            {{--$("body").on('click', '.pagar_comissao_up', function () {--}}
+            {{--    $("#loading-overlay").removeClass('ocultar');--}}
+
+            {{--    // Variáveis principais--}}
+            {{--    let mes = $("#mes_folha option:selected").val();--}}
+            {{--    let ano = $("#mes_folha").find('option:selected').text().split("/")[1];--}}
+            {{--    let id = $(this).attr('id');--}}
+            {{--    let plano = $(this).data('plano');--}}
+            {{--    let linha = $(this).closest('tr');--}}
+            {{--    let desconto = parseFloat(linha.find("input[name='porcentagem_change']").val().replace(/\./g, '').replace(',', '.'));--}}
+            {{--    let comissao_pagando = linha.find('.comissao_pagando').val();--}}
+            {{--    let comissao_recebida = comissao_pagando--}}
+            {{--        ? parseFloat(comissao_pagando.replace(/\./g, '').replace(',', '.'))--}}
+            {{--        : parseFloat(linha.find('.comissao_recebida').text().replace("R$", "").replace(/\./g, '').replace(',', '.'));--}}
+
+            {{--    id_confirmados.push(id);--}}
+            {{--    $("#valores_confirmados").val(id_confirmados);--}}
+
+            {{--    // Função para atualizar valores de seção--}}
+            {{--    const atualizarValores = (totalSeletor, qtdSeletor, valorSeletor, qtdAtual) => {--}}
+            {{--        let valorTotal = parseFloat($(totalSeletor).text().replace("R$", "").replace(/\./g, '').replace(',', '.'));--}}
+            {{--        $(qtdSeletor).text(qtdAtual + 1);--}}
+            {{--        let novoTotal = valorTotal + comissao_recebida;--}}
+            {{--        $(totalSeletor).text(novoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace("R$", ""));--}}
+            {{--        let valorAReceber = $(valorSeletor).text();--}}
+            {{--        $(valorSeletor).text(valorAReceber - 1);--}}
+            {{--    };--}}
+
+            {{--    // Atualizar valores baseados no plano--}}
+            {{--    if (plano === 1) {--}}
+            {{--        atualizarValores("#valor_total_individual", "#total_quantidade_individual", ".valor_individual_a_receber", parseInt($("#total_quantidade_individual").text()));--}}
+            {{--    } else if (plano === 3) {--}}
+            {{--        atualizarValores("#valor_total_coletivo", "#total_quantidade_coletivo", ".valor_coletivo_a_receber", parseInt($("#total_quantidade_coletivo").text()));--}}
+            {{--    } else {--}}
+            {{--        atualizarValores("#valor_total_empresarial", "#total_quantidade_empresarial", ".valor_empresarial_a_receber", parseInt($("#total_quantidade_empresarial").text()));--}}
+            {{--    }--}}
+
+            {{--    // Atualizar descontos--}}
+            {{--    let totalDescontoAtual = parseFloat($("#valor_total_desconto_vendedor").val().replace(/\./g, '').replace(',', '.')) || 0;--}}
+            {{--    let novoDesconto = totalDescontoAtual + desconto;--}}
+            {{--    $("#valor_total_desconto_vendedor").val(novoDesconto.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));--}}
+
+            {{--    // Atualizar comissão total--}}
+            {{--    let comissaoAtual = parseFloat($("#comissao_vendedor").val().replace(/\./g, '').replace(',', '.')) || 0;--}}
+            {{--    let novaComissao = comissaoAtual + comissao_recebida;--}}
+            {{--    $("#comissao_vendedor").val(novaComissao.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));--}}
+
+            {{--    // Ocultar a linha atual--}}
+            {{--    linha.slideUp('fast').addClass('pagar');--}}
+
+            {{--    // Cálculo do total do vendedor--}}
+            {{--    const calcularTotalVendedor = () => {--}}
+            {{--        const pegarValor = (seletor) => parseFloat($(seletor).val().replace(/\./g, '').replace(',', '.')) || 0;--}}
+
+            {{--        let salario = pegarValor("#salario_vendedor");--}}
+            {{--        let comissao = pegarValor("#comissao_vendedor");--}}
+            {{--        let premiacao = pegarValor("#premiacao_vendedor");--}}
+            {{--        let totalDesconto = pegarValor("#valor_total_desconto_vendedor");--}}
+            {{--        let estorno = pegarValor("#valor_total_estorno_vendedor");--}}
+
+            {{--        let ganhos = salario + comissao + premiacao;--}}
+            {{--        let totalFinal = ganhos - totalDesconto - estorno;--}}
+
+            {{--        $("#total_campo_vendedor").val(totalFinal.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));--}}
+            {{--    };--}}
+            {{--    calcularTotalVendedor();--}}
+
+            {{--    // Limpar campos de busca--}}
+            {{--    $(".estilizar_search input[type='search']").val('');--}}
+            {{--    listarcomissaomesdfirente.search('').draw();--}}
+            {{--    listarcomissaomesrecebidas.search('').draw();--}}
+            {{--    listaraptosapagar.search('').draw();--}}
+
+            {{--    // Remover a linha da tabela--}}
+            {{--    listarcomissaomesdfirente.row(linha).remove().draw();--}}
+
+            {{--    // Enviar dados via AJAX--}}
+            {{--    $.ajax({--}}
+            {{--        url: "{{route('gerente.aptar.pagamento')}}",--}}
+            {{--        method: "POST",--}}
+            {{--        data: {--}}
+            {{--            id: id,--}}
+            {{--            mes: mes,--}}
+            {{--            ano: ano,--}}
+            {{--            desconto: novoDesconto,--}}
+            {{--            salario: $("#salario_vendedor").val(),--}}
+            {{--            comissao: $("#comissao_vendedor").val(),--}}
+            {{--            premiacao: $("#premiacao_vendedor").val(),--}}
+            {{--            estorno: $("#valor_total_estorno_vendedor").val(),--}}
+            {{--            user_id: $("#corretor_escolhido").val(),--}}
+            {{--            total: $("#total_campo_vendedor").val()--}}
+            {{--        },--}}
+            {{--        complete: function () {--}}
+            {{--            $("#loading-overlay").addClass('ocultar');--}}
+            {{--        }--}}
+            {{--    });--}}
+            {{--});--}}
+
             $("body").on('click', '.pagar_comissao_up', function () {
                 $("#loading-overlay").removeClass('ocultar');
 
-                // Variáveis principais
-                let mes = $("#mes_folha option:selected").val();
-                let ano = $("#mes_folha").find('option:selected').text().split("/")[1];
-                let id = $(this).attr('id');
-                let plano = $(this).data('plano');
-                let linha = $(this).closest('tr');
-                let desconto = parseFloat(linha.find("input[name='porcentagem_change']").val().replace(/\./g, '').replace(',', '.'));
-                let comissao_pagando = linha.find('.comissao_pagando').val();
-                let comissao_recebida = comissao_pagando
+                // Coleta de dados
+                const elemento = $(this);
+                const mes = $("#mes_folha option:selected").val();
+                const ano = $("#mes_folha").find('option:selected').text().split("/")[1];
+                const id = elemento.attr('id');
+                const plano = elemento.data('plano');
+                const linha = elemento.closest('tr');
+                const desconto = parseFloat(linha.find("input[name='porcentagem_change']").val().replace(/\./g, '').replace(',', '.'));
+                const comissao_pagando = linha.find('.comissao_pagando').val();
+                const comissao_recebida = comissao_pagando
                     ? parseFloat(comissao_pagando.replace(/\./g, '').replace(',', '.'))
                     : parseFloat(linha.find('.comissao_recebida').text().replace("R$", "").replace(/\./g, '').replace(',', '.'));
 
-                id_confirmados.push(id);
-                $("#valores_confirmados").val(id_confirmados);
 
-                // Função para atualizar valores de seção
-                const atualizarValores = (totalSeletor, qtdSeletor, valorSeletor, qtdAtual) => {
-                    let valorTotal = parseFloat($(totalSeletor).text().replace("R$", "").replace(/\./g, '').replace(',', '.'));
-                    $(qtdSeletor).text(qtdAtual + 1);
-                    let novoTotal = valorTotal + comissao_recebida;
-                    $(totalSeletor).text(novoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace("R$", ""));
-                    let valorAReceber = $(valorSeletor).text();
-                    $(valorSeletor).text(valorAReceber - 1);
+
+
+                // Dados para enviar ao backend
+                const dadosRequest = {
+                    id: id,
+                    mes: mes,
+                    ano: ano,
+                    desconto: desconto,
+                    salario: $("#salario_vendedor").val(),
+                    comissao: comissao_recebida, // Ajuste conforme necessário
+                    premiacao: $("#premiacao_vendedor").val(),
+                    estorno: $("#valor_total_estorno_vendedor").val(),
+                    user_id: $("#corretor_escolhido").val(),
+                    total: $("#total_campo_vendedor").val()
                 };
 
-                // Atualizar valores baseados no plano
-                if (plano === 1) {
-                    atualizarValores("#valor_total_individual", "#total_quantidade_individual", ".valor_individual_a_receber", parseInt($("#total_quantidade_individual").text()));
-                } else if (plano === 3) {
-                    atualizarValores("#valor_total_coletivo", "#total_quantidade_coletivo", ".valor_coletivo_a_receber", parseInt($("#total_quantidade_coletivo").text()));
-                } else {
-                    atualizarValores("#valor_total_empresarial", "#total_quantidade_empresarial", ".valor_empresarial_a_receber", parseInt($("#total_quantidade_empresarial").text()));
-                }
 
-                // Atualizar descontos
-                let totalDescontoAtual = parseFloat($("#valor_total_desconto_vendedor").val().replace(/\./g, '').replace(',', '.')) || 0;
-                let novoDesconto = totalDescontoAtual + desconto;
-                $("#valor_total_desconto_vendedor").val(novoDesconto.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
 
-                // Atualizar comissão total
-                let comissaoAtual = parseFloat($("#comissao_vendedor").val().replace(/\./g, '').replace(',', '.')) || 0;
-                let novaComissao = comissaoAtual + comissao_recebida;
-                $("#comissao_vendedor").val(novaComissao.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
-
-                // Ocultar a linha atual
-                linha.slideUp('fast').addClass('pagar');
-
-                // Cálculo do total do vendedor
-                const calcularTotalVendedor = () => {
-                    const pegarValor = (seletor) => parseFloat($(seletor).val().replace(/\./g, '').replace(',', '.')) || 0;
-
-                    let salario = pegarValor("#salario_vendedor");
-                    let comissao = pegarValor("#comissao_vendedor");
-                    let premiacao = pegarValor("#premiacao_vendedor");
-                    let totalDesconto = pegarValor("#valor_total_desconto_vendedor");
-                    let estorno = pegarValor("#valor_total_estorno_vendedor");
-
-                    let ganhos = salario + comissao + premiacao;
-                    let totalFinal = ganhos - totalDesconto - estorno;
-
-                    $("#total_campo_vendedor").val(totalFinal.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
-                };
-                calcularTotalVendedor();
-
-                // Limpar campos de busca
-                $(".estilizar_search input[type='search']").val('');
-                listarcomissaomesdfirente.search('').draw();
-                listarcomissaomesrecebidas.search('').draw();
-                listaraptosapagar.search('').draw();
-
-                // Remover a linha da tabela
-                listarcomissaomesdfirente.row(linha).remove().draw();
-
-                // Enviar dados via AJAX
+                // Requisição AJAX
                 $.ajax({
                     url: "{{route('gerente.aptar.pagamento')}}",
                     method: "POST",
-                    data: {
-                        id: id,
-                        mes: mes,
-                        ano: ano,
-                        desconto: novoDesconto,
-                        salario: $("#salario_vendedor").val(),
-                        comissao: $("#comissao_vendedor").val(),
-                        premiacao: $("#premiacao_vendedor").val(),
-                        estorno: $("#valor_total_estorno_vendedor").val(),
-                        user_id: $("#corretor_escolhido").val(),
-                        total: $("#total_campo_vendedor").val()
+                    data: dadosRequest,
+                    success: function (res) {
+                        //total_quantidade_individual
+
+                        if(res != "error") {
+                            console.log(res);
+                            $(".valor_individual_a_receber").text(res.valor_individual_a_receber);
+                            $(".valor_coletivo_a_receber").text(res.valor_coletivo_a_receber);
+                            $(".valor_empresarial_a_receber").text(res.valor_empresarial_a_receber);
+                            $("#total_quantidade_individual").text(res.total_individual_quantidade);
+                            $("#total_quantidade_coletivo").text(res.total_coletivo_quantidade);
+                            $("#valor_total_individual").text(res.total_individual);
+                            $("#valor_total_coletivo").text(res.total_coletivo);
+                            $(".quantidade_estorno_empresarial").text(res.total_empresarial_quantidade_estorno);
+                            $(".quantidade_estorno_individual").text(res.total_individual_quantidade_estorno);
+                            $("#total_quantidade_empresarial").text(res.total_empresarial_quantidade);
+                            $("#valor_total_empresarial").text(res.total_empresarial);
+                            $("#comissao_vendedor").val(res.total_comissao);
+                            $("#valores_confirmados").val(res.id_confirmados);
+                            $("#salario_vendedor").val(res.total_salario);
+                            $("#premiacao_vendedor").val(res.total_premiacao);
+                            $("#valor_total_estorno_vendedor").val(res.estorno);
+                            $("#valor_total_desconto_vendedor").val(res.desconto);
+                            $(".quantidade_estorno_coletivo ").text(res.total_coletivo_quantidade_estorno);
+                            $(".quantidade_estorno_empresarial").text(res.total_empresarial_quantidade_estorno);
+                            $("#total_campo_vendedor").val(res.total);
+                            $(".coletivo_a_receber").removeClass('ativo');
+                            $(".individual_a_receber").removeClass('ativo');
+                            $(".empresarial_a_receber").removeClass('ativo');
+                            $(".individual_recebidas").removeClass('ativo');
+                            $(".coletivo_recebidas").removeClass('ativo');
+                            $(".empresarial_recebidas").removeClass('ativo');
+                            $("#listar_individual_apto").removeClass('ativo');
+                            $("#listar_coletivo_apto").removeClass('ativo');
+                            $("#listar_empresarial_apto").removeClass('ativo');
+                            $(".listar_estorno_ul li").removeClass('ativo');
+
+
+                            $("#total_quantidade_individual_total").text(res.total_individual_quantidade_geral);
+                            $("#valor_total_individual_total").text(res.total_individual_geral);
+
+                            $("#total_quantidade_coletivo_total").text(res.total_coletivo_quantidade_geral);
+                            $("#valor_total_coletivo_total").text(res.total_coletivo_geral);
+
+                            $("#total_quantidade_empresarial_total").text(res.total_empresarial_quantidade_geral);
+                            $("#valor_total_empresarial_total").text(res.total_empresarial_geral);
+
+
+                            $("#salario").val(res.valores_geral.salario);
+                            $("#comissao").val(res.valores_geral.comissao);
+                            $("#premiacao").val(res.valores_geral.premiacao);
+                            $("#estorno_geral").val(res.valores_geral.estorno);
+                            $("#valor_total_desconto").val(res.valores_geral.desconto);
+                            $("#total_campo").val(res.valores_geral.total)
+
+
+                            $("#list_user").html(res.view);
+                            $("#btn_fechar_mes").html('<button id="confirmBtn" >Fechar Mês</button>');
+                            const select = $("#escolher_vendedor");
+                            select.html('<option value="" class="text-center">--Corretores--</option>');
+                            $.each(res.usuarios, function(index, corretor) {
+                                const option = $("<option>").attr("value", corretor.id).text(corretor.name);
+                                if (corretor.id == $("#corretor_escolhido").val()) {
+                                    option.attr("selected", "selected");
+                                }
+                                select.append(option);
+                            });
+                            select.append("<option value='00'>--Finalizar--</option>");
+
+
+                            // let total_a_pagar = parseFloat(res.total_comissao) - parseFloat(res.desconto)
+                            if(parseFloat(res.total_comissao) > 0) {
+                                $(".total_a_pagar").text(res.total);
+                            } else {
+                                $(".total_a_pagar").text(0);
+                            }
+                        }
+                        // Atualizações do Frontend APÓS sucesso
+                        //id_confirmados.push(id);
+                        //$("#valores_confirmados").val(id_confirmados);
+
+                        // Função de atualização (extrair para reutilizar se necessário)
+                       //  const atualizarValores = (totalSeletor, qtdSeletor, valorSeletor, qtdAtual) => {
+                       //      const valorTotal = parseFloat($(totalSeletor).text().replace("R$", "").replace(/\./g, '').replace(',', '.'));
+                       //      $(qtdSeletor).text(qtdAtual + 1);
+                       //      const novoTotal = valorTotal + comissao_recebida;
+                       //      $(totalSeletor).text(novoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace("R$", ""));
+                       //      const valorAReceber = $(valorSeletor).text();
+                       //      $(valorSeletor).text(valorAReceber - 1);
+                       //  };
+                       //
+                       //  // Atualizações baseadas no plano
+                       //  if (plano === 1) {
+                       //      atualizarValores("#valor_total_individual", "#total_quantidade_individual", ".valor_individual_a_receber", parseInt($("#total_quantidade_individual").text()));
+                       //  } else if (plano === 3) {
+                       //      atualizarValores("#valor_total_coletivo", "#total_quantidade_coletivo", ".valor_coletivo_a_receber", parseInt($("#total_quantidade_coletivo").text()));
+                       //  } else {
+                       //      atualizarValores("#valor_total_empresarial", "#total_quantidade_empresarial", ".valor_empresarial_a_receber", parseInt($("#total_quantidade_empresarial").text()));
+                       //  }
+                       //
+                       //  // Atualizar descontos
+                       //  const totalDescontoAtual = parseFloat($("#valor_total_desconto_vendedor").val().replace(/\./g, '').replace(',', '.')) || 0;
+                       //  const novoDesconto = totalDescontoAtual + desconto;
+                       //  $("#valor_total_desconto_vendedor").val(novoDesconto.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+                       //
+                       //  // Atualizar comissão total
+                       //  const comissaoAtual = parseFloat($("#comissao_vendedor").val().replace(/\./g, '').replace(',', '.')) || 0;
+                       //  const novaComissao = comissaoAtual + comissao_recebida;
+                       //  $("#comissao_vendedor").val(novaComissao.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+                       //
+                       //  // Ocultar linha
+                       //  linha.slideUp('fast').addClass('pagar');
+                       //
+                       //  const calcularTotalVendedor = () => {
+                       //      const pegarValor = (seletor) => parseFloat($(seletor).val().replace(/\./g, '').replace(',', '.')) || 0;
+                       //
+                       //
+                       //      let salario = pegarValor("#salario_vendedor");
+                       //      let comissao = pegarValor("#comissao_vendedor");
+                       //      let premiacao = pegarValor("#premiacao_vendedor");
+                       //      let totalDesconto = pegarValor("#valor_total_desconto_vendedor");
+                       //      let estorno = pegarValor("#valor_total_estorno_vendedor");
+                       //
+                       //      console.log("salario ",salario);
+                       //      console.log("comissao ",comissao);
+                       //      console.log("premiacao ",premiacao);
+                       //      console.log("totaldesconto ",totalDesconto);
+                       //      console.log("estorno ",estorno);
+                       //
+                       //      let ganhos = salario + comissao + premiacao;
+                       //      let totalFinal = ganhos - totalDesconto - estorno;
+                       //
+                       //      console.log("ganhos ",ganhos);
+                       //      console.log("totalFinal ",totalFinal);
+                       //
+                       //
+                       //
+                       //      $("#total_campo_vendedor").val(totalFinal.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+                       //  };
+                       // calcularTotalVendedor();
+                       //
+                       //
+                       //
+                       //
+                       //  // Limpar campos e remover linha da tabela
+                       //  $(".estilizar_search input[type='search']").val('');
+                       //  listarcomissaomesdfirente.search('').draw();
+                       //  listarcomissaomesrecebidas.search('').draw();
+                       //  listaraptosapagar.search('').draw();
+                       listarcomissaomesdfirente.row(linha).remove().draw();
+                    },
+                    error: function (xhr) {
+                        alert("Erro ao processar pagamento: " + xhr.responseText);
                     },
                     complete: function () {
                         $("#loading-overlay").addClass('ocultar');
                     }
                 });
             });
-
-
 
 
 

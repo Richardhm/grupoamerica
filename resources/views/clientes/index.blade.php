@@ -187,7 +187,7 @@
                 let id = $(this).attr("data-id");
                 $('#myModalIndividual').removeClass('hidden');
                 $.ajax({
-                    url:"",
+                    url:"{{route('gerente.modal.individual')}}",
                     method:"POST",
                     data: {
                         id
@@ -206,7 +206,7 @@
                 let id = $(this).attr("data-id");
                 $('#myModalColetivo').removeClass('hidden');
                 $.ajax({
-                    url:"",
+                    url:"{{route('gerente.modal.coletivo')}}",
                     method:"POST",
                     data: {id},
                     success:function(res) {
