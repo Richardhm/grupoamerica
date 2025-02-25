@@ -12,6 +12,8 @@ use App\Http\Controllers\TabelaController;
 use App\Models\Comissoes;
 use App\Models\Contrato;
 use Illuminate\Support\Facades\Route;
+use App\Models\RankingDiario;
+use App\Http\Controllers\RankingController;
 
 
 
@@ -64,9 +66,6 @@ Route::middleware('auth')->group(callback: function () {
     Route::get("/tabela_preco",[HomeController::class,'search'])->name('orcamento.search.home');
     Route::post("/tabela_preco",[HomeController::class,'tabelaPrecoResposta'])->name('tabela.preco.resposta');
     Route::post('/mudar/grafico/ano',[HomeController::class,'mudarGraficoAno'])->name('mudar.grafico.ano');
-
-
-
     Route::post("/tabela_preco/cidade/resposta",[HomeController::class,'tabelaPrecoRespostaCidade'])->name('tabela.preco.resposta.cidade');
     Route::get("/consultar",[HomeController::class,'consultar'])->name('home.administrador.consultar');
     Route::post("/consultar",[HomeController::class,'consultarCarteirnha'])->name('consultar.carteirinha');
@@ -79,18 +78,7 @@ Route::middleware('auth')->group(callback: function () {
     Route::post("/dashboard/tabela/ranking/mes",[HomeController::class,'dashboardTabelaRankingmes'])->name("dashboard.tabela.ranking.mes");
     Route::post("/dashboard/ranking/ano",[HomeController::class,'dashboardRankingano'])->name("dashboard.ranking.ano");
     Route::post("/dashboard/grafico/ano",[HomeController::class,'dashboardGraficoAno'])->name("grafico.mudar.ano");
-
     /******Fim Home*****/
-
-
-
-
-
-
-
-
-
-
 
     /***Tabela Full***/
     Route::get('/tabela_completa',[TabelaController::class,'index'])->name('tabela_completa.index');
@@ -109,9 +97,6 @@ Route::middleware('auth')->group(callback: function () {
     Route::get("/estrela",[EstrelaController::class,'index'])->name('estrela.index');
     /******Fim Estrela********/
 
-
-
-
     /*********ORCAMENTO*************/
     Route::get('/orcamento',[OrcamentoController::class,'index'])->name('orcamento');
     Route::post('/buscar_planos',[OrcamentoController::class,'buscar_planos'])->middleware(['auth', 'verified'])->name('buscar_planos');
@@ -119,9 +104,6 @@ Route::middleware('auth')->group(callback: function () {
     /*********FIM ORCAMENTO*************/
 
     Route::post("/pdf",[ImagemController::class,'criarPDF'])->middleware(['auth', 'verified'])->name('gerar.imagem');
-
-
-
 
     /****Financeiro****/
     Route::get('/financeiro',[FinanceiroController::class,'index'])->name('financeiro.index');
@@ -257,9 +239,6 @@ Route::middleware('auth')->group(callback: function () {
     Route::post('/gerente/change/premiacao',[GerenteController::class,'mudarPremiacao'])->name('gerente.mudar.premiacao');
     Route::get('/gerente/excel/exportar/{mes}',[GerenteController::class,'exportarContratoExcel'])->name('gerente.excel.exportar');
     Route::get('/gerente/estorno/individual/{id}',[GerenteController::class,'estornoIndividual'])->name('gerente.estorno.individual');
-
-
-
     /*****Fim Gerente************/
 
 
@@ -268,6 +247,22 @@ Route::middleware('auth')->group(callback: function () {
     Route::get('/perfil',[ProfileController::class,'perfil'])->name('perfil.index');
     Route::put('/perfil/alterar', [ProfileController::class, 'alterar'])->name('profile.alterar');
     /***********FIM PERFIL************/
+
+    /***********RANKING************/
+
+    Route::get('/ranking',[RankingController::class,'index'])->name('ranking.index');
+    Route::get('/dashboard/filtragem',[RankingController::class,'filtragem'])->name('ranking.filtragem');
+    Route::post('/ranking/cadastrar-concessionaria', [RankingController::class, 'cadastrarConcessionaria'])->name('cadastrar.concessionaria');
+    Route::post('/ranking/veriricar/corretor',[RankingController::class,'rankingVerificarCorretor'])->name('ranking.verificar.corretor');
+
+
+    Route::post('/ranking/historico', [RankingController::class, 'historico'])->name('ranking.historico');
+    Route::post('/ranking/historico/editar', [RankingController::class, 'editarHistorico'])->name('ranking.historico.editar');
+    Route::post('/ranking/diario/atualizar',[RankingController::class,'atualizarRankingDiario'])->name('ranking.atualizar');
+
+    /***********FIM RANKING************/
+
+
 
 
 

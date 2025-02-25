@@ -447,6 +447,8 @@ class FinanceiroController extends Controller
                             $cidade = $cells[2]->getValue();
                         }
                         if ($rowNumber >= 5 && $this->codigoExterno($cells[0]->getValue()) == 0) {
+                            $data_correta = explode(" ",$cells[9]->getValue())[1];
+                            $data_v = explode("/",trim($data_correta));
                             $cpf = mb_strlen($cells[4]->getValue()) == 11 ? $cells[4]->getValue() : str_pad($cells[4]->getValue(), 11, "000", STR_PAD_LEFT);
                             $dia = str_pad($cells[18]->getValue(), 2, "0", STR_PAD_LEFT);
                             array_push($cpfs, $cells[0]->getValue());
@@ -479,7 +481,7 @@ class FinanceiroController extends Controller
                             $dataDateTime->modify('+1 month');
                             $dataDateTime->setDate($dataDateTime->format('Y'), $dataDateTime->format('m'), $novoDia);
                             //$data_vigencia = $dataDateTime->format('Y-m-d');
-                            $data_vigencia = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
+                            $data_vigencia = implode("-", $data_v);
 
                             $contrato = new Contrato();
                             //$contrato->acomodacao_id = $acomodacao_id;
@@ -488,7 +490,7 @@ class FinanceiroController extends Controller
                             $contrato->tabela_origens_id = $cidade_id;
                             $contrato->plano_id = 1;
                             $contrato->financeiro_id = 5;
-                            $contrato->data_vigencia = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
+                            $contrato->data_vigencia = implode("-", $data_v);
                             $contrato->codigo_externo = $cells[0]->getValue();
                             $contrato->data_boleto = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
                             $contrato->valor_adesao = str_replace([".",","],["","."], $cells[12]->getValue());
@@ -528,8 +530,8 @@ class FinanceiroController extends Controller
                                     $comissaoVendedor->parcela = $c->parcela;
                                     $comissaoVendedor->valor = ($valor_comissao_default * $c->valor) / 100;
                                     if ($comissao_corretor_default == 0) {
-                                        //$comissaoVendedor->data = $data_vigencia;
-                                        $comissaoVendedor->data = null;
+                                        $comissaoVendedor->data = $data_vigencia;
+                                        //$comissaoVendedor->data = null;
                                         $comissaoVendedor->status_financeiro = 1;
                                         if ($comissaoVendedor->valor == "0.00" || $comissaoVendedor->valor == 0 || $comissaoVendedor->valor >= 0) {
 

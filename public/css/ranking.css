@@ -127,7 +127,6 @@
 
 #fundo-preto {
     z-index: 90; /* Fundo preto para os fogos */
-
     justify-content: center;
     align-items: center;
     position: fixed;
@@ -457,3 +456,5 @@
         transform: translate(var(--dx), var(--dy)) scale(2);
     }
 }
+
+

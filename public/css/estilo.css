@@ -21,49 +21,68 @@ nav.navbar {flex-shrink: 0;}
 
 .position-1 {
     order: 2;
-    flex-basis: 33%;
-    bottom:55%;
-    /*transform: scale(1);*/
-    /*left: 45%;*/
-    /*top: -120px;*/
-    /*z-index: 3;*/
-    /*transform: translateX(-50%) translateZ(30px) scale(0.6); !* Aumentado o tamanho inicial *!*/
-    /*animation: move-forward 4s infinite;*/
+    flex-basis: 28%;
+    bottom:35%;
     animation: move-forward 4s infinite;
+}
+
+.position-1 .style-img-corretor {
+    position:absolute;
+    width: 120px;
+    height: 120px;
+    top:60px;
+    left:60px;
+    border-radius:50%;
+    background-color:red;
 }
 
 .position-2 {
     order: 1;
-    flex-basis: 33%;
-    bottom:35%;
-    /*left: -33%;*/
-    /*top: -20px;*/
-    /*z-index: 2;*/
-    /*transform: translateX(-10%) translateZ(10px);*/
+    flex-basis: 28%;
+    bottom:15%;
     animation: subtle-move 6s infinite;
+}
+
+.position-2 .style-img-corretor {
+    position:absolute;width: 110px; height: 110px;top:22%;left:70px;border-radius:50%;background-color:red;"
 }
 
 .position-3 {
     order: 3;
-    flex-basis: 33%;
-    bottom:35%;
-    /*right: -45px;*/
-    /*top: -35px;*/
-    /*z-index: 1;*/
-    /*transform: translateX(-10%) translateZ(-100px);*/
+    flex-basis: 28%;
+    bottom:15%;
     animation: subtle-move 6s infinite;
 }
 
+.imagem-corretor {
+    width:100%;
+    height:100%;
+    border-radius:50%;
+}
 
+.conteiner-medal {
+    width:100%;
+    height:290px;
+}
+
+@media (max-width: 1550px) {
+    .imagem-corretor {
+        width:90% !important;
+        height:90% !important;
+        border-radius:50% !important;
+        margin-right:20px !important;
+
+    }
+}
 
 
 @keyframes move-forward {
     0%, 100% {
-        transform: translateX(0) scale(0.8); /* Levemente menor */
+        transform: translateX(0) scale(0.5); /* Levemente menor */
         z-index: 1;
     }
     50% {
-        transform: translateX(0) scale(1.2); /* Leve movimento para a frente */
+        transform: translateX(0) scale(1); /* Leve movimento para a frente */
         z-index: 2;
     }
 }
