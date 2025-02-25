@@ -200,6 +200,7 @@ $.ajaxSetup({
 
 
 $("body").on('click','.open-model-individual',function(e){
+    console.log("Olaaaaaaaaaaaaaaaaaaaa");
     e.preventDefault();
     let corretor = $(this).data('corretor');
 
@@ -208,8 +209,8 @@ $("body").on('click','.open-model-individual',function(e){
     let status = $(this).data('status');
     let rua = $(this).data('rua');
     let cpf = $(this).data('cpf');
-    let data_criacao = $(this).data('data-criacao');
-    let data_nascimento= $(this).data('data_nascimento');
+    let data_criacao = $(this).data('criacao');
+    let data_nascimento= $(this).data('nascimento');
     let email = $(this).data('email');
     let celular = $(this).data('celular');
     let codigo_externo = $(this).data('codigo_externo');
@@ -225,6 +226,7 @@ $("body").on('click','.open-model-individual',function(e){
     let data_vigencia= $(this).data('data_vigencia');
     let data_boleto= $(this).data('data_boleto');
     let user_id = $(this).data('user_id');
+
     $.ajax({
         url:individualFinanceiroInicializar,
         method:"POST",
@@ -254,6 +256,7 @@ $("body").on('click','.open-model-individual',function(e){
             data_boleto
         },
         success:function(res){
+            console.log(res);
             $('#modalLoaderIndividual').addClass('hidden');
             $('.content-modal-individual').removeClass('hidden');
             $(".content-modal-individual").html(res);

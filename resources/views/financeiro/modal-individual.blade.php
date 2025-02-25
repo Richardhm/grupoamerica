@@ -77,7 +77,7 @@
                 </div>
                 <div>
                     <label for="data_nascimento" class="block text-white text-sm">Data Nascimento</label>
-                    <input type="date" id="data_nascimento" value="{{$data_nascimento}}" class="w-full bg-gray-100 text-gray-800 p-1 rounded-md editar_campo_individual" readonly>
+                    <input type="text" id="data_nascimento" value="{{$data_nascimento}}" class="w-full bg-gray-100 text-gray-800 p-1 rounded-md editar_campo_individual" readonly>
                 </div>
             </div>
 

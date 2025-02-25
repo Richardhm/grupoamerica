@@ -3454,7 +3454,7 @@ class FinanceiroController extends Controller
             "rua" => request()->rua,
             "cpf" => request()->cpf,
             "data_criacao" => request()->data_criacao,
-            "data_nascimento" => $contratos->clientes->data_nascimento,
+            "data_nascimento" => request()->data_nascimento,
             "email" => request()->email,
             "celular" => request()->celular,
             "codigo_externo" => request()->codigo_externo,
@@ -3555,8 +3555,6 @@ class FinanceiroController extends Controller
             if($request->has('refresh') && $request->refresh == 1) {
                 Cache::forget($cacheKey);
             }
-
-
 
 
 
