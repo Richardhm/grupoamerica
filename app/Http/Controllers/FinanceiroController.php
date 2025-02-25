@@ -449,6 +449,7 @@ class FinanceiroController extends Controller
                         if ($rowNumber >= 5 && $this->codigoExterno($cells[0]->getValue()) == 0) {
                             $data_correta = explode(" ",$cells[9]->getValue())[1];
                             $data_v = explode("/",trim($data_correta));
+
                             $cpf = mb_strlen($cells[4]->getValue()) == 11 ? $cells[4]->getValue() : str_pad($cells[4]->getValue(), 11, "000", STR_PAD_LEFT);
                             $dia = str_pad($cells[18]->getValue(), 2, "0", STR_PAD_LEFT);
                             array_push($cpfs, $cells[0]->getValue());
@@ -481,7 +482,7 @@ class FinanceiroController extends Controller
                             $dataDateTime->modify('+1 month');
                             $dataDateTime->setDate($dataDateTime->format('Y'), $dataDateTime->format('m'), $novoDia);
                             //$data_vigencia = $dataDateTime->format('Y-m-d');
-                            $data_vigencia = implode("-", $data_v);
+                            $data_vigencia = implode("-",array_reverse($data_v));
 
                             $contrato = new Contrato();
                             //$contrato->acomodacao_id = $acomodacao_id;
@@ -490,7 +491,7 @@ class FinanceiroController extends Controller
                             $contrato->tabela_origens_id = $cidade_id;
                             $contrato->plano_id = 1;
                             $contrato->financeiro_id = 5;
-                            $contrato->data_vigencia = implode("-", $data_v);
+                            $contrato->data_vigencia = $data_vigencia;
                             $contrato->codigo_externo = $cells[0]->getValue();
                             $contrato->data_boleto = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
                             $contrato->valor_adesao = str_replace([".",","],["","."], $cells[12]->getValue());
@@ -536,7 +537,7 @@ class FinanceiroController extends Controller
                                         if ($comissaoVendedor->valor == "0.00" || $comissaoVendedor->valor == 0 || $comissaoVendedor->valor >= 0) {
 
                                         }
-                                        $comissaoVendedor->data_baixa = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
+                                        $comissaoVendedor->data_baixa = $data_vigencia;
                                         $comissaoVendedor->valor_pago = str_replace([".", ","], ["", "."], $cells[12]->getValue());
                                     } else {
                                         $data_vigencia_sem_dia = date("Y-m", strtotime($data_vigencia));
@@ -592,13 +593,13 @@ class FinanceiroController extends Controller
                                         $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
                                         //$comissaoVendedor->data = null;
                                         if ($comissao_corretor_contagem == 0) {
-                                            $comissaoVendedor->data = null;
-                                            //$comissaoVendedor->data = $data_vigencia;
+                                            //$comissaoVendedor->data = null;
+                                            $comissaoVendedor->data = $data_vigencia;
                                             $comissaoVendedor->status_financeiro = 1;
                                             if ($comissaoVendedor->valor == "0.00" || $comissaoVendedor->valor == 0 || $comissaoVendedor->valor >= 0) {
 
                                             }
-                                            $comissaoVendedor->data_baixa = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
+                                            $comissaoVendedor->data_baixa = $data_vigencia;
                                             $comissaoVendedor->valor_pago = str_replace([".", ","], ["", "."], $cells[12]->getValue());
                                         } else {
                                             $data_vigencia_sem_dia = date("Y-m", strtotime($data_vigencia));
@@ -645,13 +646,13 @@ class FinanceiroController extends Controller
                                         $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
                                         //$comissaoVendedor->data = null;
                                         if ($comissao_corretor_contagem == 0) {
-                                            $comissaoVendedor->data = null;
-                                            //$comissaoVendedor->data = $data_vigencia;
+                                            //$comissaoVendedor->data = null;
+                                            $comissaoVendedor->data = $data_vigencia;
                                             $comissaoVendedor->status_financeiro = 1;
                                             if ($comissaoVendedor->valor == "0.00" || $comissaoVendedor->valor == 0 || $comissaoVendedor->valor >= 0) {
 
                                             }
-                                            $comissaoVendedor->data_baixa = implode("-", array_reverse(explode("/", $cells[17]->getValue())));
+                                            $comissaoVendedor->data_baixa = $data_vigencia;
                                             $comissaoVendedor->valor_pago = str_replace([".", ","], ["", "."], $cells[12]->getValue());
                                         } else {
                                             $data_vigencia_sem_dia = date("Y-m", strtotime($data_vigencia));
@@ -1195,7 +1196,7 @@ class FinanceiroController extends Controller
                                             ComissoesCorretoresLancadas::where('comissoes_id', $c->comissoes_id)
                                                 ->where('parcela', 1)
                                                 ->update([
-                                                    'data' => $dt_pagamento,
+                                                    //'data' => $dt_pagamento,
                                                     'data_baixa' => $dt_pagamento
                                                 ]);
                                         }
@@ -1247,7 +1248,7 @@ class FinanceiroController extends Controller
                                             ComissoesCorretoresLancadas::where('comissoes_id', $c->comissoes_id)
                                                 ->where('parcela', 1)
                                                 ->update([
-                                                    'data' => $dt_pagamento,
+                                                    //'data' => $dt_pagamento,
                                                     'data_baixa' => $dt_pagamento
                                                 ]);
                                         }
