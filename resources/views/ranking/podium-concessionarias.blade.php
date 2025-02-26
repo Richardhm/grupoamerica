@@ -48,18 +48,18 @@
             <div class="position {{ $positionClass }}" style="margin: 0 10px; position: relative; text-align: center;">
                 <!-- Imagem do Corretor com Border Radius -->
                 <!-- Imagem do Corretora com Border Radius -->
-                <div {!! $style_img_corretor !!}>
-                    <img src="{{ asset($rr->imagem) }}" alt="Imagem do Corretora" style="width:100%;height:100%;border-radius:50%;" />
+                <div class="style_img_corretor">
+                    <img src="{{ asset($rr->imagem) }}" alt="Imagem do Corretora" class="imagem-concessionaria-podium" />
                 </div>
                 <!-- Exibe o SVG da medalha -->
                 <img src="{{$medalSVG}}" {!! $style !!}  />
                 <!-- Texto de Equipe e Quantidade de Vidas -->
                 <svg width="280" height="80" {!! $style_texto !!}>
-                    <text {{$x_zero}} {{$y_zero}} text-anchor="middle" style="font-size: 1.3em;fill:#00008B;">
+                    <text {{$x_zero}} {{$y_zero}} text-anchor="middle" class="tamanho-fonte" style="fill:#00008B;">
                         {{$rr->nome}}
                     </text>
 
-                    <text {{$x_last}} {{$y_last}} text-anchor="middle" style="font-size: 1.3em;fill:#00008B;">
+                    <text {{$x_last}} {{$y_last}} text-anchor="middle" class="tamanho-fonte" style="fill:#00008B;">
                         {{$rr->total_vidas}} vidas
                     </text>
                 </svg>

@@ -33,7 +33,7 @@ nav.navbar {flex-shrink: 0;}
     top:60px;
     left:60px;
     border-radius:50%;
-    background-color:red;
+
 }
 
 .position-2 {
@@ -44,7 +44,7 @@ nav.navbar {flex-shrink: 0;}
 }
 
 .position-2 .style-img-corretor {
-    position:absolute;width: 110px; height: 110px;top:22%;left:70px;border-radius:50%;background-color:red;"
+    position:absolute;width: 110px; height: 110px;top:22%;left:70px;border-radius:50%;
 }
 
 .position-3 {
@@ -60,19 +60,240 @@ nav.navbar {flex-shrink: 0;}
     border-radius:50%;
 }
 
+.container-trofeu {
+    width:30%;
+
+}
+
+.container-trofeu img {
+    width:25px;
+}
+
 .conteiner-medal {
     width:100%;
     height:290px;
 }
 
+#mes_ano {
+    font-weight: bold;
+    font-size: 1.2em;
+    color:#335B99 !important;
+}
+
+.container-ranking-title {
+    width:36%;
+}
+
+
+#titulo_ranking {
+    font-weight: bold !important;
+    font-size: 2.5em !important;
+}
+
+.container-button-header {
+    width:33%;
+    font-size:1em;
+
+}
+
+#header_esquerda {
+    background-color:#2e4a7a;
+    width:95%;
+    border-radius:8px;
+    margin:10px auto;
+    padding:10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:70px;
+}
+
+.container-foguete {
+    background-color:white;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-right:3%;
+}
+
+.container-foguete img {
+    width:80%;
+    height:auto;
+}
+
+.header_esquerda_title {
+    color:#FFF;font-weight:bold;display:flex;justify-content:center;
+}
+
+.header_esquerda_title_concessionaria {
+    color:#FFF;font-weight:bold;display:flex;justify-content:center;
+}
+
+.header_esquerda_container {
+    background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;
+}
+
+.container_concessionaria_header {
+    background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;
+}
+
+.container-ranking-section {
+    display:flex;width:99%;justify-content:center;margin:0 0 5px 0;background-color:#2e4a7a;border-radius:10px;padding:3px 0;align-items: center;
+}
+
+.concessionaria-info {
+    flex: 3;text-align: right;padding:2px;color:#FFF;font-size:0.875em;
+}
+
+.nome-corretor {
+    font-size: 1.2em;
+}
+
+.info-ranking {
+    font-size: 0.7em;
+}
+
+.estilo-slid {
+    flex-basis: 50%; padding: 5px; box-sizing: border-box;
+}
+
+.estilo-interno {
+    display:flex;
+    border:1px solid #FFFFFF;
+    color:#FFF;
+    align-items: center;
+    border-radius: 5px;
+    background-color: #2e4a7a;
+    padding:3px;
+}
+
+.footer-buttons {background-color: #2e4a7a;padding: 5px 0;}
+.footer-btn {flex: 1;border: 2px solid white;background-color: #2e4a7a;color: white;padding: 10px 0;text-align: center;font-size: 1.1em;position: relative;transition: all 0.3s ease;display: inline-flex;justify-content: center;align-items: center;}
+.footer-btn::before {content: "";width: 24px;height: 24px;border: 2px solid white;border-radius: 50%;display: inline-block;margin-right: 8px;box-sizing: border-box;transition: all 0.3s ease;background-color: transparent;}
+.footer-btn.active::before {border-color: #FFA500;background-color: #FFA500;box-shadow: 0 0 20px #FFA500, 0 0 30px #FFA500, 0 0 40px #FFA500;}
+.footer-btn.active,
+.footer-btn:hover {background-color: #FFD700;color: #2e4a7a;border-color: #FFA500;}
+.footer-btn.active::before,
+.footer-btn:hover::before {border-color: #FFA500;background-color: #FFA500;}
+.footer-btn:hover::before {box-shadow: none;}
+
+.imagem-concessionaria-podium {
+    width:100%;height:100%;border-radius:50%;
+}
+.style_img_corretor {
+    position:absolute;
+    width: 130px;
+    height: 130px;
+    top:45px;
+    left:50px;
+    border-radius:50%;
+    background-color:white;
+}
+
+.tamanho-fonte {
+    font-size: 1.3em;
+}
+
+.container_nome {
+    position:absolute;
+    width:100px;
+    top:35px;
+    left:50px;
+}
+
+
+
 @media (max-width: 1550px) {
+    .style_img_corretor {
+        width:100px;
+        height: 100px;
+    }
+
+
+
+    .footer-btn {
+        padding:5px 0;
+        font-size:0.8em;
+    }
+
     .imagem-corretor {
         width:90% !important;
         height:90% !important;
         border-radius:50% !important;
         margin-right:20px !important;
-
     }
+
+    .container-trofeu {
+        width: 28%;
+    }
+
+    #mes_ano {
+        font-size:1em;
+        padding:6px 12px;
+    }
+
+    .container-ranking-title {
+        width:25%;
+    }
+
+    #titulo_ranking {
+        font-weight: bold !important;
+        font-size: 1.2em !important;
+    }
+
+    .container-button-header {
+        width:45%;
+        font-size:0.8em;
+    }
+
+    .header_esquerda_title {
+        font-size:0.8em;
+    }
+
+    .header_esquerda_container {
+        font-size:0.7em !important;
+    }
+
+    .total_individual, .total_coletivo, .total_empresarial, .total_vidas , .total_porcentagem, .total_concessioanaria_meta, .total_individual_concessionaria , .total_super_simples_concessionaria , .total_pme_concessionaria , .total_adesao_concessionaria, .total_vidas_concessionaria, .total_porcentagem_concessionaria {
+        font-size:0.8em;
+    }
+
+    .header_esquerda_title_concessionaria {
+        font-size: 0.7em !important;
+    }
+
+    .container_concessionaria_header {
+        padding:5px 5px !important;
+    }
+
+    .container-ranking-section {
+        padding:1px 0 !important;
+    }
+
+    .concessionaria-info {
+        font-size: 0.7em;
+    }
+
+    .nome-corretor {
+        font-size: 0.8em;
+    }
+
+    .info-ranking {
+        font-size: 0.6em;
+    }
+
+    .estilo-slid {
+        padding:1px;
+    }
+
+    .estilo-interno {
+        padding:1px;
+    }
+
+    .imagem-concessionaria-podium {
+        width:100%;height:100%;border-radius:50%;
+    }
+
+    .tamanho-fonte {
+        font-size:1em;
+    }
+
 }
 
 
@@ -161,15 +382,7 @@ footer {flex-shrink: 0;}
 #dados_direito::-webkit-scrollbar {width: 3px;}
 #dados_direito::-webkit-scrollbar-thumb {background-color: #00CED1;border-radius: 10px;}
 #dados_direito::-webkit-scrollbar-track {background-color: #f0f0f0;}
-.footer-buttons {background-color: #2e4a7a;padding: 5px 0;}
-.footer-btn {flex: 1;border: 2px solid white;background-color: #2e4a7a;color: white;padding: 10px 0;text-align: center;font-size: 1.1em;position: relative;transition: all 0.3s ease;display: inline-flex;justify-content: center;align-items: center;}
-.footer-btn::before {content: "";width: 24px;height: 24px;border: 2px solid white;border-radius: 50%;display: inline-block;margin-right: 8px;box-sizing: border-box;transition: all 0.3s ease;background-color: transparent;}
-.footer-btn.active::before {border-color: #FFA500;background-color: #FFA500;box-shadow: 0 0 20px #FFA500, 0 0 30px #FFA500, 0 0 40px #FFA500;}
-.footer-btn.active,
-.footer-btn:hover {background-color: #FFD700;color: #2e4a7a;border-color: #FFA500;}
-.footer-btn.active::before,
-.footer-btn:hover::before {border-color: #FFA500;background-color: #FFA500;}
-.footer-btn:hover::before {box-shadow: none;}
+
 
 /* Modal Container */
 .modal {

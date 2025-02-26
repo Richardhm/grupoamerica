@@ -262,19 +262,19 @@
 
 <nav class="navbar navbar-expand-md navbar-light shadow-lg py-2 text-sm" style="background-color:#006EB6;">
     <div class="container-fluid text-white">
-        <div style="width:30%;display:flex;align-items: center;align-content: center;justify-content: space-between;">
-            <div style="display:flex;">
-                <img src="{{asset('trofeu.png')}}" alt="Trofeu" style="width:25px;">
-                <h5 class="my-auto font-italic" style="font-style: italic;">Ranking de Vendass</h5>
+        <div class="flex items-center content-center justify-between container-trofeu">
+            <div class="flex">
+                <img src="{{asset('trofeu.png')}}" alt="Trofeu">
+                <h5 class="my-auto font-italic">Ranking de Vendas</h5>
             </div>
             <div>
-                <span class="bg-white py-1 px-4 rounded" style="font-weight: bold;font-size: 1.2em;color:#335B99;" id="mes_ano">Goiania - Novembro/2024</span>
+                <span class="bg-white py-1 px-4 rounded" style="color:#335B99;" id="mes_ano">Goiania - Novembro/2024</span>
             </div>
         </div>
-        <div style="width:36%;text-align: center;">
-            <span class="bg-white py-1 px-4 rounded" style="font-weight: bold;font-size: 2.5em;color:#335B99;" id="titulo_ranking">Ranking - Diario</span>
+        <div class="container-ranking-title text-center">
+            <span class="bg-white py-1 px-4 rounded" style="color:#335B99;" id="titulo_ranking">Ranking - Diario</span>
         </div>
-        <div class="d-flex justify-content-between items-center" style="width:33%;font-size: 1em;">
+        <div class="d-flex justify-content-between items-center container-button-header">
             <div class="d-flex text-center flex-wrap">
                 <span style="width:100%;margin:0;padding:0;">Faltam <span style="color:#F8DA22;font-weight:bold;" id="quantidade_dias">21</span> dias</span>
                 <span style="width:100%;">para o</span>
@@ -295,13 +295,9 @@
 
 <div class="carrossel-container ocultar">
     <div class="slides-container">
-
-
         <div class="slide-carrossel">
             <img src="{{asset('slides/02.jpg')}}" alt="Imagem 2">
         </div>
-
-
     </div>
 </div>
 
@@ -314,46 +310,46 @@
                 $meta=10;
                 $porcentagem=($total_vidas / $meta) * 100;
             @endphp
-            <div id="header_esquerda" style="background-color:#2e4a7a; width:95%; border-radius:8px; margin:10px auto; padding:10px; display:flex; align-items:center; justify-content: space-between; height: 70px;">
-                <div style="background-color:white;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-right:3%;">
-                    <img src="{{asset('foguete.png')}}" alt="Hapvida" style="width:80%;height:auto;">
+            <div id="header_esquerda">
+                <div class="container-foguete">
+                    <img src="{{asset('foguete.png')}}" alt="Hapvida">
                 </div>
                 <div class="container-meta">
-                    <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">Meta</span>
-                    <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
+                    <span class="header_esquerda_title">Meta</span>
+                    <span class="header_esquerda_container">
                         <span style="color:#6a1a21;" class="aqui_meta">13</span>
                     </span>
                 </div>
                 @if(isset($totals[0]) && !empty($totals[0]))
                     <div style="display:flex;flex-direction:column;">
-                        <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">Individual</span>
+                        <span class="header_esquerda_title">Individual</span>
                         <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
-                        <span style="color:#6a1a21;" class="total_individual">{{$totals[0]->total_individual}}</span>
-                    </span>
+                            <span style="color:#6a1a21;" class="total_individual">{{$totals[0]->total_individual}}</span>
+                        </span>
                     </div>
                     <div style="display:flex;flex-direction:column;">
-                        <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">Coletivo</span>
+                        <span class="header_esquerda_title">Coletivo</span>
                         <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
-                        <span style="color:#6a1a21;" class="total_coletivo">{{$totals[0]->total_coletivo}}</span>
-                     </span>
+                            <span style="color:#6a1a21;" class="total_coletivo">{{$totals[0]->total_coletivo}}</span>
+                        </span>
                     </div>
                     <div style="display:flex;flex-direction:column;">
-                        <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">Empresarial</span>
+                        <span class="header_esquerda_title">Empresarial</span>
                         <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
-                        <span style="color:#6a1a21;" class="total_empresarial">{{$totals[0]->total_empresarial}}</span>
-                    </span>
+                            <span style="color:#6a1a21;" class="total_empresarial">{{$totals[0]->total_empresarial}}</span>
+                        </span>
                     </div>
                     <div style="display:flex;flex-direction:column;">
-                        <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">Total</span>
+                        <span class="header_esquerda_title">Total</span>
                         <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
-                        <span style="color:#6a1a21;" class="total_vidas">{{$total_vidas}}</span>
-                    </span>
+                            <span style="color:#6a1a21;" class="total_vidas">{{$total_vidas}}</span>
+                        </span>
                     </div>
                     <div style="display:flex;flex-direction:column;">
-                        <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">%</span>
+                        <span class="header_esquerda_title">%</span>
                         <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
-                        <span style="color:#6a1a21;" class="total_porcentagem">{{ number_format($porcentagem, 2) }}%</span>
-                    </span>
+                            <span style="color:#6a1a21;" class="total_porcentagem">{{ number_format($porcentagem, 2) }}%</span>
+                        </span>
                     </div>
                 @endif
             </div>
@@ -363,42 +359,46 @@
                     <img src="{{asset('foguete.png')}}" alt="Hapvida" style="width:80%;height:auto;">
                 </div>
                 <div class="container-meta">
-                    <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">Meta</span>
-                    <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
+                    <span class="header_esquerda_title_concessionaria">Meta</span>
+                    <span class="container_concessionaria_header">
                         <span style="color:#6a1a21;" class="total_concessioanaria_meta">3050</span>
+                    </span>
                 </div>
-                <div style="display:flex;flex-direction:column;">
-                    <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">Individual</span>
-                    <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
+                <div class="flex flex-column">
+                    <span class="header_esquerda_title_concessionaria">Individual</span>
+                    <span class="container_concessionaria_header">
                         <span style="color:#6a1a21;" class="total_individual_concessionaria">1850</span>
+                    </span>
                 </div>
-                <div style="display:flex;flex-direction:column;">
-                    <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">Super Simples</span>
-                    <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
+                <div class="flex flex-column">
+                    <span class="header_esquerda_title_concessionaria">Super Simples</span>
+                    <span class="container_concessionaria_header">
                         <span style="color:#6a1a21;" class="total_super_simples_concessionaria">350</span>
-
+                    </span>
                 </div>
-                <div style="display:flex;flex-direction:column;">
-                    <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">PME</span>
-                    <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
+                <div class="flex flex-column">
+                    <span class="header_esquerda_title_concessionaria">PME</span>
+                    <span class="container_concessionaria_header">
                         <span style="color:#6a1a21;" class="total_pme_concessionaria">30</span>
-
+                    </span>
                 </div>
-                <div style="display:flex;flex-direction:column;">
-                    <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">Adesão</span>
-                    <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
+                <div class="flex flex-column">
+                    <span class="header_esquerda_title_concessionaria">Adesão</span>
+                    <span class="container_concessionaria_header">
                         <span style="color:#6a1a21;" class="total_adesao_concessionaria">820</span>
-
+                    </span>
                 </div>
-                <div style="display:flex;flex-direction:column;">
-                    <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">Total</span>
-                    <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
+                <div class="flex flex-column">
+                    <span class="header_esquerda_title_concessionaria">Total</span>
+                    <span class="container_concessionaria_header">
                         <span style="color:#6a1a21;" class="total_vidas_concessionaria">0</span>
+                    </span>
                 </div>
-                <div style="display:flex;flex-direction:column;">
-                    <span style="color:#FFF;font-weight:bold;display:flex;justify-content:center;">%</span>
-                    <span style="background-color:rgba(255, 255, 255, 0.8);padding:5px 15px;display:flex;justify-content:center;border-radius:10px;font-weight:bold;width:80px;border:2px solid yellow;">
+                <div class="flex flex-column">
+                    <span class="header_esquerda_title_concessionaria">%</span>
+                    <span class="container_concessionaria_header">
                         <span style="color:#6a1a21;" class="total_porcentagem_concessionaria">O%</span>
+                    </span>
                 </div>
 
             </div>
