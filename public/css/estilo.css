@@ -218,18 +218,18 @@ nav.navbar {flex-shrink: 0;}
 
     .style_img_corretor {
         position:absolute;
-        width: 110px !important;
-        height: 110px !important;
-        top:45px !important;
-        left:55px !important;
+        width: 110px;
+        height: 110px;
+        top:45px;
+        left:55px;
         border-radius:50%;
         background-color:white;
 
     }
 
     .style-medal {
-        width:100% !important;
-        height:290px !important;
+        width:100%;
+        height:290px;
     }
 
     .footer-btn {
