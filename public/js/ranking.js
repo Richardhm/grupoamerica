@@ -819,7 +819,7 @@ $(document).ready(function() {
                 type: 'GET',
                 data: { corretora: corretora },
                 success: function (data) {
-                    console.log(data);
+
                     // Atualiza o conteúdo do ranking e os valores do lado direito
                     $(".stage").html(data.podium);
                     $("#dados_direito").html(data.ranking);

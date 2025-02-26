@@ -326,7 +326,7 @@ class RankingController extends Controller
             ");
 
             return [
-                'meta' => 0,
+                'meta' => 944,
                 'podium' => $podium,
                 'ranking' => $ranking,
                 'totals' => $totals,
