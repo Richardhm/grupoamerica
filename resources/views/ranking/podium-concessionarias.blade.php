@@ -15,8 +15,6 @@
                     $y_last = "y=90%";
                     $x_zero = "x=50%";
                     $y_zero = "y=60%";
-                    $style="";
-                    $style = 'style="width:100%;height:290px;"';
                     $style_texto = 'style="position:absolute;bottom:65px;"';
                     $style_img_corretor = 'style="position:absolute;width: 130px; height: 130px;top:45px;left:50px;border-radius:50%;background-color:white;"';
                 } elseif($loop->iteration == 2) {
@@ -28,7 +26,6 @@
                     $y_last = "y=60%";
                     $x_zero = "x=60%";
                     $y_zero = "y=20%";
-                    $style = 'style="width:100%;height:290px"';
                     $style_texto = 'style="position:absolute;bottom:50px;right:20px;color:#FFF;fill:#000;"';
                     $style_img_corretor = 'style="position:absolute;width: 130px; height: 130px;top:45px;left:50px;border-radius:50%;background-color:white;"';
                 } elseif($loop->iteration == 3) {
@@ -40,7 +37,6 @@
                     $y_last = "y=70%";
                     $x_zero = "x=50%";
                     $y_zero = "y=20%";
-                    $style = 'style="width:100%;height:290px;"';
                     $style_texto = 'style="position:absolute;bottom:40px;fill:#000;"';
                     $style_img_corretor = 'style="position:absolute;width: 130px; height: 130px;top:45px;left:50;border-radius:50%;background-color:white;"';
                 }
@@ -52,7 +48,7 @@
                     <img src="{{ asset($rr->imagem) }}" alt="Imagem do Corretora" class="imagem-concessionaria-podium" />
                 </div>
                 <!-- Exibe o SVG da medalha -->
-                <img src="{{$medalSVG}}" {!! $style !!}  />
+                <img src="{{$medalSVG}}" class="style-medal" />
                 <!-- Texto de Equipe e Quantidade de Vidas -->
                 <svg width="280" height="80" {!! $style_texto !!}>
                     <text {{$x_zero}} {{$y_zero}} text-anchor="middle" class="tamanho-fonte" style="fill:#00008B;">
