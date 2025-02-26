@@ -178,12 +178,13 @@ nav.navbar {flex-shrink: 0;}
 }
 .style_img_corretor {
     position:absolute;
-    width: 130px;
-    height: 130px;
+    width: 140px !important;
+    height: 140px !important;
     top:55px;
-    left:50px;
+    left:40px;
     border-radius:50%;
     background-color:white;
+
 }
 
 .style-medal {
@@ -215,10 +216,21 @@ nav.navbar {flex-shrink: 0;}
         display:flex;
     }
 
-
     .style_img_corretor {
-        width:100px;
-        height: 100px;
+        position:absolute;
+        width: 110px !important;
+        height: 110px !important;
+        top:45px !important;
+        left:55px !important;
+        border-radius:50%;
+        background-color:white;
+
+    }
+
+    .style-medal {
+        width:100%;
+        height:290px;
+
     }
 
 
