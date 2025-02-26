@@ -849,8 +849,8 @@ $(document).ready(function() {
 
     function defineMetaPorCorretora(corretora) {
         switch (corretora) {
-            case 'accert': return 236;
-            case 'innove': return 236;
+            case 'grupo': return 944;
+            case 'america': return 472;
             case 'diario': return 10;
             case 'semanal': return 65;
             case 'estrela': return 150;
