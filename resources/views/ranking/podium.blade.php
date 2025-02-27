@@ -60,7 +60,7 @@
             <div class="position {{ $positionClass }}" style="position: relative; text-align: center;">
 
                 <!-- Imagem do Corretor com Border Radius -->
-                <div {!! $style_img_corretor !!} class="style-img-corretor">
+                <div class="style-img-corretor">
                     <img src="{{ asset($rr->imagem) }}" alt="Imagem do Corretor" class="imagem-corretor" />
                 </div>
 
