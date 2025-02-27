@@ -155,7 +155,7 @@ nav.navbar {flex-shrink: 0;}
 }
 
 .concessionaria-info {
-    flex: 3;text-align: right;padding:2px;color:#FFF;font-size:0.875em;
+    flex: 3;text-align: right;padding:2px;color:#FFF;font-size:1em;
 }
 
 .nome-corretor {
@@ -193,8 +193,7 @@ nav.navbar {flex-shrink: 0;}
 .imagem-concessionaria-podium {
     width:80%;height:80%;border-radius:50%;
 }
-.style_img_corretor {
-    position:absolute;
+.style_img_corretor {position:absolute;
     width: 120px;
     height: 120px;
     top:55px;
