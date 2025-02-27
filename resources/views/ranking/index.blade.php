@@ -298,6 +298,24 @@
         <div class="slide-carrossel">
             <img src="{{asset('slides/02.jpg')}}" alt="Imagem 2">
         </div>
+        <div class="slide-carrossel">
+            <img src="{{asset('slides/03.jpg')}}" alt="Imagem 3">
+        </div>
+        <div class="slide-carrossel">
+            <img src="{{asset('slides/04.jpg')}}" alt="Imagem 4">
+        </div>
+        <div class="slide-carrossel">
+            <img src="{{asset('slides/05.jpg')}}" alt="Imagem 5">
+        </div>
+        <div class="slide-carrossel">
+            <img src="{{asset('slides/06.jpg')}}" alt="Imagem 6">
+        </div>
+        <div class="slide-carrossel">
+            <img src="{{asset('slides/07.jpg')}}" alt="Imagem 7">
+        </div>
+        <div class="slide-carrossel">
+            <img src="{{asset('slides/08.jpg')}}" alt="Imagem 8">
+        </div>
     </div>
 </div>
 
@@ -562,6 +580,8 @@
         <button class="footer-btn" data-corretora="grupo">Grupo America</button>
         <button class="footer-btn" data-corretora="america">America</button>
         <button class="footer-btn" data-corretora="vivaz">Vivaz</button>
+        <button class="footer-btn" data-corretora="estrela">Estrela</button>
+        <button class="footer-btn" data-corretora="carrossel">Campanhas</button>
 
     </div>
     <div class="d-flex justify-content-center" style="background-color:#2e4a7a;">

@@ -7,12 +7,12 @@
 
                 @if ($i % 7 === 0)
                     <!-- Início de uma nova coluna a cada 7 itens -->
-                    <div class="slid" style="flex-basis: 50%; padding: 5px; box-sizing: border-box;">
+                    <div class="slid estilo-slid">
                         @endif
 
                         <!-- Cada item -->
                         <div style="margin-bottom: 5px; color: white;">
-                            <div class="d-flex border text-white rounded align-items-center p-2" style="background-color: #2e4a7a;">
+                            <div class="estilo-interno">
                                 <!-- 1ª Div: Posição -->
                                 <div class="text-center text-white rounded me-2"
                                      style="width:40px;height:100%;display:flex;align-items:center;justify-content:center;padding:5px 10px;font-size:1em;font-weight:bold;background:rgba(254, 254, 254, 0.18);backdrop-filter:blur(15px);">
@@ -20,8 +20,8 @@
                                 </div>
 
                                 <!-- 2ª Div: Imagem -->
-                                <div class="me-2" style="flex:0 1 auto;display:flex;align-items:center;margin-left:8px;background-color: #FFF;height:60px;width:60px;">
-                                    <img src="{{ asset($r->imagem) }}" class="rounded" style="width:100%;border-radius:50%;">
+                                <div class="me-2" style="flex:0 1 auto;display:flex;align-items:center;margin-left:8px;background-color: #FFF;">
+                                    <img src="{{ asset($r->imagem) }}" class="rounded" style="height:60px;width:60px;border-radius:50%;">
                                 </div>
 
                                 <!-- 3ª Div: Nome e descrição -->

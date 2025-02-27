@@ -507,6 +507,66 @@ class RankingController extends Controller
 
 
 
+        } else if($corretora == "estrela") {
+            $ranking = DB::connection('tenant')->select("
+                SELECT
+                    users.name AS corretor,
+                    users.image AS imagem,
+                    COALESCE(SUM(IF(MONTH(contratos.created_at) = 7, clientes.quantidade_vidas, 0)),0) AS janeiro,
+                    COALESCE(SUM(IF(MONTH(contratos.created_at) = 8, clientes.quantidade_vidas, 0)),0) AS fevereiro,
+                    COALESCE(SUM(IF(MONTH(contratos.created_at) = 9, clientes.quantidade_vidas, 0)),0) AS marco,
+                    COALESCE(SUM(IF(MONTH(contratos.created_at) = 10, clientes.quantidade_vidas, 0)),0) AS abril,
+                    COALESCE(SUM(IF(MONTH(contratos.created_at) = 11, clientes.quantidade_vidas, 0)),0) AS maio,
+                    COALESCE(SUM(IF(MONTH(contratos.created_at) = 12, clientes.quantidade_vidas, 0)),0) AS junho,
+                    COALESCE(SUM(clientes.quantidade_vidas), 0) AS quantidade_vidas,
+                    COALESCE(SUM(contratos.valor_adesao), 0) AS valor,
+            CASE
+                WHEN SUM(clientes.quantidade_vidas) >= 150 AND SUM(clientes.quantidade_vidas) <= 190 THEN 'tres_estrelas'
+                WHEN SUM(clientes.quantidade_vidas) >= 191 AND SUM(clientes.quantidade_vidas) <= 250 THEN 'quatro_estrelas'
+                WHEN SUM(clientes.quantidade_vidas) > 250 THEN 'cinco_estrelas'
+                ELSE 'nao_classificado'
+            END AS status,
+            CASE
+                WHEN SUM(clientes.quantidade_vidas) >= 150 AND SUM(clientes.quantidade_vidas) <= 190 THEN 191 - SUM(clientes.quantidade_vidas)
+                WHEN SUM(clientes.quantidade_vidas) >= 191 AND SUM(clientes.quantidade_vidas) <= 250 THEN 251 - SUM(clientes.quantidade_vidas)
+                WHEN SUM(clientes.quantidade_vidas) > 250 THEN 'Atingiu a meta'
+                ELSE 150 - SUM(clientes.quantidade_vidas)
+            END AS falta
+        FROM comissoes
+        INNER JOIN users ON users.id = comissoes.user_id
+        INNER JOIN contratos ON contratos.id = comissoes.contrato_id
+        INNER JOIN clientes ON clientes.id = contratos.cliente_id
+        WHERE contratos.created_at BETWEEN '2025-01-01' AND '2025-06-30' AND contratos.plano_id = 1 AND users.ativo != 2
+        GROUP BY comissoes.user_id, users.name, users.image
+        ORDER BY quantidade_vidas DESC
+            ");
+            $podium = view('ranking.podium',[
+                'ranking' => $ranking,
+                'corretora' => "Estrela",
+                'corretora_id' => $corretora_id
+            ])->render();
+            $ranking = view('ranking.ranking-estrela',[
+                'ranking' => $ranking,
+                'corretora' => $corretora
+            ])->render();
+            $totals = DB::connection('tenant')->select("SELECT
+                SUM(CASE WHEN comissoes.plano_id = 1 AND comissoes.empresarial = 0 THEN (SELECT IFNULL(SUM(clientes.quantidade_vidas), 0) FROM clientes INNER JOIN contratos ON contratos.cliente_id = clientes.id WHERE contratos.id = comissoes.contrato_id AND contratos.plano_id = 1) ELSE 0 END) as total_individual,
+                SUM(CASE WHEN comissoes.plano_id = 3 AND comissoes.empresarial = 0 THEN (SELECT IFNULL(SUM(clientes.quantidade_vidas), 0) FROM clientes INNER JOIN contratos ON contratos.cliente_id = clientes.id WHERE contratos.id = comissoes.contrato_id AND contratos.plano_id = 3) ELSE 0 END) as total_coletivo,
+                SUM( CASE WHEN comissoes.plano_id = 5 AND comissoes.empresarial = 1 THEN(SELECT IFNULL(SUM(contrato_empresarial.quantidade_vidas), 0) FROM contrato_empresarial WHERE contrato_empresarial.id = comissoes.contrato_empresarial_id AND contrato_empresarial.plano_id = 5)ELSE 0 END) as total_empresarial
+                FROM comissoes
+                WHERE comissoes.plano_id IN (1, 3, 5)
+                AND (comissoes.user_id != 198 AND comissoes.user_id != 269)
+            ");
+
+            return [
+                'meta' => 0,
+                'podium' => $podium,
+                'ranking' => $ranking,
+                'totals' => $totals,
+                'corretora' => $corretora,
+                'concessionarias' => $concessionarias
+            ];
+
         } else if($corretora == "vivaz") {
             $ranking = DB::connection('tenant')->select(
                 "
