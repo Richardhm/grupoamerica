@@ -15,7 +15,12 @@ class OrcamentoController extends Controller
     public function index()
     {
         $cidades = TabelaOrigens::all();
-        $administradoras = Administradora::all();
+        if(auth()->user()->corretora_id == 1) {
+            $administradoras = Administradora::where("id","!=",5)->get();
+        } else {
+            $administradoras = Administradora::all();
+        }
+
         $planos = Plano::all();
         return view('orcamento.index', compact('cidades', 'administradoras','planos'));
     }

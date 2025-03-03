@@ -151,7 +151,7 @@
                                     Salario:
                                 </span>
                                <span style="flex-grow: 1; flex-shrink: 1; flex-basis: 50%;">
-                                    <input type="text" disabled name="salario" id="salario" value="{{$total_salario}}"
+                                    <input type="text" disabled name="salario" id="salario" value="{{number_format($total_salario,2,",",".")}}"
                                     class="salario_usuario bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] rounded-md"
                                     style="text-align:right; height:20px; font-size:0.8em; width: 100%;">
                                 </span>
@@ -173,7 +173,7 @@
                                     Premiação:
                                 </span>
                                <span style="flex-grow: 1; flex-shrink: 1; flex-basis: 50%;">
-                                    <input type="text" disabled name="premiacao" id="premiacao" value="{{$total_premiacao}}"
+                                    <input type="text" disabled name="premiacao" id="premiacao" value="{{number_format($total_premiacao,2,",",".")}}"
                                            class="salario_usuario bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] rounded-md premiacao_usuario"
                                            style="text-align:right; height:20px; font-size:0.8em; width: 100%;">
                                 </span>
@@ -184,7 +184,7 @@
                                     Estorno:
                                 </span>
                                <span style="flex-grow: 1; flex-shrink: 1; flex-basis: 50%;">
-                                    <input type="text" disabled id="valor_total_desconto_geral" value="{{$total_estorno}}" name="estorno_geral" id="estorno_geral"
+                                    <input type="text" disabled value="{{number_format($estorno_geral,2,",",".")}}" name="estorno_geral" id="estorno_geral"
                                            class="salario_usuario bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] rounded-md estorno_usuario"
                                            style="text-align:right; height:20px; font-size:0.8em; width: 100%;">
                                 </span>
@@ -195,7 +195,7 @@
                                     Desconto:
                                 </span>
                                <span style="flex-grow: 1; flex-shrink: 1; flex-basis: 50%;">
-                                    <input type="text" disabled id="valor_total_desconto" value="{{$total_desconto}}" name="desconto" id="desconto"
+                                    <input type="text" disabled id="valor_total_desconto" value="{{number_format($total_desconto,2,",",".")}}" name="desconto" id="desconto"
                                            class="desconto_usuario bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] rounded-md estorno_usuario"
                                            style="text-align:right; height:20px; font-size:0.8em; width: 100%;">
                                 </span>
@@ -206,7 +206,7 @@
                                     Total:
                                 </span>
                                <span style="flex-grow: 1; flex-shrink: 1; flex-basis: 50%;">
-                                    <input type="text" disabled name="total_campo" value="{{$total_mes}}" id="total_campo"
+                                    <input type="text" disabled name="total_campo" value="{{number_format($total_mes,2,",",".")}}" id="total_campo"
                                            class="desconto_usuario bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] rounded-md total_campo"
                                            style="text-align:right; height:20px; font-size:0.8em; width: 100%;">
                                 </span>
@@ -584,7 +584,7 @@
                     <select name="ano_folha_historico" id="ano_folha_historico" class="form-control form-control-sm mb-1 w-full border border-gray-300 text-gray-700 text-sm rounded-md tamanho_de_25 mb-1">
                         <option value="" class="text-center">--Ano--</option>
 
-                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
                     </select>
 
                     <select name="mes_folha_historico" disabled id="mes_folha_historico" class="form-control form-control-sm mb-1 w-full border border-gray-300 text-gray-700 text-sm rounded-md tamanho_de_25 mb-1">
@@ -662,9 +662,11 @@
                     <div style="margin-top:2px;margin-bottom:2px;" class="bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px]">
                         <p style="color:white;border-bottom:1px solid white;margin:0;padding: 0;display:flex;">
                             <span style="flex-basis:90%;justify-content:center;display:flex;font-size:0.7em;">Planos</span>
-                            <a style="flex-basis:10%;font-size:0.7em;" id="criar_excel_historico" href="">
-                                <i class="fas fa-download fa-sm text-white"></i>
-                            </a>
+                            <div style="flex-basis:10%;font-size:0.7em;" class="dsnone">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="criar_excel_historico" fill="currentColor" class="small-svg">
+                                    <path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
                         </p>
                         <ul style="margin:0 0 0 0;padding:0;">
                             <li style="display:flex;justify-content: space-between;" data-plano="1" id="listar_individual_apto_total_historico">
@@ -2322,7 +2324,15 @@
             // link_excel();
 
             $("body").on("click","#criar_excel",function(){
-                exportAllToExcel();
+                let mes = $("#mes_folha option:selected").val();
+                let ano = $("#mes_folha option:selected").text().split("/")[1];
+                exportAllToExcel(mes,ano);
+            });
+
+            $("body").on("click","#criar_excel_historico",function(){
+                let ano = $("#ano_folha_historico").val();
+                let mes = $("#mes_folha_historico").val();
+                exportAllToExcel(mes,ano);
             });
 
 
@@ -2701,6 +2711,7 @@
                        data:"mes="+mes+"&id="+id+"&ano="+ano,
                        method:"POST",
                        success:function(res) {
+
                            $(".valor_individual_a_receber").text(res.valor_individual_a_receber);
                            $(".valor_coletivo_a_receber").text(res.valor_coletivo_a_receber);
                            $(".valor_empresarial_a_receber").text(res.valor_empresarial_a_receber);
@@ -2725,6 +2736,9 @@
                            $(".quantidade_estorno_coletivo").text(res.total_coletivo_quantidade_estorno);
                            $("#listar_individual_apto").removeClass("ativo");
                            $("#listar_coletivo_apto").removeClass("ativo");
+                           $(".quantidade_estorno_individual").text(res.total_individual_quantidade_estorno);
+                           $(".quantidade_estorno_coletivo").text(res.total_coletivo_quantidade_estorno);
+                           $(".quantidade_estorno_empresarial").text(res.total_empresarial_quantidade_estorno);
                            listaraptosapagar.ajax.reload(function() {
                                listaraptosapagar.clear().draw();
                            });
@@ -2952,7 +2966,7 @@
                 if(mes != "" && ano != "") {
 
 
-                    $("#criar_excel_historico").attr('href','/gerente/excel/exportar/'+mes);
+                    $("#criar_excel_historico").removeClass('dsnone');
                     $("#mes_historico").val(mes);
                     if(mes == "") {
                         //$("#escolher_vendedor").prop("disabled",true)
@@ -3793,9 +3807,7 @@
                 }
             });
 
-            function exportAllToExcel() {
-                let mes = $("#mes_folha option:selected").val();
-                let ano = $("#mes_folha option:selected").text().split("/")[1];
+            function exportAllToExcel(mes,ano) {
 
                 const urls = [
                     `{{ url('/gerente/mes/fechados/confirmados/${ano}/${mes}/1') }}`,  // Endpoint para dados de Individual
@@ -3833,7 +3845,7 @@
                         const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
                         const wb = XLSX.utils.book_new();
                         XLSX.utils.book_append_sheet(wb, ws, "Dados Filtrados");
-                        XLSX.writeFile(wb, "dados_filtrados.xlsx");
+                        XLSX.writeFile(wb, "vendidos.xlsx");
                     })
                     .catch(error => {
                         console.error("Erro ao exportar os dados filtrados:", error);
@@ -4068,7 +4080,11 @@
                     method: "POST",
                     data: requestData,
                     success: function (res) {
-                            console.log(res);
+                            $("#comissao").val(res.valores_geral.comissao);
+                            $("#salario").val(res.valores_geral.salario);
+                            $("#premiacao").val(res.valores_geral.premiacao);
+                            $("#estorno_geral").val(res.valores_geral.estorno);
+                            $("#valor_total_desconto").val(res.valores_geral.desconto);
                             $(".valor_individual_a_receber").text(res.valor_individual_a_receber);
                             $(".valor_coletivo_a_receber").text(res.valor_coletivo_a_receber);
                             $(".valor_empresarial_a_receber").text(res.valor_empresarial_a_receber);
@@ -4120,8 +4136,9 @@
                             } else {
                                 $(".total_a_pagar").text(0);
                             }
-                            listarcomissaomesrecebidas.ajax.reload();
-                            listarcomissaomesdfirente.ajax.reload();
+                            //listarcomissaomesrecebidas.ajax.reload();
+                            //listarcomissaomesdfirente.ajax.reload();
+                            listaraptosapagar.ajax.reload();
                     },
                     complete: function () {
                         $("#loading-overlay").addClass('ocultar');
@@ -5448,6 +5465,7 @@
                     method: "POST",
                     data: dadosRequest,
                     success: function (res) {
+                        console.log(res);
                         //total_quantidade_individual
 
                         if(res != "error") {
@@ -7165,7 +7183,20 @@
 
 @section('css')
     <style>
+        #criar_excel:hover {
+            cursor:pointer;
+        }
 
+        #criar_excel_historico:hover {
+            cursor:pointer;
+        }
+
+
+
+
+        input[type="search"] {
+            color:black !important;
+        }
         .loading-dots {display: flex;justify-content: center;align-items: center;}
         .loading-dots div {width: 12px;height: 12px;margin: 10px 4px;border-radius: 50%;background-color: #333;animation: loading-dots 1.2s infinite ease-in-out;}
         .loading-dots div:nth-child(1) {animation-delay: 0s;}

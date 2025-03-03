@@ -8,14 +8,14 @@
     </head>
     <body>
        <div style="width:95%;margin:0 auto;padding:5px 0;">
-            <p style="font-size:0.75em;">ACCERT CORRETORA</p>
+            <p style="font-size:0.75em;">GRUPO AMERICA</p>
        </div>
 
        <div style="border-top:1px solid black;display:block;width:95%;left:20px;position:absolute;height:70px;padding:10px 0;">
             <div style="width:90%;position:relative;left:0;float:left;">
                 <p>COMPOSIÇÃO SALARIAL</p>
                 <p>Vendedor: {{$user}}</p>
-                <p>Referência: {{$meses}} / 2023</p>
+                <p>Referência: {{$meses}} / {{$ano}}</p>
             </div>
 
             @if($logo && $logo != '')

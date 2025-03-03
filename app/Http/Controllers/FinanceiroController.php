@@ -311,6 +311,7 @@ class FinanceiroController extends Controller
                 $comissoes_configuradas_default = ComissoesCorretoresConfiguracoes
                     ::where("plano_id", $request->plano_id)
                     ->where("administradora_id", 4)
+                    ->where('corretora_id',$corretora_id)
                     ->get();
 
                 foreach ($comissoes_configuradas_default as $c) {
@@ -1338,9 +1339,6 @@ class FinanceiroController extends Controller
         $dia = 10;
         $codigo_externo = $request->codigo_externo_individual;
 
-
-
-
         $valores_numericos = array_filter($request->faixas_etarias, function ($valor) {
             return is_numeric($valor);
         });
@@ -1557,8 +1555,8 @@ class FinanceiroController extends Controller
 
     public function store(Request $request)
     {
-
         $corretora_id = User::find($request->usuario_coletivo_switch)->corretora_id;
+        $user = User::find($request->usuario_coletivo_switch);
         $clt = User::find($request->usuario_coletivo_switch)->clt;
         if($cod = $this->coletivoVerificarCodigoExterno($request->codigo_externo_coletivo) != 0) {
             return "ja_existe";
@@ -1588,9 +1586,6 @@ class FinanceiroController extends Controller
             $cliente->desconto_operadora = $request->desconto_operadora;
             $cliente->quantidade_parcelas = $request->quantidade_parcelas;
         }
-
-
-
 
         $cliente->save();
         if($cliente->dependente) {
@@ -1656,14 +1651,11 @@ class FinanceiroController extends Controller
         $comissao->corretora_id = $corretora_id;
         $comissao->save();
 
-
-        if($clt == 1) {
+        if ($user->first()->clt == 1) {
 
             $dados = ComissoesCorretoresDefault
                 ::where("plano_id",3)
                 ->where('corretora_id',$corretora_id)
-                //->where("administradora_id",$request->administradora)
-                //->where("tabela_origens_id",2)
                 ->get();
             foreach($dados as $c) {
                 $cd++;
@@ -1699,12 +1691,6 @@ class FinanceiroController extends Controller
                 $comissaoVendedor->save();
                 $comissao_corretor_default++;
             }
-
-
-
-
-
-
 
         } else {
 
@@ -1751,6 +1737,7 @@ class FinanceiroController extends Controller
                 $comissoes_configuradas_corretor_geral = ComissoesCorretoresConfiguracoes
                     ::where("plano_id",3)
                     ->where('corretora_id',$corretora_id)
+                    ->whereNull("user_id")
                     //->where("administradora_id",$request->administradora)
                     //->where("user_id",$request->usuario_coletivo_switch)
                     //->where("tabela_origens_id",$request->tabela_origem)
@@ -1776,28 +1763,8 @@ class FinanceiroController extends Controller
                     $comissaoVendedor->save();
                     $comissao_corretor_contagem++;
                 }
-
             }
-
-
-
-
-
-
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
         if($request->tipo_financeiro) {
             return "financeiro";
@@ -3211,68 +3178,82 @@ class FinanceiroController extends Controller
 
     public function changeEmpresarial()
     {
+        //return request()->all();
         $contrato_id    = request()->cliente_id;
         $user_id        = request()->user_id;
         $corretora_id   = User::find($user_id)->corretora_id;
-        $estagiario     = User::where("id",$user_id)->first()->estagiario;
+        $user           = User::where("id",$user_id);
         $contrato       = ContratoEmpresarial::find($contrato_id);
         $comissao       = Comissoes::where("contrato_empresarial_id",$contrato_id)->first();
+        ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->update(["valor" => 0]);
+        if ($user->first()->clt == 1) {
 
-        if($estagiario == 0) {
-            ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->update(["valor" => 0]);
-            $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
+            $dados = ComissoesCorretoresDefault
                 ::where("plano_id", $contrato->plano_id)
                 ->where("administradora_id", 4)
-                ->where("user_id", $user_id)
+                ->where("corretora_id",$corretora_id)
+                //->where("tabela_origens_id", 2)
                 ->get();
-            $par = 0;
-            if (count($comissoes_configuradas_corretor) >= 1) {
-                foreach($comissoes_configuradas_corretor as $c) {
-                    $par++;
-                    $valor_comissao = $contrato->valor_plano;
-                    $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$par)->first();
-                    $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
-                    $comissaoVendedor->save();
-                }
-            } else {
-                $dados = ComissoesCorretoresDefault
-                    ::where("plano_id", $contrato->plano_id)
-                    ->where("administradora_id", 4)
-                    ->where("corretora_id",$contrato->corretora_id)
-                    ->get();
-                foreach ($dados as $c) {
-                    $par++;
-                    $valor_comissao_default = $contrato->valor_plano;
-                    $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$par)->first();
-                    $comissaoVendedor->valor = ($valor_comissao_default * $c->valor) / 100;
-                    $comissaoVendedor->save();
-                }
-                //}
-//                /****FIm SE Comissoes Lancadas */
+
+            foreach ($dados as $c) {
+                $valor_comissao_default = $contrato->valor_plano;
+                $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$c->parcela)->first();
+                //$comissaoVendedor->comissoes_id = $comissao->id;
+                //$comissaoVendedor->parcela = $c->parcela;
+                $comissaoVendedor->valor = ($valor_comissao_default * $c->valor) / 100;
+                $comissaoVendedor->save();
             }
 
-            $contrato->user_id = $user_id;
-            $contrato->save();
 
-            $comissao->user_id = $user_id;
-            $comissao->save();
+
 
         } else {
 
-            ClienteEstagiario::updateOrCreate(
-                [
-                    'cliente_id' => $contrato->id, // Condição de busca
-                ],
-                [
-                    'user_id' => $user_id,       // Dados para atualizar ou criar
-                    'data' => now(),
-                ]
-            );
+            $comissoes_configuradas_personalizado = ComissoesCorretoresConfiguracoes
+                ::where("plano_id", $contrato->plano_id)
+                ->where("administradora_id", 4)
+                ->where("corretora_id", $corretora_id)
+                ->where("user_id", $user_id)
+                //->where("tabela_origens_id", 2)
+                ->get();
+
+            if (count($comissoes_configuradas_personalizado) >= 1) {
+
+                foreach ($comissoes_configuradas_personalizado as $c) {
+                    $valor_comissao = $contrato->valor_plano;
+                    $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$c->parcela)->first();
+                    $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
+                    $comissaoVendedor->save();
+                    //$comissao_corretor_contagem++;
+                }
+
+            } else {
+
+                $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
+                    ::where("plano_id", $contrato->plano_id)
+                    ->where("administradora_id", 4)
+                    ->where("corretora_id", $corretora_id)
+                    ->whereNull("user_id")
+                    ->get();
+
+                foreach ($comissoes_configuradas_corretor as $c) {
+                    $valor_comissao = $contrato->valor_plano;
+                    $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$c->parcela)->first();
+                    $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
+                    $comissaoVendedor->save();
+
+                }
+            }
         }
+
+
+        $contrato->user_id = $user_id;
+        $contrato->save();
+
+        $comissao->user_id = $user_id;
+        $comissao->save();
+
         return $corretora_id;
-
-
-
 
     }
 
@@ -3286,61 +3267,75 @@ class FinanceiroController extends Controller
         $cliente = Cliente::where("id",$contrato->cliente_id)->first();
         $comissao = Comissoes::where('contrato_id',$contrato->id)->first();
         $corretora_id = User::find($user_id)->corretora_id;
+        $user = User::find($user_id);
 
-        if($estagiario == 0) {
+        if ($user->first()->clt == 1) {
 
-
-            ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->update(["valor" => 0]);
-            $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
+            $dados = ComissoesCorretoresDefault
                 ::where("plano_id", $contrato->plano_id)
-                ->where("administradora_id", $contrato->administradora_id)
-                ->where("user_id", $user_id)
+                ->where("corretora_id",$corretora_id)
+                //->where("tabela_origens_id", 2)
                 ->get();
-            $par = 0;
-            if (count($comissoes_configuradas_corretor) >= 1) {
-                foreach($comissoes_configuradas_corretor as $c) {
-                    $par++;
-                    $valor_comissao = $contrato->valor_adesao;
-                    $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$par)->first();
-                    $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
-                    $comissaoVendedor->save();
-                }
-            } else {
-                $dados = ComissoesCorretoresDefault
-                    ::where("plano_id", $contrato->plano_id)
-                    ->where("administradora_id", $contrato->administradora_id)
-                    ->where("corretora_id",$cliente->corretora_id)
-                    ->get();
-                foreach ($dados as $c) {
-                    $par++;
-                    $valor_comissao_default = $contrato->valor_adesao;
-                    $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$par)->first();
-                    $comissaoVendedor->valor = ($valor_comissao_default * $c->valor) / 100;
-                    $comissaoVendedor->save();
-                }
-                //}
-//                /****FIm SE Comissoes Lancadas */
+
+            foreach ($dados as $c) {
+                $valor_comissao_default = $contrato->valor_plano;
+                $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$c->parcela)->first();
+                //$comissaoVendedor->comissoes_id = $comissao->id;
+                //$comissaoVendedor->parcela = $c->parcela;
+                $comissaoVendedor->valor = ($valor_comissao_default * $c->valor) / 100;
+                $comissaoVendedor->save();
             }
 
-            $cliente->user_id = $user_id;
-            $cliente->save();
 
-            $comissao->user_id = $user_id;
-            $comissao->save();
+
 
         } else {
 
-            ClienteEstagiario::updateOrCreate(
-                [
-                    'cliente_id' => $cliente->id, // Condição de busca
-                ],
-                [
-                    'user_id' => $user_id,       // Dados para atualizar ou criar
-                    'data' => now(),
-                ]
-            );
+            $comissoes_configuradas_personalizado = ComissoesCorretoresConfiguracoes
+                ::where("plano_id", $contrato->plano_id)
+                ->where("corretora_id", $corretora_id)
+                ->where("user_id", $user_id)
+                ->get();
+
+            if (count($comissoes_configuradas_personalizado) >= 1) {
+
+                foreach ($comissoes_configuradas_personalizado as $c) {
+                    $valor_comissao = $contrato->valor_plano;
+                    $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$c->parcela)->first();
+                    $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
+                    $comissaoVendedor->save();
+                    //$comissao_corretor_contagem++;
+                }
+
+            } else {
+
+                $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
+                    ::where("plano_id", $contrato->plano_id)
+                    ->where("administradora_id", $contrato->administradora_id)
+                    ->where("corretora_id", $corretora_id)
+                    ->whereNull("user_id")
+                    ->get();
+
+                foreach ($comissoes_configuradas_corretor as $c) {
+                    $valor_comissao = $contrato->valor_plano;
+                    $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$c->parcela)->first();
+                    $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
+                    $comissaoVendedor->save();
+
+                }
+            }
         }
+
+        $cliente->user_id = $user_id;
+        $cliente->save();
+
+        $comissao->user_id = $user_id;
+        $comissao->save();
+
         return $corretora_id;
+
+
+
     }
 
 
@@ -3354,7 +3349,7 @@ class FinanceiroController extends Controller
         $contrato_id = request()->id_cliente;
         $user_id = request()->user_id;
 
-        $estagiario = User::where("id",$user_id)->first()->estagiario;
+        $user = User::where("id",$user_id);
 
         $contrato = Contrato::find($contrato_id);
         $cliente = Cliente::where("id",$contrato->cliente_id)->first();
@@ -3362,69 +3357,86 @@ class FinanceiroController extends Controller
 
         $corretora_id = User::find($user_id)->corretora_id;
 
+        ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->update(["valor" => 0]);
+        if ($user->first()->clt == 1) {///SE AQUI O CORRETOR E CLT
 
-        if($estagiario == 0) {
-
-
-            ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->update(["valor" => 0]);
-            $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
+            $dados = ComissoesCorretoresDefault
                 ::where("plano_id", 1)
                 ->where("administradora_id", 4)
-                ->where("user_id", $user_id)
+                ->where("corretora_id",$corretora_id)
                 //->where("tabela_origens_id", 2)
                 ->get();
-            $par = 0;
-            if (count($comissoes_configuradas_corretor) >= 1) {
-                foreach ($comissoes_configuradas_corretor as $c) {
-                    $par++;
-                    $valor_comissao = $contrato->valor_adesao;
-                    $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$par)->first();
-                    $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
-                    $comissaoVendedor->save();
-                }
-            } else {
-                $dados = ComissoesCorretoresDefault
-                    ::where("plano_id", 1)
-                    ->where("administradora_id", 4)
-                    ->where("corretora_id",$cliente->corretora_id)
-                    ->get();
-                foreach ($dados as $c) {
-                    $par++;
-                    $valor_comissao_default = $contrato->valor_adesao;
-                    $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$par)->first();
-                    $comissaoVendedor->valor = ($valor_comissao_default * $c->valor) / 100;
-                    $comissaoVendedor->save();
-                }
-                //}
-//                /****FIm SE Comissoes Lancadas */
+
+            foreach ($dados as $c) {
+                $valor_comissao_default = $contrato->valor_plano;
+                $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$c->parcela)->first();
+                //$comissaoVendedor->comissoes_id = $comissao->id;
+                //$comissaoVendedor->parcela = $c->parcela;
+                $comissaoVendedor->valor = ($valor_comissao_default * $c->valor) / 100;
+                $comissaoVendedor->save();
+                $comissao_corretor_default++;
             }
+            //}
+            /****FIm SE Comissoes Lancadas */
+            $comissao_corretor_default = 0;
 
-            $cliente->user_id = $user_id;
-            $cliente->save();
-
-            $comissao->user_id = $user_id;
-            $comissao->save();
 
         } else {
 
-            ClienteEstagiario::updateOrCreate(
-                [
-                    'cliente_id' => $cliente->id, // Condição de busca
-                ],
-                [
-                    'user_id' => $user_id,       // Dados para atualizar ou criar
-                    'data' => now(),
-                ]
-            );
+
+            $comissoes_configuradas_personalizado = ComissoesCorretoresConfiguracoes
+                ::where("plano_id", 1)
+                ->where("administradora_id", 4)
+                ->where("corretora_id", $corretora_id)
+                ->where("user_id", $user_id)
+                //->where("tabela_origens_id", 2)
+                ->get();
+
+            $comissao_corretor_contagem = 0;
+            $comissao_corretor_default = 0;
+
+            if (count($comissoes_configuradas_personalizado) >= 1) {//AQUI CORRETOR TEM COMISSOES PERSONALIZADAS
+
+                //dd("PARCEIRO COM CONF");
+                foreach ($comissoes_configuradas_personalizado as $c) {
+                    $valor_comissao = $contrato->valor_plano;
+                    $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$c->parcela)->first();
+                    $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
+                    $comissaoVendedor->save();
+                    //$comissao_corretor_contagem++;
+                }
+
+            } else {//AQUI O CORRETOR E PARCELA DEFAULT
+
+                $comissoes_configuradas_corretor = ComissoesCorretoresConfiguracoes
+                    ::where("plano_id", 1)
+                    ->where("administradora_id", 4)
+                    ->where("corretora_id", $corretora_id)
+                    ->whereNull("user_id")
+                    ->get();
+
+                foreach ($comissoes_configuradas_corretor as $c) {
+                    $valor_comissao = $contrato->valor_plano;
+                    $comissaoVendedor = ComissoesCorretoresLancadas::where("comissoes_id",$comissao->id)->where("parcela",$c->parcela)->first();
+                    $comissaoVendedor->valor = ($valor_comissao * $c->valor) / 100;
+                    $comissaoVendedor->save();
+
+                }
+
+
+            }
 
 
 
         }
 
+        $cliente->user_id = $user_id;
+        $cliente->save();
+
+        $comissao->user_id = $user_id;
+        $comissao->save();
 
         return $corretora_id;
-
-
 
     }
 
@@ -3442,7 +3454,7 @@ class FinanceiroController extends Controller
             ->orderBy("id","desc")
             ->first();
 
-        $users = User::where("corretora_id",auth()->user()->corretora_id)->where('ativo',1)->get();
+        $users = User::where("corretora_id",auth()->user()->corretora_id)->where('ativo',1)->where('name',"!=",'')->get();
 
         return view('financeiro.modal-individual',[
             "users" => $users,

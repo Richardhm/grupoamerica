@@ -83,8 +83,11 @@
             </form>
         </div>
     </div>
-
+    <script src="{{asset('js/jquery.mask.min.js')}}"></script>
     <script>
+        $(function(){
+            $("#celular").mask("(00) 0 0000-0000");
+        })
         document.getElementById('file_input').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
@@ -94,10 +97,8 @@
                 };
                 reader.readAsDataURL(file);
             }
+
         });
-
-
-
     </script>
 
 </x-app-layout>

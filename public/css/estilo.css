@@ -155,7 +155,7 @@ nav.navbar {flex-shrink: 0;}
 }
 
 .concessionaria-info {
-    flex: 3;text-align: right;padding:2px;color:#FFF;font-size:1em;
+    flex: 3;text-align:right;padding:2px;color:#FFF;font-size:1.3em;
 }
 
 .nome-corretor {
@@ -307,7 +307,7 @@ nav.navbar {flex-shrink: 0;}
     }
 
     .concessionaria-info {
-        font-size: 0.7em;
+        font-size: 0.75em;
     }
 
     .nome-corretor {
