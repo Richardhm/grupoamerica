@@ -382,6 +382,7 @@
                     </tr>
 
                     @foreach($dadosComOdonto as $faixaEtaria => $valores)
+                        @for($i=0;$i<$valores['quantidade'];$i++)
                     <tr>
                         <td>
                             <div class="valor-copart">
@@ -389,6 +390,7 @@
                             </div>
                         </td>
                     </tr>
+                        @endfor
                     @endforeach
                     @if($desconto == 1)
                         <tr>
@@ -448,6 +450,7 @@
                         </td>
                     </tr>
                     @foreach($dadosComOdonto as $faixaEtaria => $valores)
+                        @for($i=0;$i<$valores['quantidade'];$i++)
                     <tr>
                         <td>
                            <div class="valor-copart">
@@ -466,6 +469,7 @@
                            </div>
                         </td>
                     </tr>
+                        @endfor
                     @endforeach
                     <tfoot>
 
@@ -556,6 +560,7 @@
                     </tr>
 
                     @foreach($dadosComOdonto as $faixaEtaria => $valores)
+                        @for($i=0;$i<$valores['quantidade'];$i++)
                     <tr >
                         <td>
                            <div class="valor-copart">
@@ -574,6 +579,7 @@
                            </div>
                         </td>
                     </tr>
+                        @endfor
                     @endforeach
                     <tfoot>
                     @if($desconto == 1)
