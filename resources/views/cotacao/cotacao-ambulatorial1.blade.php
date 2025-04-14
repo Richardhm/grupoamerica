@@ -471,7 +471,7 @@
 
             padding: 15px;
 
-            min-height: 480px;
+            min-height: 380px;
 
         }
 
@@ -1018,17 +1018,7 @@
 
                                 </div>
 
-                                <div class="linha-procedimento">
 
-                                    <span>Internações</span>
-
-                                </div>
-
-                                <div class="linha-procedimento">
-
-                                    <span>Cirurgias</span>
-
-                                </div>
 
                             </div>
 
@@ -1080,17 +1070,7 @@
 
                                 </div>
 
-                                <div class="linha-procedimento">
 
-                                    <span>{{$pdf->internacoes_total}}</span>
-
-                                </div>
-
-                                <div class="linha-procedimento">
-
-                                    <span>{{$pdf->cirurgia_total}}</span>
-
-                                </div>
 
                             </div>
 
@@ -1264,10 +1244,7 @@
 
                                     <span style="font-size: 1.3em; color: yellow;text-align:left;display: block;font-weight: bold;">
 
-                                        Cirurgias, Internações, Exames<br>
-
-                                        Alto Custo, Trat. Psicológico,<br>
-
+                                        Exames Alto Custo, Trat. Psicológico,<br>
                                         Terapia Ocupacional, Fisioterapia<br>
 
                                     </span>
@@ -1279,41 +1256,6 @@
                         </table>
 
                     </div>
-
-
-
-                    <!-- 5º Bloco -->
-
-                    <div style="padding-bottom: 10px;">
-
-                        <table>
-
-                            <tr>
-
-                                <td style="vertical-align: top; padding-right: 10px;">
-
-                                    <div style="border: 8px solid yellow;background-color:white;border-radius:10%;color:blue; width: 80px; text-align: center; line-height: 1; padding: 12px;height:80px;">
-
-                                        <span style="font-size: 1.4em; font-weight: bold;">300</span><br>
-
-                                        <span style="font-size: 1.2em;">Dias</span>
-
-                                    </div>
-
-                                </td>
-
-                                <td style="vertical-align: middle;">
-
-                                    <span style="font-size: 1.3em; color: yellow;text-align:left;display: block;font-weight: bold;">Parto</span>
-
-                                </td>
-
-                            </tr>
-
-                        </table>
-
-                    </div>
-
 
 
                     <!-- 6º Bloco -->
