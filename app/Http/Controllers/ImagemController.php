@@ -29,19 +29,28 @@ class ImagemController extends Controller
 
         $odonto = request()->odonto;
 
-        $sql = "";
-        $chaves = [];
+
         $linhas = 0;
 
+        $sql = "";
+        $chaves = [];
+        $somar_linhas = 0;
         foreach(request()->faixas[0] as $k => $v) {
             if($v != null AND $v != 0) {
                 $sql .= " WHEN tabelas.faixa_etaria_id = {$k} THEN ${v} ";
                 $chaves[] = $k;
+                $somar_linhas += (int) $v;
             }
         }
 
 
+
+
+        $keys = implode(",",$chaves);
         $linhas = count($chaves);
+
+
+
         $cidade_nome = TabelaOrigens::find($cidade)->nome;
 
         $plano_nome = Plano::find($plano)->nome;
@@ -78,7 +87,12 @@ class ImagemController extends Controller
 
         $odonto_frase = $odonto == 1 ? " c/ Odonto" : " s/ Odonto";
         $frase = $plano_nome.$odonto_frase;
-        $keys = implode(",",$chaves);
+
+
+
+
+
+
         $imagem_user = auth()->user()->image;
 
         $nome = auth()->user()->name;
@@ -103,16 +117,15 @@ class ImagemController extends Controller
 
 
 
+
+
             $desconto = Desconto::where('plano_id', $plano)
                 ->where('tabela_origens_id', $cidade)
                 ->where('administradora_id',$operadora)
                 ->first();
-
             $valor_desconto = "";
-            $status_desconto = 0;
             if($desconto) {
                 $valor_desconto = $desconto->valor;
-                $status_desconto = 1;
             }
 
             $viewName = "cotacao.modelo1";
@@ -190,12 +203,14 @@ class ImagemController extends Controller
 
             $nome_img = "orcamento_". date('d') . "_" . date('m') . "_" . date("Y") . "_" . date('H') . "_" . date("i") . "_" . date("s")."_" . uniqid();
             $altura = match (true) {
-                $linhas === 1 => 350,
-                $linhas === 2 => 380,
-                $linhas === 3 => 420,
-                $linhas >= 4 && $linhas <= 5 => 500,
-                default => 580,
+                $somar_linhas === 1 => 350,
+                $somar_linhas === 2 => 380,
+                $somar_linhas === 3 => 420,
+                $somar_linhas >= 4 && $linhas <= 5 => 500,
+                default => 620,
             };
+
+
 
             if($tipo_documento == "pdf") {
 

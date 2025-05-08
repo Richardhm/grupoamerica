@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Administradora;
+use App\Models\Desconto;
 use App\Models\Pdf;
 use App\Models\Plano;
 use App\Models\Tabela;
@@ -64,7 +65,16 @@ class OrcamentoController extends Controller
                 ->where('tabelas.administradora_id', $operadora)
                 //->where('acomodacao_id',"!=",3)
                 ->whereIn('tabelas.faixa_etaria_id', explode(',', $keys))
+                ->orderBy('tabelas.faixa_etaria_id')
                 ->get();
+
+            $desconto = Desconto::where("tabela_origens_id",$cidade)->where("plano_id",$plano)->where("administradora_id",$operadora)->count();
+            $status_desconto = 0;
+            if($desconto == 1) {
+                $status_desconto = 1;
+            }
+
+
                 $status = $dados->contains('odonto', 0);
                 return view("cotacao.cotacao2",[
                     "dados" => $dados,
@@ -72,7 +82,8 @@ class OrcamentoController extends Controller
                     "plano_nome" => $plano_nome,
                     "cidade_nome" => $cidade_nome,
                     "imagem_plano" => $imagem_plano,
-                    "status" => $status
+                    "status" => $status,
+                    "status_desconto" => $status_desconto
                 ]);
         } else {
             $dados = Tabela::select('tabelas.*')
@@ -86,13 +97,21 @@ class OrcamentoController extends Controller
                 ->get();
             //return $dados;
             $status = $dados->contains('odonto', 0);
+
+            $desconto = Desconto::where("tabela_origens_id",$cidade)->where("plano_id",$plano)->where("administradora_id",$operadora)->count();
+            $status_desconto = 0;
+            if($desconto == 1) {
+                $status_desconto = 1;
+            }
+
             return view("cotacao.cotacao-ambulatorial",[
                 "dados" => $dados,
                 "operadora" => $imagem_operadora,
                 "plano_nome" => $plano_nome,
                 "cidade_nome" => $cidade_nome,
                 "imagem_plano" => $imagem_plano,
-                "status" => $status
+                "status" => $status,
+                "status_desconto" => $status_desconto
             ]);
         }
 

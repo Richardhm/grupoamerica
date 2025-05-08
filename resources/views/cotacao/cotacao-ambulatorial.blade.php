@@ -256,10 +256,11 @@ focus:ring-4 focus:ring-gray-200 bg-red-400">
 {{--        <input type="checkbox" name="status_carencia_ambulatorial" id="status_carencia_ambulatorial" class="w-6 h-6 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">--}}
 {{--        <span style="color:white;" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 text-2xl">Com Carências</span>--}}
 {{--    </label>--}}
-{{--    <label for="status_desconto_ambulatorial">--}}
-{{--        <input type="checkbox" name="status_desconto_ambulatorial" id="status_desconto_ambulatorial" class="w-6 h-6 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">--}}
-{{--        <span style="color:white;" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 text-2xl">Desconto</span>--}}
-{{--    </label>--}}
+
+    <label for="status_desconto_ambulatorial">
+        <input type="checkbox" name="status_desconto_ambulatorial" id="status_desconto_ambulatorial" class="w-6 h-6 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+        <span style="color:white;" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 text-2xl">Desconto</span>
+    </label>
 
     <div>
         <button class="btn_normal focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">

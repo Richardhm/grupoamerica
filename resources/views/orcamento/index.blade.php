@@ -206,35 +206,75 @@
                /*****************verificar se cidade e minus estão preenchidos para aparecer administradoras*******/
 
                /***********Incrementar valores aos input*****************************/
-               let counterInput = $("input[type='text']");
-               let incrementButton = $("button:contains('+')");
-               let decrementButton = $("button:contains('-')");
-               incrementButton.click(function() {
-                   let inputField = $(this).siblings("input[type='text']");
-                   let currentValue = parseInt(inputField.val()) || 0;
-                   if (getTotal() < 8) {
-                       inputField.val(currentValue + 1);
-                       inputField.trigger('input'); // Dispara o evento 'input' no campo de texto
-                   }
-               });
+               $('.faixa-etaria-buttons').each(function() {
+                   const $container = $(this);
+                   const $input = $container.find('.faixa-etaria-input');
+                   const $plusBtn = $container.find('.bg-green-400');
+                   const $minusBtn = $container.find('.bg-red-400');
 
-               // Adiciona evento de clique para decremento
-               decrementButton.click(function() {
-                   let inputField = $(this).siblings("input[type='text']");
-                   let currentValue = parseInt(inputField.val()) || 0;
-                   if (currentValue > 0) {
-                       inputField.val(currentValue - 1);
-                       inputField.trigger('input'); // Dispara o evento 'input' no campo de texto
-                   }
-               });
+                   // Função para atualizar o estado dos botões
+                   const updateButtonsState = () => {
+                       const currentValue = parseInt($input.val()) || 0;
+                       $minusBtn.prop('disabled', currentValue <= 0);
+                   };
 
-
-               function getTotal() {
-                   let total = 0;
-                   $("input[type='text']").each(function() {
-                       total += parseInt($(this).val()) || 0;
+                   // Evento de incremento
+                   $plusBtn.on('click', function(e) {
+                       e.preventDefault();
+                       const currentTotal = getTotal();
+                       if (currentTotal < 7) {
+                           $input.val((i, val) => {
+                               const newVal = parseInt(val) + 1;
+                               return isNaN(newVal) ? 1 : newVal;
+                           }).trigger('input');
+                           updateButtonsState();
+                       } else {
+                           toastr.error('O total máximo de 7 pessoas foi atingido!', 'Limite Atingido', {
+                               timeOut: 3000,
+                               progressBar: true,
+                               closeButton: true
+                           });
+                       }
                    });
-                   return total;
+
+                   // Evento de decremento
+                   $minusBtn.on('click', function(e) {
+                       e.preventDefault();
+                       $input.val((i, val) => {
+                           const newVal = parseInt(val) - 1;
+                           return newVal < 0 ? 0 : newVal;
+                       }).trigger('input');
+                       updateButtonsState();
+                   });
+
+                   // Validação direta no input
+                   $input.on('input', function() {
+                       let value = parseInt($(this).val()) || 0;
+                       if (value < 0) value = 0;
+
+                       // Verifica o total global
+                       const currentTotal = getTotal();
+                       if (currentTotal > 7) {
+                           value -= (currentTotal - 7);
+                           toastr.error(`Limitado a 7 pessoas.`, 'Limite Atingido', {
+                               timeOut: 3000,
+                               progressBar: true,
+                               closeButton: true
+                           });
+                       }
+
+                       $(this).val(value);
+                       updateButtonsState();
+                   });
+
+                   updateButtonsState(); // Estado inicial
+               });
+
+               // Função para calcular o total
+               function getTotal() {
+                   return $('.faixa-etaria-input').get().reduce((total, input) => {
+                       return total + (parseInt(input.value) || 0);
+                   }, 0);
                }
                /***********Incrementar valores aos input*****************************/
 
@@ -373,6 +413,8 @@
                        '9' : $("body").find('#input_54_58').val(),
                        '10' : $("body").find('#input_59').val()
                    }];
+
+
 
                    $.ajax({
                        url: "{{route('gerar.imagem')}}",
