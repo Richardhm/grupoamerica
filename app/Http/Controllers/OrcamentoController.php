@@ -4,27 +4,82 @@ namespace App\Http\Controllers;
 
 use App\Models\Administradora;
 use App\Models\Desconto;
+use App\Models\Layout;
 use App\Models\Pdf;
 use App\Models\Plano;
 use App\Models\Tabela;
 use App\Models\TabelaOrigens;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrcamentoController extends Controller
 {
     public function index()
     {
-        $cidades = TabelaOrigens::all();
+        $estados = TabelaOrigens::groupBy("uf")->get();
         if(auth()->user()->corretora_id == 1) {
             $administradoras = Administradora::where("id","!=",5)->get();
         } else {
             $administradoras = Administradora::all();
         }
-
         $planos = Plano::all();
-        return view('orcamento.index', compact('cidades', 'administradoras','planos'));
+        $ufpreferencia = auth()->user()->uf_preferencia ?? '';
+
+        return view('orcamento.index', compact('estados', 'administradoras','planos','ufpreferencia'));
     }
+
+    public function getCidadesDeOrigem(Request $request)
+    {
+        $uf = $request->input('uf');
+        $cidades = \DB::table('tabela_origens')
+            ->where('uf', $uf)
+            ->select('id', 'nome')
+            ->orderBy('nome')
+            ->get();
+
+        return response()->json($cidades);
+    }
+
+    public function filtrarAdministradora(Request $request)
+    {
+        $cidade = $request->cidade;
+
+//        $administradora_id = DB::table('tabelas')
+//            ->select('administradora_id')
+//            ->where('tabela_origens_id', $cidade)
+//            ->groupBy('administradora_id')
+//            ->get();
+
+        $administradoraIds = DB::table('tabelas')
+            ->select('administradora_id')
+            ->where('tabela_origens_id', $cidade)
+            ->groupBy('administradora_id')
+            ->pluck('administradora_id');
+        $operadoras = Administradora::whereIn('id', $administradoraIds)
+            //->where('cidade', $cidade)
+            ->get();
+
+
+        //$operadoras = Administradora::where('cidade', $cidade)->get();
+        return response()->json($operadoras);
+    }
+
+    public function select(Request $request)
+    {
+        $user = auth()->user();
+        $user->layout_id = $request->input('valor');
+
+        if($user->save()) {
+            return "sucesso";
+        } else {
+            return "error";
+        }
+
+    }
+
+
+
 
     public function buscar_planos(Request $request)
     {
@@ -117,4 +172,29 @@ class OrcamentoController extends Controller
 
 
     }
+
+    public function getLayout(Request $request)
+    {
+        $user = Auth::user();
+        $layouts = Layout::all();
+        $estados = TabelaOrigens::groupBy('uf')->select('uf')->get();
+        return view('orcamento.layouts',compact('layouts','user','estados'));
+    }
+
+
+    public function regiao(Request $request)
+    {
+        $user = Auth::user(); // ou auth()->user()
+        $uf = $request->input('regiao');
+        $user->uf_preferencia = $uf ?: null;
+        if($user->save()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+
 }

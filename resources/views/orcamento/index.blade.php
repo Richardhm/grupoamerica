@@ -1,7 +1,7 @@
 <x-app-layout>
     <input type="hidden" id="odonto_resultado" />
     <div class="max-w-full mx-auto sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-x-4 px-4">
-        <x-informacoes :cidades="$cidades" class="sm:mx-5"></x-informacoes>
+        <x-informacoes :estados="$estados" :ufpreferencia="$ufpreferencia"  class="sm:mx-5"></x-informacoes>
         <x-operadoras :operadoras="$administradoras" class="sm:mx-5"></x-operadoras>
         <x-planos :planos="$planos" class="sm:mx-5"></x-planos>
         <div class="p-1 rounded mt-2 hidden bg-[rgba(254,254,254,0.18)] backdrop-blur-[15px] border w-full lg:w-[30%] sm:mx-5" id="resultado"></div>
@@ -106,6 +106,82 @@
     @section('scripts')
        <script>
            $(document).ready(function(){
+
+               let ufPreferida = "{{ $ufpreferencia }}";
+
+               if (ufPreferida) {
+                   mudarEstado()
+               }
+
+
+               function mudarEstado() {
+                   $('.faixa-etaria-input').val(0);
+                   let estado_id = $("#estado").val();
+                   if(estado_id) {
+                       $('#loading-cidades').fadeIn(150);
+                       $.ajax({
+                           url: '{{route('cidades.origem')}}', // endpoint para post
+                           type: "POST",
+                           dataType: "json",
+                           data: {
+                               uf: estado_id, // 'uf' ou 'id', conforme seu campo
+                               _token: $('meta[name="csrf-token"]').attr('content') // CSRF Token Laravel
+                           },
+                           success:function(data) {
+                               $('#cidade').empty();
+                               $('#cidade').append('<option value="">Escolher Cidade</option>');
+                               $.each(data, function(key, value) {
+                                   $('#cidade').append('<option value="'+ value.id +'">' + value.nome + '</option>');
+                               });
+                           },
+                           complete: function() {
+                               // Esconde loader sempre ao finalizar
+                               $('#loading-cidades').fadeOut(150);
+
+                               verificarVisibilidade();
+
+                               desmarcarPlanos()
+
+                           }
+                       });
+                   } else {
+                       $('#cidade').empty();
+                       $('#cidade').append('<option value="">Escolher Cidade</option>');
+
+                       verificarVisibilidade();
+
+                       desmarcarPlanos()
+                   }
+               }
+
+               function verificarVisibilidade() {
+                   if ($('#operadoras').is(':visible')) {
+                       $('#operadoras').addClass('hidden');
+                   } else {
+                       console.log('#operadoras não está visível');
+                   }
+
+                   if ($('#planos').is(':visible')) {
+                       $("#planos").addClass('hidden');
+                   } else {
+                       console.log('#planos não está visível');
+                   }
+
+                   if ($('#resultado').is(':visible')) {
+                       $("#resultado").addClass('hidden').empty();
+                   } else {
+                       console.log('#resultado não está visível');
+                   }
+               }
+
+               function desmarcarPlanos() {
+                   $("input[name='planos-radio']").prop('checked', false);
+               }
+
+
+
+               $('#estado').on('change',mudarEstado);
+
                function scrollToBottom() {
                    if (window.innerWidth <= 768) { // Aplica apenas para mobile
                        $('html, body').animate({
@@ -121,7 +197,6 @@
                });
 
                $("input[name='planos-radio']").on('click', function(){
-                   // Lógica para selecionar um plano
                    scrollToBottom(); // Chama o scroll para o bottom após a seleção do plano
                });
 
@@ -179,6 +254,7 @@
 
                /*****************verificar se cidade e minus estão preenchidos para aparecer administradoras*******/
                function checkFields() {
+
                    var hasValue = false;
                    // Verifica se algum campo de texto tem valor diferente de vazio ou zero
                    $('input[type="text"]').each(function() {
@@ -191,6 +267,53 @@
                    var cidadeSelected = $('#cidade').val() !== '';
                    // Se ambas as condições forem verdadeiras, remova a classe 'hidden'
                    if (hasValue && cidadeSelected) {
+
+                       if (!$('#operadoras').is(':visible')) {
+
+                           $.ajax({
+                               url: "{{route('filtrar.administradora')}}",
+                               method: "POST",
+                               data: {
+                                   cidade: $('#cidade').val()
+                               },
+                               success: function(res) {
+                                   let operadorasContainer = $('#operadoras');
+                                   operadorasContainer.empty(); // Limpa o conteúdo existente
+
+                                   let titulo = `
+                    <button class="py-1.5 w-full px-1 me-2 mb-2 text-sm font-medium text-white bg-white rounded-lg border border-gray-200 bg-gray-500 bg-opacity-10">
+                        Operadoras
+                    </button>`;
+                                   operadorasContainer.append(titulo);
+
+                                   res.forEach(op => {
+                                       let operadoraDiv = `
+                        <div class="bg-white w-full container_image_operadora flex flex-wrap justify-between py-1 px-1 me-2 mb-1 text-sm font-medium text-white focus:outline-none bg-white rounded-lg border border-gray-200 focus:z-10 bg-gray-500 bg-opacity-10 dark:hover:text-gray-900">
+                            <label class="flex justify-between items-center w-full cursor-pointer">
+                                <div class="flex w-[50%] items-center">
+                                    <input type="radio"
+                                           name="operadoras"
+                                           id="operadoras_${op.id}"
+                                           value="${op.id}"
+                                           class="w-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <span class="ml-1 text-sm">${op.nome}</span>
+                                </div>
+                                <div class="flex w-[50%] justify-end">
+                                    <img src="${op.logo}" alt="${op.nome}" class="image_operadora rounded-md" style="width:100px;border-radius:5px;padding:2px;background-color: white;">
+                                </div>
+                            </label>
+                        </div>`;
+                                       operadorasContainer.append(operadoraDiv);
+                                   });
+
+                                   operadorasContainer.removeClass('hidden');
+                               }
+                           });
+
+                           // Torna visível após carregamento
+                           $('#operadoras').removeClass('hidden');
+                       }
+
                        $('#operadoras').removeClass('hidden');
                    } else {
                        $('#operadoras').addClass('hidden');

@@ -30,12 +30,19 @@ use App\Http\Controllers\RankingController;
 //    });
 //});
 
-Route::domain('{tenant}.bmsys.test')->group(function () {
+Route::domain('{tenant}.bmsys.test')->group(function ($tenant) {
+
+
+
+
+
+
 //    Route::get('/', function ($tenant) {
 //        return view('welcome');
 //    });
 
-
+    //$tenant = Tenant::current();
+    //dd($tenant); // Mostra os detalhes do tenant
 //    Route::get('/', function () {
 //        return redirect()->route('login'); // Redireciona para login
 //    });
@@ -101,6 +108,7 @@ Route::middleware('auth')->group(callback: function () {
     Route::get('/orcamento',[OrcamentoController::class,'index'])->name('orcamento');
     Route::post('/buscar_planos',[OrcamentoController::class,'buscar_planos'])->middleware(['auth', 'verified'])->name('buscar_planos');
     Route::post('/dashboard/orcamento',[OrcamentoController::class,'orcamento'])->middleware(['auth', 'verified'])->name('orcamento.montarOrcamento');
+    Route::get('/orcamento/layout',[OrcamentoController::class,'getLayout'])->name('orcamento.getlayout');
     /*********FIM ORCAMENTO*************/
 
     Route::post("/pdf",[ImagemController::class,'criarPDF'])->middleware(['auth', 'verified'])->name('gerar.imagem');
@@ -262,13 +270,21 @@ Route::middleware('auth')->group(callback: function () {
 
     /***********FIM RANKING************/
 
-
-
-
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+//    Route::get("/gerenciamento", [OrcamentoController::class, 'getLayout'])->name('gerenciamento.index')->middleware(['apenasAdministradores','check']);
+   Route::post("/gerenciamento/regiao", [OrcamentoController::class, 'regiao'])->name('gerenciamento.regiao');
+
+    Route::post('/cidades/origem', [OrcamentoController::class, 'getCidadesDeOrigem'])->name('cidades.origem');
+
+    Route::post('/filtrar/administradora',[OrcamentoController::class,'filtrarAdministradora'])->name('filtrar.administradora');
+
+    Route::post('/layouts/select', [OrcamentoController::class, 'select'])->name('layouts.select');
+
+
 });
 
 require __DIR__.'/auth.php';

@@ -116,43 +116,21 @@
         }
 
         .cidade_container {
-
             position:absolute;
-
-            top:190px;
-
-            left:0%;
-
+            top:160px;
+            left:42%;
             font-weight: bold;
-
             font-size: 2em;
-
             color:white;
-
-            text-align:center;
-
-
-
         }
 
-
-
         .frase_container {
-
             position:absolute;
-
-            top:260px;
-
-            left:0%;
-
+            top:230px;
+            left:36%;
             font-weight: bold;
-
             font-size: 1.5em;
-
             color:white;
-
-            text-align: center;
-
         }
 
 
@@ -303,29 +281,18 @@
             margin-left: 10px;
         }
 
-        .bloco-container-desconto {
-
-            width: 100%;
-
-            margin: 0 auto;
-
-            border-spacing: 5px; /* Espaço entre blocos */
-
-            border-collapse: separate;
-
-
-
-        }
-
     </style>
 </head>
 <body>
     <div class="header-container">
-        <img style="position: absolute;top: 0;width:100%;height:300px;left: 0;object-fit: cover;" src="cabecalhos/cabecalho{{$cabecalho}}.png" alt="Orçamento">
-    </div>
-    <p class="cidade_container" style="text-transform:uppercase;width:100%">{{$cidade}}</p>
-    <p class="frase_container" style="text-transform:uppercase;width:100%">{{$frase}}</p>
+        <img style="position: absolute;top: 0;width:100%;height:300px;left: 0;object-fit: cover;" src="cabecalhos/cabecalho4.png" alt="Orçamento">
 
+    </div>
+    <p class="cidade_container">{{$cidade}}</p>
+    <p class="frase_container">{{$frase}}</p>
+
+    <p class="cidade_container">{{$cidade}}</p>
+<p class="frase_container">{{$frase}}</p>
 
 @php
     $dadosComOdontoComCopar = [];
@@ -406,14 +373,11 @@
                     </tr>
                         @endfor
                     @endforeach
-
-                        <tr>
-                            <td>
-                                <div class="valor-copart-laranja">TOTAL</div>
-                            </td>
-
-                        </tr>
-
+                    <tr>
+                        <td>
+                            <div class="valor-copart-laranja">TOTAL</div>
+                        </td>
+                    </tr>
                 </table>
             </td>
             @if($com_coparticipacao == 1)
@@ -472,27 +436,20 @@
                         @endfor
                     @endforeach
                     <tfoot>
+            	    <tr>
 
-
-                        <tr>
-                            <td>
-                                <div class="valor-copart-laranja">
-                                    {{number_format($totalEnfermaria_com_copar,2,",",".")}}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="valor-copart-laranja">
-                                    {{number_format($totalApartamento_com_copar,2,",",".")}}
-                                </div>
-                            </td>
-                        </tr>
-
-
-
-
-
-
-                    </tfoot>
+                	<td>
+                	     	<div class="valor-copart-laranja">
+                        	{{number_format($totalEnfermaria_com_copar,2,",",".")}}
+                    	   </div>
+                	</td>
+                	<td>
+                    	<div class="valor-copart-laranja">
+                        	{{number_format($totalApartamento_com_copar,2,",",".")}}
+                        </div>
+                       </td>
+            </tr>
+        </tfoot>
                 </table>
 
             </td>
@@ -555,20 +512,19 @@
                         @endfor
                     @endforeach
                     <tfoot>
+            <tr>
 
-                        <tr>
-                            <td>
-                                <div class="valor-copart-laranja">
-                                    {{number_format($totalEnfermaria_sem_copar,2,",",".")}}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="valor-copart-laranja">
-                                    {{number_format($totalApartamento_sem_copar,2,",",".")}}
-                                </div>
-                            </td>
-                        </tr>
-
+                <td>
+                    <div class="valor-copart-laranja">
+                        {{number_format($totalEnfermaria_sem_copar,2,",",".")}}
+                    </div>
+                </td>
+                <td>
+                    <div class="valor-copart-laranja">
+                        {{number_format($totalApartamento_sem_copar,2,",",".")}}
+                     </div>
+                </td>
+            </tr>
         </tfoot>
                 </table>
                 <tr>
@@ -577,66 +533,7 @@
             @endif
         </tr>
     </table>
-    @if($desconto == 1)
-        <table class="bloco-container-desconto" style="margin-top:5px;{{$sem_coparticipacao == 0 || $com_coparticipacao == 0 ? "margin-left:335px" : ""}}" align="center" cellpadding="0" cellspacing="0">
-            <tr>
-                <td class="bloco" style="width: 22%;">
-                    <table width="100%" cellpadding="0" cellspacing="0">
-                        <td>
-                            <div class="valor-copart" style="border-radius:50px;font-size: 1em;">
-                                Des. {{ (int) $valor_desconto}}% 3/meses
-                            </div>
 
-                        </td>
-                    </table>
-
-                </td>
-                @if($com_coparticipacao == 1)
-                    <td class="bloco" style="width: {{ $widths[$totalBlocos] }}; margin: {{ $margins[$totalBlocos] }};">
-                        <table width="100%" cellpadding="0" cellspacing="0">
-                            <tr>
-                                <td>
-                                    <div class="valor-copart" style="border-radius:50px;font-size: 1em;">
-                                        {{ number_format($totalEnfermaria_com_copar * (1 - ($valor_desconto / 100)), 2, ",", ".") }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="valor-copart" style="border-radius:50px;font-size: 1em;">
-                                        {{ number_format($totalApartamento_com_copar * (1 - ($valor_desconto / 100)), 2, ",", ".") }}
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                @endif
-                @if($sem_coparticipacao == 1)
-                    <td class="bloco" style="width: {{ $widths[$totalBlocos] }};">
-                        <table width="100%" cellpadding="0" cellspacing="0">
-                            <tr>
-                                <td>
-                                    <div class="valor-copart" style="border-radius:50px;font-size: 1em;">
-                                        {{ number_format($totalEnfermaria_sem_copar * (1 - ($valor_desconto / 100)), 2, ",", ".") }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="valor-copart" style="border-radius:50px;font-size: 1em;">
-                                        {{ number_format($totalApartamento_sem_copar * (1 - ($valor_desconto / 100)), 2, ",", ".") }}
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                @endif
-
-
-
-
-
-            </tr>
-
-        </table>
-
-    @endif
 </div>
 
 

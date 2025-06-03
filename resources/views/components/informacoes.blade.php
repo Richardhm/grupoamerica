@@ -5,12 +5,19 @@
 
     <form>
         <div class="w-full flex">
-            <div class="ml-1 w-full">
-                <select id="cidade" class="py-2 text-lg bg-[rgba(254,254,254,0.18)] focus:outline-none active:outline-none hover:bg-transparent py-2 text-white focus:bg-transparent w-full text-xs px-1 me-2 mb-2 text-sm font-medium text-black rounded-lg hover:border-transparent focus:border-transparent border-transparent">
-                    <option value="" class="text-center text-lg text-black">Escolher Cidade</option>
-                    @foreach($cidades as $cc)
-                        <option value="{{$cc->id}}" class="text-black hover:bg-transparent focus:bg-transparent focus:text-white" style="background-color:#5c636a !important;opacity:0.2;color:white;">{{$cc->nome}}</option>
+            <div class="ml-3 w-[32%]">
+                <label for="estado" class="text-white text-sm">UF</label>
+                <select id="estado" class="py-2 py-2 text-black w-full dark:border-white text-xs px-1 me-2 mb-2 font-medium rounded-lg dark:bg-transparent dark:text-white">
+                    <option value="" class="text-xs text-black">Escolher UF</option>
+                    @foreach($estados as $uf)
+                        <option value="{{$uf->uf}}" {{$ufpreferencia == $uf->uf ? 'selected' : ''}} class="text-black">{{$uf->uf}} - {{$uf->descricao}}</option>
                     @endforeach
+                </select>
+            </div>
+            <div class="ml-1 w-[60%]">
+                <label for="cidade" class="text-white text-sm">Cidade</label>
+                <select id="cidade" class="py-2 py-2 text-black w-full dark:border-white text-xs px-1 me-2 mb-2 font-medium rounded-lg dark:bg-transparent dark:text-white">
+                    <option value="" class="text-xs text-black">Escolher Cidade</option>
                 </select>
             </div>
         </div>
