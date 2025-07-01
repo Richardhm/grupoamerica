@@ -1,13 +1,94 @@
 // Individual
+
+$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+    // Verifica se é a tabela correta
+    if (!$(settings.nTable).hasClass('listarindividual')) {
+        return true;
+    }
+
+    let anoSelecionado = $("#mudar_ano_table").val();
+    let mesSelecionado = $("#mudar_mes_table").val();
+
+    // Se nenhum filtro está selecionado, mostra todas as linhas
+    if (!anoSelecionado && !mesSelecionado) {
+        return true;
+    }
+
+    // Pega a data da primeira coluna
+    let dataColuna = data[0];
+
+    if (!dataColuna) {
+        return false;
+    }
+
+    try {
+        // Tenta diferentes formatos de data
+        let dataObj;
+
+        if (dataColuna.includes('/')) {
+            // Formato dd/mm/yyyy
+            let partes = dataColuna.split('/');
+            if (partes.length === 3) {
+                dataObj = new Date(partes[2], partes[1] - 1, partes[0]);
+            }
+        } else if (dataColuna.includes('-')) {
+            // Formato yyyy-mm-dd
+            dataObj = new Date(dataColuna);
+        }
+
+        if (!dataObj || isNaN(dataObj.getTime())) {
+            return false;
+        }
+
+        let anoData = dataObj.getFullYear().toString();
+        let mesData = (dataObj.getMonth() + 1).toString();
+
+        // Aplica os filtros
+        let passaFiltroAno = !anoSelecionado || anoData === anoSelecionado;
+        let passaFiltroMes = !mesSelecionado || mesData === mesSelecionado;
+
+        return passaFiltroAno && passaFiltroMes;
+
+    } catch (error) {
+        console.error('Erro ao processar data:', dataColuna, error);
+        return false;
+    }
+});
+
+
+
+$('#mudar_ano_table, #mudar_mes_table').on('change', function() {
+    table_individual.ajax.reload(function(json) {
+        // ✅ CALLBACK EXECUTADO APÓS O RELOAD
+        if (json.contagens) {
+            $(".individual_quantidade_1_parcela").text(json.contagens.parcela1 || 0);
+            $(".individual_quantidade_2_parcela").text(json.contagens.parcela2 || 0);
+            $(".individual_quantidade_3_parcela").text(json.contagens.parcela3 || 0);
+            $(".individual_quantidade_4_parcela").text(json.contagens.parcela4 || 0);
+            $(".individual_quantidade_5_parcela").text(json.contagens.parcela5 || 0);
+            $(".individual_quantidade_6_parcela").text(json.contagens.finalizado || 0);
+            $(".individual_quantidade_cancelado").text(json.contagens.cancelado || 0);
+        }
+    });
+});
+
+
+
+
+
+
+
 $("#select_usuario_individual").on('change',function(){
+
     if (parcelaSelecionada) {  // Verifica se há uma parcela selecionada
         updateFiltragemParcela(parcelaSelecionada);  // Reaplica a filtragem com base na parcela já selecionada
     }
     let mes = $("#mudar_mes_table").val() == '' ? '00' : $("#mudar_mes_table").val();
-    let id = $('option:selected', this).attr('data-id');
+    let corretor_id = $('option:selected', this).attr('data-id');
     let nome = $('option:selected', this).text();
     let corretor = $("#corretor_selecionado_id").val();
     let valorSelecionado = $(this).val();
+
     $("ul#listar_individual li.individual").removeClass('textoforte-list').removeClass('destaque_content');
     $("#atrasado_corretor").removeClass('textoforte-list').removeClass('destaque_content_radius');
     $("#finalizado_corretor").removeClass('textoforte-list').removeClass('destaque_content_radius');
@@ -15,77 +96,60 @@ $("#select_usuario_individual").on('change',function(){
     //$("#content_list_individual_begin").addClass('destaque_content_radius');
     //$('#title_individual').html("<h4 style='font-size:1em;margin-top:10px;margin-left:5px;'>Listagem(Completa)</h4>");
     if(valorSelecionado != "todos") {
-        table_individual.column(9).search('').draw();
-        table_individual.column(12).search(valorSelecionado).draw();
-        let dadosColuna9 = table_individual.column(9,{search: 'applied'}).data();
-        let dadosColuna11 = table_individual.column(11,{search: 'applied'}).data();
-        let primeiraParcelaIndividual = 0;
-        let segundaParcelaIndividual = 0;
-        let terceiraParcelaIndividual = 0;
-        let quartaParcelaIndividual = 0;
-        let quintaParcelaIndividual = 0;
-        let sextaParcelaIndividual = 0;
-        let canceladosIndividual = 0;
-        let atrasadoIndividual = 0;
-        dadosColuna9.each(function (valor) {
-            if (valor.toLowerCase() == 'pag. 1º parcela') {primeiraParcelaIndividual++;}
-            if (valor.toLowerCase() == 'pag. 2º parcela') {segundaParcelaIndividual++;}
-            if (valor.toLowerCase() == 'pag. 3º parcela') {terceiraParcelaIndividual++;}
-            if (valor.toLowerCase() == 'pag. 4º parcela') {quartaParcelaIndividual++;}
-            if (valor.toLowerCase() == 'pag. 5º parcela') {quintaParcelaIndividual++;}
-            if (valor.toLowerCase() == 'finalizado') {sextaParcelaIndividual++;}
-            if (valor.toLowerCase() == 'cancelado') {canceladosIndividual++;}
-        });
-        dadosColuna11.each(function (valor) {
-            if (valor.toLowerCase() == 'atrasado') {atrasadoIndividual++;}
-        });
-
-        $(".individual_quantidade_1_parcela").text(primeiraParcelaIndividual);
-        $(".individual_quantidade_2_parcela").text(segundaParcelaIndividual);
-        $(".individual_quantidade_3_parcela").text(terceiraParcelaIndividual);
-        $(".individual_quantidade_4_parcela").text(quartaParcelaIndividual);
-        $(".individual_quantidade_5_parcela").text(quintaParcelaIndividual);
-        $(".individual_quantidade_6_parcela").text(sextaParcelaIndividual);
-        $(".individual_quantidade_cancelado").text(canceladosIndividual);
-        $(".individual_quantidade_atrasado").text(atrasadoIndividual);
+         inicializarIndividual(null,null,corretor_id);
     } else {
-        table_individual.column(9).search('').draw();
-        table_individual.column(12).search('').draw();
-        //$('#tabela_individual').DataTable().column(2).search(valorSelecionado).draw();
-        let dadosColuna9 = table_individual.column(9,{search: 'applied'}).data();
-        let dadosColuna11 = table_individual.column(11,{search: 'applied'}).data();
-        let primeiraParcelaIndividual = 0;
-        let segundaParcelaIndividual = 0;
-        let terceiraParcelaIndividual = 0;
-        let quartaParcelaIndividual = 0;
-        let quintaParcelaIndividual = 0;
-        let sextaParcelaIndividual = 0;
-        let canceladosIndividual = 0;
-        let atrasadoIndividual = 0;
-        dadosColuna9.each(function (valor) {
-            if (valor.toLowerCase() == 'pag. 1º parcela') {primeiraParcelaIndividual++;}
-            if (valor.toLowerCase() == 'pag. 2º parcela') {segundaParcelaIndividual++;}
-            if (valor.toLowerCase() == 'pag. 3º parcela') {terceiraParcelaIndividual++;}
-            if (valor.toLowerCase() == 'pag. 4º parcela') {quartaParcelaIndividual++;}
-            if (valor.toLowerCase() == 'pag. 5º parcela') {quintaParcelaIndividual++;}
-            if (valor.toLowerCase() == 'finalizado') {sextaParcelaIndividual++;}
-            if (valor.toLowerCase() == 'cancelado') {canceladosIndividual++;}
-        });
+        inicializarIndividual(null,null,null);
+        // table_individual.column(9).search('').draw();
+        // table_individual.column(12).search('').draw();
+        // //$('#tabela_individual').DataTable().column(2).search(valorSelecionado).draw();
+        // let dadosColuna9 = table_individual.column(9,{search: 'applied'}).data();
+        // let dadosColuna11 = table_individual.column(11,{search: 'applied'}).data();
+        // let primeiraParcelaIndividual = 0;
+        // let segundaParcelaIndividual = 0;
+        // let terceiraParcelaIndividual = 0;
+        // let quartaParcelaIndividual = 0;
+        // let quintaParcelaIndividual = 0;
+        // let sextaParcelaIndividual = 0;
+        // let canceladosIndividual = 0;
+        // let atrasadoIndividual = 0;
 
-        dadosColuna11.each(function (valor) {
-            if (valor.toLowerCase() == 'atrasado') {atrasadoIndividual++;}
-        });
-
-        $(".individual_quantidade_1_parcela").text(primeiraParcelaIndividual);
-        $(".individual_quantidade_2_parcela").text(segundaParcelaIndividual);
-        $(".individual_quantidade_3_parcela").text(terceiraParcelaIndividual);
-        $(".individual_quantidade_4_parcela").text(quartaParcelaIndividual);
-        $(".individual_quantidade_5_parcela").text(quintaParcelaIndividual);
-        $(".individual_quantidade_6_parcela").text(sextaParcelaIndividual);
-        $(".individual_quantidade_cancelado").text(canceladosIndividual);
-        $(".individual_quantidade_atrasado").text(atrasadoIndividual);
+        // dadosColuna9.each(function (valor) {
+        //     if (valor.toLowerCase() == 'pag. 1º parcela') {primeiraParcelaIndividual++;}
+        //     if (valor.toLowerCase() == 'pag. 2º parcela') {segundaParcelaIndividual++;}
+        //     if (valor.toLowerCase() == 'pag. 3º parcela') {terceiraParcelaIndividual++;}
+        //     if (valor.toLowerCase() == 'pag. 4º parcela') {quartaParcelaIndividual++;}
+        //     if (valor.toLowerCase() == 'pag. 5º parcela') {quintaParcelaIndividual++;}
+        //     if (valor.toLowerCase() == 'finalizado') {sextaParcelaIndividual++;}
+        //     if (valor.toLowerCase() == 'cancelado') {canceladosIndividual++;}
+        // });
+        //
+        // dadosColuna11.each(function (valor) {
+        //     if (valor.toLowerCase() == 'atrasado') {atrasadoIndividual++;}
+        // });
+        //
+        // $(".individual_quantidade_1_parcela").text(primeiraParcelaIndividual);
+        // $(".individual_quantidade_2_parcela").text(segundaParcelaIndividual);
+        // $(".individual_quantidade_3_parcela").text(terceiraParcelaIndividual);
+        // $(".individual_quantidade_4_parcela").text(quartaParcelaIndividual);
+        // $(".individual_quantidade_5_parcela").text(quintaParcelaIndividual);
+        // $(".individual_quantidade_6_parcela").text(sextaParcelaIndividual);
+        // $(".individual_quantidade_cancelado").text(canceladosIndividual);
+        // $(".individual_quantidade_atrasado").text(atrasadoIndividual);
     }
 });
+
+table_individual.on('xhr', function (e, settings, json) {
+    let totalLinhasFiltradas = json.recordsTotal;
+    let totalVidas = json.totalVidas;
+    let valor = json.valor;
+    $(".total_por_orcamento").html(totalLinhasFiltradas);
+    $(".total_por_vida").html(totalVidas);
+    $(".total_por_page").html(valor);
+});
+
+
+
+
 
 $("body").on("change",'#select_corretoras',function(){
     let corretora_id = $(this).val();
@@ -346,19 +410,7 @@ $("body").on('change','#change_corretor_coletivo',function(){
             });
         }
     });
-
-
-
-
-
-
-
-
 });
-
-
-
-
 
 $("body").on('change', '#mudar_corretor_individual', function () {
     let id_cliente = $("#id_cliente").val();
@@ -571,40 +623,130 @@ function realizarContagem()
 }
 
 
-function filtrarTabela(selectAno, selectMes) {
+// function filtrarTabela(selectAno, selectMes) {
+//     let anoSelecionado = selectAno.val();
+//     let mesSelecionado = selectMes.val();
+//
+//     // Reseta a filtragem
+//     $.fn.dataTable.ext.search.length = 0;
+//     // Adiciona filtro baseado no ano e/ou mês selecionados
+//     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+//         let dataColuna = data[0]; // Coluna 0, onde está a data
+//         let dataParts = dataColuna.split('/'); // Separa a data no formato dd/mm/yyyy
+//
+//         let mesData = dataParts[1];
+//         let anoData = dataParts[2];
+//
+//         // Verifica se há correspondência com o ano e/ou mês selecionados
+//         if (anoSelecionado && mesSelecionado) {
+//
+//             return anoData === anoSelecionado && mesData === mesSelecionado.padStart(2, '0');
+//         } else if (anoSelecionado) {
+//             return anoData === anoSelecionado;
+//         } else if (mesSelecionado) {
+//             return mesData === mesSelecionado.padStart(2, '0');
+//         }
+//         return true; // Sem filtros, retorna todos os dados
+//     });
+//     // Redesenha a tabela com os novos filtros aplicados
+//     table_individual.draw();
+//
+// }
+
+
+
+// function mudarAnoMeses() {
+//
+//
+//
+//     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+//         let anoSelecionado = $('#mudar_ano_table').val(); // Ano selecionado
+//         let mesSelecionado = $('#mudar_mes_table').val(); // Mês selecionado
+//         let dataColuna = data[0]; // Data da 1ª coluna da DataTables (índice 0)
+//
+//         return anoSelecionado;
+//
+//
+//         // Nenhum filtro aplicado
+//         if (!anoSelecionado && !mesSelecionado) {
+//             return true;
+//         }
+//
+//         // Converte a data da coluna (DD/MM/YYYY) para um formato manipulável
+//         let dataParts = dataColuna.split('/'); // Divide a data no formato DD/MM/YYYY
+//         let dia = parseInt(dataParts[0], 10); // Dia
+//         let mes = parseInt(dataParts[1], 10); // Mês
+//         let ano = parseInt(dataParts[2], 10); // Ano
+//
+//         // Verifica se a data corresponde ao ano e/ou mês selecionados
+//         if (anoSelecionado && ano != anoSelecionado) {
+//             return false; // Ano não correspondente
+//         }
+//         if (mesSelecionado && mes != mesSelecionado) {
+//             return false; // Mês não correspondente
+//         }
+//
+//         return true; // Data válida
+//     });
+// }
+
+
+
+// Evento de filtro ao selecionar o ano ou mês
+
+function filtrarTabela() {
+    let selectAno = $("#mudar_ano_table");
+    let selectMes = $("#mudar_mes_table");
+
     let anoSelecionado = selectAno.val();
     let mesSelecionado = selectMes.val();
 
+    console.log("Ano selecionado:", anoSelecionado);
+    console.log("Mês selecionado:", mesSelecionado);
 
-
-
-    // Reseta a filtragem
-    $.fn.dataTable.ext.search.length = 0;
-    // Adiciona filtro baseado no ano e/ou mês selecionados
+    // Define o filtro customizado
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        let dataColuna = data[0]; // Coluna 0, onde está a data
-        let dataParts = dataColuna.split('/'); // Separa a data no formato dd/mm/yyyy
+        let dataColuna = data[0]; // Coluna onde a data está (ajustar índice se necessário)
+        console.log("Data na coluna:", dataColuna);
 
+        // Verifica se a coluna contém valores válidos
+        if (!dataColuna) {
+            return true; // Caso esteja vazio, não aplica o filtro
+        }
+
+        // Divide a data em [DD, MM, YYYY]
+        let dataParts = dataColuna.split('/'); // Formato esperado: DD/MM/YYYY
+        let dia = dataParts[0];
         let mesData = dataParts[1];
         let anoData = dataParts[2];
 
-
-
-        // Verifica se há correspondência com o ano e/ou mês selecionados
+        // Filtro por ano e/ou mês
         if (anoSelecionado && mesSelecionado) {
-            console.log("Olaaaaa");
             return anoData === anoSelecionado && mesData === mesSelecionado.padStart(2, '0');
-        } else if (anoSelecionado) {
+        }
+        if (anoSelecionado) {
             return anoData === anoSelecionado;
-        } else if (mesSelecionado) {
+        }
+        if (mesSelecionado) {
             return mesData === mesSelecionado.padStart(2, '0');
         }
-        return true; // Sem filtros, retorna todos os dados
+
+        return true; // Caso nenhum filtro esteja selecionado, retorna todos os resultados
     });
-    // Redesenha a tabela com os novos filtros aplicados
+
+    // Redesenha a tabela com os filtros aplicados
     table_individual.draw();
 
+    // Remove o filtro para não impactar implementações futuras (use se necessário)
+    //$.fn.dataTable.ext.search.pop();
 }
+
+
+
+
+
+
+
 
 
 // $("#mudar_mes_table").on('change',function(){
@@ -627,9 +769,11 @@ function filtrarTabela(selectAno, selectMes) {
 // });
 
 // table_individual.on('draw.dt', function() {
-//     //console.log("Olaaaaa");
-//     realizarContagem();  // Recalcula sempre que a tabela é desenhada
+//     let totalLinhasFiltradas = table_individual.rows().data().length;
+//     console.log("ixxxiiiiii :", totalLinhasFiltradas);
+//     //realizarContagem();  // Recalcula sempre que a tabela é desenhada
 // });
+
 
 
 
@@ -677,68 +821,68 @@ function filtrarTabela(selectAno, selectMes) {
 //
 // });
 
-$('#mudar_ano_table, #mudar_mes_table').on('change', function() {
-    let anoSelecionado = $('#mudar_ano_table').val();
-    let mesSelecionado = $('#mudar_mes_table').val();
-
-    // Construir a expressão regular para combinar o ano e o mês
-    let filtro = '';
-    if (anoSelecionado && !mesSelecionado) {
-        filtro = `/${anoSelecionado}$`; // Filtro para o ano completo no final
-    }
-    if (mesSelecionado && !anoSelecionado) {
-        let mesFormatado = mesSelecionado.padStart(2, '0'); // Garantir formato "MM"
-        filtro = `/${mesFormatado}/`; // Filtro para o mês completo
-    }
-    if (anoSelecionado && mesSelecionado) {
-        let mesFormatado = mesSelecionado.padStart(2, '0'); // Garantir formato "MM"
-        filtro = `/${mesFormatado}/${anoSelecionado}$`; // Filtro para mês e ano combinados
-    }
-
-    // Se ambos os selects forem "nada", limpar o filtro
-    if (!anoSelecionado && !mesSelecionado) {
-        filtro = ''; // Nenhum filtro
-    }
-
-    // Aplicar o filtro na coluna 0
-    table_individual.column(0).search(filtro, true, false).draw();
-
-    // Atualizar os meses disponíveis apenas se o ano for alterado
-    if (this.id === 'mudar_ano_table') {
-        let datasFiltradas = table_individual.column(0).data().toArray();
-
-        if (anoSelecionado) {
-            datasFiltradas = datasFiltradas.filter(value => value.endsWith(`/${anoSelecionado}`));
-        }
-
-        // Obter os meses únicos das datas filtradas
-        let mesesPorAno = datasFiltradas.map(function(value) {
-            let partesData = value.split('/');
-            return parseInt(partesData[1], 10); // Extrair o mês
-        });
-        mesesPorAno = [...new Set(mesesPorAno)]; // Remover duplicatas
-        let mesesOrdenados = mesesPorAno.sort(function(a, b) {
-            return a - b;
-        });
-
-        // Atualizar o select de meses
-        let selectMes = $('#mudar_mes_table');
-        selectMes.empty();
-        selectMes.append('<option value="" selected class="text-white text-center">- Mês -</option>'); // Opção padrão
-        let nomesMeses = {
-            1: "Janeiro", 2: "Fevereiro", 3: "Março", 4: "Abril", 5: "Maio", 6: "Junho",
-            7: "Julho", 8: "Agosto", 9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro"
-        };
-        mesesOrdenados.forEach(function(mes) {
-            selectMes.append('<option value="' + mes + '">' + nomesMeses[mes] + '</option>');
-        });
-
-        // Resetar o mês selecionado se o novo ano não corresponder
-        if (!mesesOrdenados.includes(parseInt(mesSelecionado))) {
-            $('#mudar_mes_table').val('');
-        }
-    }
-});
+// $('#mudar_ano_table, #mudar_mes_table').on('change', function() {
+//     let anoSelecionado = $('#mudar_ano_table').val();
+//     let mesSelecionado = $('#mudar_mes_table').val();
+//
+//     // Construir a expressão regular para combinar o ano e o mês
+//     let filtro = '';
+//     if (anoSelecionado && !mesSelecionado) {
+//         filtro = `/${anoSelecionado}$`; // Filtro para o ano completo no final
+//     }
+//     if (mesSelecionado && !anoSelecionado) {
+//         let mesFormatado = mesSelecionado.padStart(2, '0'); // Garantir formato "MM"
+//         filtro = `/${mesFormatado}/`; // Filtro para o mês completo
+//     }
+//     if (anoSelecionado && mesSelecionado) {
+//         let mesFormatado = mesSelecionado.padStart(2, '0'); // Garantir formato "MM"
+//         filtro = `/${mesFormatado}/${anoSelecionado}$`; // Filtro para mês e ano combinados
+//     }
+//
+//     // Se ambos os selects forem "nada", limpar o filtro
+//     if (!anoSelecionado && !mesSelecionado) {
+//         filtro = ''; // Nenhum filtro
+//     }
+//
+//     // Aplicar o filtro na coluna 0
+//     table_individual.column(0).search(filtro, true, false).draw();
+//
+//     // Atualizar os meses disponíveis apenas se o ano for alterado
+//     if (this.id === 'mudar_ano_table') {
+//         let datasFiltradas = table_individual.column(0).data().toArray();
+//
+//         if (anoSelecionado) {
+//             datasFiltradas = datasFiltradas.filter(value => value.endsWith(`/${anoSelecionado}`));
+//         }
+//
+//         // Obter os meses únicos das datas filtradas
+//         let mesesPorAno = datasFiltradas.map(function(value) {
+//             let partesData = value.split('/');
+//             return parseInt(partesData[1], 10); // Extrair o mês
+//         });
+//         mesesPorAno = [...new Set(mesesPorAno)]; // Remover duplicatas
+//         let mesesOrdenados = mesesPorAno.sort(function(a, b) {
+//             return a - b;
+//         });
+//
+//         // Atualizar o select de meses
+//         let selectMes = $('#mudar_mes_table');
+//         selectMes.empty();
+//         selectMes.append('<option value="" selected class="text-white text-center">- Mês -</option>'); // Opção padrão
+//         let nomesMeses = {
+//             1: "Janeiro", 2: "Fevereiro", 3: "Março", 4: "Abril", 5: "Maio", 6: "Junho",
+//             7: "Julho", 8: "Agosto", 9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro"
+//         };
+//         mesesOrdenados.forEach(function(mes) {
+//             selectMes.append('<option value="' + mes + '">' + nomesMeses[mes] + '</option>');
+//         });
+//
+//         // Resetar o mês selecionado se o novo ano não corresponder
+//         if (!mesesOrdenados.includes(parseInt(mesSelecionado))) {
+//             $('#mudar_mes_table').val('');
+//         }
+//     }
+// });
 
 $("#mudar_planos_empresarial").on('change',function(){
     let plano = $(this).val();
@@ -1543,9 +1687,6 @@ $("#mudar_user_empresarial").on('change',function(){
         $(".empresarial_quantidade_cancelado").text(countCancelados);
         $(".quantidade_empresarial_finalizado").text(countFinalizado);
         $(".empresarial_quantidade_atrasado").text(countAtrasado);
-
-
-
     }
-
 });
+

@@ -1,10 +1,10 @@
 table.dataTable tbody td {
-    font-size: 0.85em !important;
+    font-size: 0.8em !important;
     padding: 0px !important;
 }
 
 table.dataTable thead th {
-    font-size: 0.85em !important;
+    font-size: 0.8em !important;
     padding: 0px !important;
 }
 
@@ -83,6 +83,20 @@ input[readonly] {
 
 
 
+#tabela_individual td:nth-child(9), /* Índice para 'status' */
+#tabela_individual td:nth-child(14), /* Índice para 'status' */
+#tabela_individual td:nth-child(15), /* Índice para 'estagiario' */
+#tabela_individual td:nth-child(16) /* Índice para 'corretor_id' */ {
+    display: none !important;
+}
+
+
+#tabela_individual th:nth-child(9), /* Índice para 'status' */
+#tabela_individual th:nth-child(14), /* Índice para 'status' */
+#tabela_individual th:nth-child(15), /* Índice para 'estagiario' */
+#tabela_individual th:nth-child(16) /* Índice para 'corretor_id' */ {
+    display: none !important;
+}
 
 
 .select2-container .select2-selection {
