@@ -27,4 +27,21 @@ class Comissao extends Model
         'data' => 'date',
         'empresarial' => 'boolean',
     ];
+
+    public function menorVencimento()
+    {
+
+        return $this->hasOne(ComissoesCorretoresLancadas::class, 'comissoes_id')
+            ->where('status_financeiro', 0)
+            ->orderBy('data', 'asc');
+    }
+
+    public function contrato() {
+        return $this->belongsTo(Contrato::class);
+    }
+
+
+
+
+
 }
